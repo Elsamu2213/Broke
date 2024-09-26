@@ -1,9 +1,9 @@
-
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include  # Importa include
 from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='brokeapp1/index.html'), name='home'),  # Ruta para index.html
+    path('', include('brokeAPP.urls')),  # Incluye las URLs de brokeAPP
 ]

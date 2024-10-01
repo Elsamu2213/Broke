@@ -4,10 +4,20 @@ def index(request):
     return render(request, 'brokeAPP/index.html')
 
 
-def profile_view(request):
-    return render(request, 'brokeapp1/users-profile.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+def asignar_view(request):
+    return render(request, 'brokeapp1/asignar.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 
-def profile_view(request):
+def tablas_view(request):
     return render(request, 'brokeapp1/tablas.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+
+
+def dashboardA_view(request):
+    return render(request, 'brokeapp1/dashboardA.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+
+def loginAdmin_view(request):
+    return render(request, 'brokeapp1/loginAdmin.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+    
+def loginUser_view(request):
+    return render(request, 'brokeapp1/loginUser.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 

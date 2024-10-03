@@ -7,6 +7,8 @@ urlpatterns = [
     path('dashboardA/', views.dashboardA_view, name='dashboardA'),  # Aquí defines una ruta para tu vista de perfil
     path('loginAdmin/', views.loginAdmin_view, name='loginAdmin'),  # Aquí defines una ruta para tu vista de perfil
     path('loginUser/', views.loginUser_view, name='loginUser'),  # Aquí defines una ruta para tu vista de perfil
+    path('Registrar/', views.Registrar_view, name='Registrar'),  # Aquí defines una ruta para tu vista de perfil
+    path('Correo/', views.Correo_view, name='Correo'),  # Aquí defines una ruta para tu vista de perfil
 
     # Puedes agregar más rutas aquí según lo necesites
 

@@ -21,3 +21,9 @@ def loginAdmin_view(request):
 def loginUser_view(request):
     return render(request, 'brokeapp1/loginUser.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
+def Registrar_view(request):
+    return render(request, 'brokeapp1/Registrar.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+
+def Correo_view(request):
+    return render(request, 'brokeapp1/Correo.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+

@@ -292,24 +292,25 @@
     
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle=".html" href="#">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle=".html" href="{% url 'tablas' %}">
           <i class="bi bi-journal-text"></i><span>Empleados</span><i class=""></i>
         </a>
        
-      </li><!-- End Forms Nav -->
+      </li>
+      <!-- End Forms Nav -->
 
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'tablas' %}">
+        <a class="nav-link collapsed" href="{% url 'Correo' %}">
           <i class="bi bi-envelope"></i>
-          <span>Contact</span>
+          <span>Mensaje</span>
         </a>
       </li><!-- End Contact Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
+        <a class="nav-link collapsed" href="{% url 'Registrar' %}">
           <i class="bi bi-card-list"></i>
-          <span>Register</span>
+          <span>Registro</span>
         </a>
       </li><!-- End Register Page Nav -->
 
@@ -319,7 +320,8 @@
 
     </ul>
 
-  </aside><!-- End Sidebar-->
+  </aside>
+  <!-- End Sidebar-->
 
   <main id="main" class="main">
 

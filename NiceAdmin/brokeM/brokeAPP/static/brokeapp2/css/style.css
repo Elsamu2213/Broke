@@ -8,10 +8,39 @@
 
 /*--------------------------------------------------------------
 # General
---------------------------------------------------------------*/
-/* Clase personalizada para el botón */
+--------------------------------------------------------------*/ 
+.dragRRRR {
+  display: flex;           /* Utiliza flexbox para organizar los elementos */
+  gap: 10px;               /* Espacio entre los elementos */
+  margin-bottom: 20px;     /* Espacio debajo del contenedor */
+}
 
+/* Estilo básico para cada elemento arrastrable */
+.XORR {
+  padding: 10px;           /* Espacio interno */
+  color: rgb(255, 255, 255); /* Texto blanco */
+  cursor: grab;            /* Cambia el cursor a "mano" al pasar sobre el elemento */
+  border-radius: 5px;      /* Bordes redondeados */
+  text-align: center;      /* Texto centrado */
+}
 
+/* Estilos específicos de color para cada elemento */
+.redSS { 
+  background-color: #ff4d4d; /* Rojo */
+}
+.blueSS { 
+  background-color: #2c57ad; /* Azul oscuro */
+}
+.greenSS { 
+  background-color: #4dff4d; /* Verde claro */
+}
+.yellowSS { 
+  background-color: #ffff4d; /* Amarillo */
+  color: black;              /* Texto en negro para mejor contraste */
+}
+.purSS { 
+  background-color: #9b59b6; /* Morado */
+}
 
 .COLOR{
   background-color: #BBDDEB;

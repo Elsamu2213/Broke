@@ -6,6 +6,54 @@
 * License: https://bootstrapmade.com/license/
 */
 
+function drag(event) {
+  // Guarda el texto y el color del elemento arrastrado
+  event.dataTransfer.setData("text", event.target.innerText);
+  event.dataTransfer.setData("color", event.target.style.backgroundColor);
+}
+
+function allowDrop(event) {
+  event.preventDefault(); // Permite que el elemento sea un objetivo
+}
+
+function drop(event) {
+  event.preventDefault(); // Previene el comportamiento por defecto
+
+  // Recupera el texto y el color del elemento arrastrado
+  const data = event.dataTransfer.getData("text");
+  const color = event.dataTransfer.getData("color");
+
+  // Cambia el contenido y el color de la celda donde se suelta
+  event.target.innerText = data; // Cambia el contenido de la celda
+  event.target.style.color = color; // Cambia el color del texto
+
+  // Guarda el cambio en localStorage usando un identificador único
+  const cellId = event.target.getAttribute("data-cell-id");
+  if (cellId) {
+      const cellData = {
+          text: data,
+          color: color
+      };
+      localStorage.setItem(cellId, JSON.stringify(cellData)); // Guarda como un objeto JSON
+  }
+}
+
+// Cargar los cambios desde localStorage al cargar la página
+window.onload = function() {
+  const cells = document.querySelectorAll('[data-cell-id]');
+  cells.forEach(cell => {
+      const cellId = cell.getAttribute("data-cell-id");
+      const savedData = localStorage.getItem(cellId);
+
+      if (savedData) {
+          const cellData = JSON.parse(savedData); // Convierte de JSON a objeto
+          cell.innerText = cellData.text; // Restaura el texto guardado
+          cell.style.color = cellData.color; // Restaura el color guardado
+      }
+  });
+};
+
+
 (function() {
   "use strict";
 

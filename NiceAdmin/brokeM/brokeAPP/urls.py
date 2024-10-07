@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views  # Asegúrate de importar views
+from django.urls import path
+from . import views
 
 urlpatterns = [
     path('asignar/', views.asignar_view, name='asignar'),  # Aquí defines una ruta para tu vista de perfil
@@ -10,6 +12,14 @@ urlpatterns = [
     path('Registrar/', views.Registrar_view, name='Registrar'),  # Aquí defines una ruta para tu vista de perfil
     path('Correo/', views.Correo_view, name='Correo'),  # Aquí defines una ruta para tu vista de perfil
 
-    # Puedes agregar más rutas aquí según lo necesites
+    path('usuarios/', views.lista_usuarios, name='lista_usuarios'),  # Ruta para la lista de usuarios
+
+
+
+    path('crear_usuario/', views.crear_usuario, name='crear_usuario'),
+    path('lista_usuarios/', views.lista_usuarios, name='lista_usuarios'),
+
+
+
 
 ]

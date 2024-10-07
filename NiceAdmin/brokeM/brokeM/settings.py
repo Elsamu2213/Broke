@@ -1,5 +1,7 @@
 
+import pymysql
 
+pymysql.install_as_MySQLdb()
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'brokeAPP',  # Asegúrate de que tu aplicación esté aquí
 ]
 
 MIDDLEWARE = [

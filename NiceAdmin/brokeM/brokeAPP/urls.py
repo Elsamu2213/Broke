@@ -11,13 +11,13 @@ urlpatterns = [
     path('loginUser/', views.loginUser_view, name='loginUser'),  # Aquí defines una ruta para tu vista de perfil
     path('Registrar/', views.Registrar_view, name='Registrar'),  # Aquí defines una ruta para tu vista de perfil
     path('Correo/', views.Correo_view, name='Correo'),  # Aquí defines una ruta para tu vista de perfil
+    path('crear_usuario/', views.crear_usuario, name='crear_usuario'),  # Aquí defines una ruta para tu vista de perfil
+    
+    
+    path('usuarios/', views.lista_usuarios, name='lista_usuarios'),
+    path('editar_usuario/<int:id>/', views.editar_usuario, name='editar_usuario'),
+    path('borrar_usuario/<int:id>/', views.borrar_usuario, name='borrar_usuario'),
 
-    path('usuarios/', views.lista_usuarios, name='lista_usuarios'),  # Ruta para la lista de usuarios
-
-
-
-    path('crear_usuario/', views.crear_usuario, name='crear_usuario'),
-    path('lista_usuarios/', views.lista_usuarios, name='lista_usuarios'),
 
 
 

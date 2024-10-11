@@ -5,6 +5,146 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
+//codigo para ver tablas en asignar
+document.addEventListener('DOMContentLoaded', function() {
+  const searchInput = document.getElementById('searchInput');
+  const tableRows = document.querySelectorAll('#asignarTareasTable tbody tr');
+
+  searchInput.addEventListener('input', function() {
+      const filter = searchInput.value.toLowerCase();
+      tableRows.forEach(row => {
+          const nombre = row.cells[1].textContent.toLowerCase();
+          row.style.display = nombre.includes(filter) ? '' : 'none';
+      });
+  });
+
+  const asignarModal = document.getElementById('asignarModal');
+  asignarModal.addEventListener('show.bs.modal', function(event) {
+      const button = event.relatedTarget;
+      const trabajadorId = button.getAttribute('data-id');
+      // Aquí puedes capturar el ID y usarlo para asignar la tarea
+  });
+});
+
+
+
+
+
+//busqueda de tabla usuarios /admin
+document.addEventListener("DOMContentLoaded", function() {
+  // Obtiene el campo de búsqueda y la tabla
+  const searchInput = document.getElementById("searchInput");
+  const userTable = document.getElementById("userTable");
+  
+  // Agrega un evento input para filtrar los resultados cuando se escriba algo
+  searchInput.addEventListener("input", function() {
+    const filter = searchInput.value.toLowerCase();
+    const rows = userTable.getElementsByTagName("tr");
+
+    // Recorre todas las filas de la tabla y oculta las que no coincidan
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName("td");
+      let rowText = "";
+      
+      // Concatena el texto de todas las celdas de la fila para compararlo con el filtro
+      for (let j = 0; j < cells.length; j++) {
+        rowText += cells[j].innerText.toLowerCase();
+      }
+
+      // Muestra la fila si el texto contiene el filtro, de lo contrario, ocúltala
+      if (rowText.indexOf(filter) > -1) {
+        rows[i].style.display = "";
+      } else {
+        rows[i].style.display = "none";
+      }
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+//vnetanana modal para borrar y editar usuarios ___________________________________
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Llenar el modal de editar con los datos del usuario
+  $('#editarModal').on('show.bs.modal', function (event) {
+      let button = $(event.relatedTarget);
+      let id = button.data('id');
+      let nombre = button.data('nombre');
+      let apellido = button.data('apellido');
+      let email = button.data('email');
+      let telefono = button.data('telefono');
+      let rol = button.data('rol');
+
+      let modal = $(this);
+      modal.find('#editarUsuarioId').val(id);
+      modal.find('#editarNombre').val(nombre);
+      modal.find('#editarApellido').val(apellido);
+      modal.find('#editarEmail').val(email);
+      modal.find('#editarTelefono').val(telefono);
+      modal.find('#editarRol').val(rol);
+      
+      // Actualizar la acción del formulario
+      $('#editarForm').attr('action', '/editar_usuario/' + id + '/');
+  });
+
+  // Llenar el modal de borrar con los datos del usuario
+  $('#borrarModal').on('show.bs.modal', function (event) {
+      let button = $(event.relatedTarget);
+      let id = button.data('id');
+      let nombre = button.data('nombre');
+      let apellido = button.data('apellido');
+
+      let modal = $(this);
+      modal.find('#borrarUsuarioId').val(id);
+      modal.find('#borrarNombre').text(nombre);
+      modal.find('#borrarApellido').text(apellido);
+      
+      // Actualizar la acción del formulario
+      $('#borrarForm').attr('action', '/borrar_usuario/' + id + '/');
+  });
+});
+
+
+
+
+
+
+
+
+
+//para la ventana modal 
+document.addEventListener("DOMContentLoaded", function() {
+  const messageElement = document.getElementById('django-messages');
+  
+  if (messageElement) {
+      // Obtener los mensajes desde el div con los mensajes de Django
+      const messages = messageElement.getAttribute('data-messages');
+      
+      if (messages) {
+          const messageArray = messages.split(';'); // Convierte el string en un array
+          let modalMessage = document.getElementById('modalMessage');
+          modalMessage.innerText = messageArray.join(", "); // Combina mensajes si hay múltiples
+          
+          // Mostrar el modal si hay mensajes
+          let resultadoModal = new bootstrap.Modal(document.getElementById('resultadoModal'));
+          resultadoModal.show();
+      }
+  }
+});
+
+//
+
+  
+
+
+
 
 
 (function() {

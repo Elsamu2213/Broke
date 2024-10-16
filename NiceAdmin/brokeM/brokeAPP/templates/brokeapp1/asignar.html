@@ -182,7 +182,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
+                <img src="{% static 'brokeapp2/img/messages-3.jpg'%}" alt="" class="rounded-circle">
                 <div>
                   <h4>David Muldon</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -335,19 +335,19 @@
     <section class="section profile">
       <div class="row">
 
-        <div class="col-xl-8"><!-- tabla -->
+        <div class="col-xl-12"><!-- tabla -->
 
           <div class="card">
-            <div class="card-body pt-3">
+            <div class="card-body pt-12">
               <!-- Bordered Tabs -->
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Lista de Tareas</button>
                 </li>
 
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Asignar</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Asignados</button>
                 </li>
 
                 <li class="nav-item">
@@ -359,116 +359,142 @@
                 </li>
 
               </ul>
-              <div class="tab-content pt-2">
+
+              <div class="tab-content pt-12">
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
                   
-                  <div class="card-body">
-                    <div class="container mt-5">
-                      <h2>Asignar Tareas a Empleados</h2>
-              
-                      <!-- Formulario para asignar tareas -->
-                      <form method="POST" action="{% url 'asignar' %}">
-                          {% csrf_token %}
-                          <div class="form-group">
-                              <label for="usuario">Selecciona un Empleado:</label>
-                              <select class="form-control" id="usuario" name="usuario" required>
-                                  <option value="">-- Seleccionar Empleado --</option>
-                                  {% for empleado in empleados %}
-                                      <option value="{{ empleado.id }}">{{ empleado.nombre }} {{ empleado.apellido }}</option>
-                                  {% endfor %}
-                              </select>
-                          </div>
-              
-                          <div class="form-group">
-                              <label for="descripcion">Descripción de la tarea:</label>
-                              <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
-                          </div>
-              
-                          <div class="form-group">
-                              <label for="fecha_vencimiento">Fecha de vencimiento:</label>
-                              <input type="date" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento">
-                          </div>
-              
-                          <button type="submit" class="btn btn-primary">Asignar Tarea</button>
-                      </form>
-              
-                      <!-- Tabla de tareas asignadas -->
-                      <h3 class="mt-5">Tareas Asignadas</h3>
-                      <table class="table table-bordered">
-                          <thead>
-                              <tr>
-                                  <th>ID</th>
-                                  <th>Empleado</th>
-                                  <th>Descripción</th>
-                                  <th>Fecha Asignación</th>
-                                  <th>Fecha Vencimiento</th>
-                                  <th>Estado</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              {% for tarea in tareas %}
-                              <tr>
-                                  <td>{{ tarea.id }}</td>
-                                  <td>{{ tarea.usuario.nombre }} {{ tarea.usuario.apellido }}</td>
-                                  <td>{{ tarea.descripcion }}</td>
-                                  <td>{{ tarea.fecha_asignacion }}</td>
-                                  <td>{{ tarea.fecha_vencimiento }}</td>
-                                  <td>{{ tarea.estado }}</td>
-                              </tr>
-                              {% endfor %}
-                          </tbody>
-                      </table>
+                  <div class="card-body mt-12">
+                    <div class="container mt-12">
+
+                      <div class="table-responsive mt-4">
+                        <h2></h2>
+                        <div class="mb-3">
+                          <input type="text" id="searchInput" class="form-control" placeholder="Buscar tareas...">
+    </div>
+
+    <table class="table table-bordered mt-12">
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Descripción</th>
+              <th>Fecha de Asignación</th>
+              <th>Dirección</th>
+              <th>Actividad</th>
+              <th>Asignar Usuario</th> <!-- Columna para seleccionar usuario -->
+              <th>Acciones</th> <!-- Columna para el botón de asignar -->
+          </tr>
+      </thead>
+      <tbody id="tareaTableBody">
+          {% for tarea in tareas_no_asignadas %}
+          <tr>
+              <td>{{ tarea.id }}</td>
+              <td>{{ tarea.descripcion }}</td>
+              <td>{{ tarea.fecha_asignacion }}</td>
+              <td>{{ tarea.direccion }}</td>
+              <td>{{ tarea.actividad }}</td>
+              <td>
+                  <select id="usuario-select-{{ tarea.id }}" class="form-select">
+                      <option value="">Seleccione un usuario</option>
+                      {% for usuario in usuarios %}
+                          <option value="{{ usuario.id }}">{{ usuario.nombre }} {{ usuario.apellido }}</option>
+                      {% endfor %}
+                  </select>
+              </td>
+              <td>
+                  <button class="btn btn-primary" onclick="asignarTarea({{ tarea.id }})">Asignar</button>
+              </td>
+          </tr>
+          {% empty %}
+          <tr>
+              <td colspan="7">No hay tareas no asignadas.</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
                   </div>
       
                   </div>
 
-                </div>
 
-                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
-                  <!-- Asignar Edit Form -->
-                  <form>
-                    <div class="row mb-3">
-                    
 
-                    </div>
-                  </form><!-- End Asignar Edit Form -->
 
                 </div>
-
-                <div class="tab-pane fade pt-3" id="profile-settings">
-
-                  <!-- Settings Form -->
-                  <form>
-
-                    <div class="row mb-3">
-                      
-                    
-                    </div>
-                  </form><!-- End settings Form -->
-
-                </div>
+              
+              </div>
 
               
-              </div><!-- End Bordered Tabs -->
+
+
+              <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                <!---------------- Tareas asignadas----------------- -->
+               
+              
+              <!-- Tabla de Tareas Asignadas -->
+              <table class="table table-bordered mt-12">
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Descripción</th>
+                          <th>Fecha de Asignación</th>
+                          <th>Dirección</th>
+                          <th>Actividad</th>
+                          <th>Asignado a</th>
+                          <th>Acciones</th> <!-- Columna para modificar el usuario -->
+                      </tr>
+                  </thead>
+                  <tbody id="tareaAsignadaTableBody">
+                      {% for tarea in tareas_asignadas %}
+                      <tr>
+                          <td>{{ tarea.id }}</td>
+                          <td>{{ tarea.descripcion }}</td>
+                          <td>{{ tarea.fecha_asignacion }}</td>
+                          <td>{{ tarea.direccion }}</td>
+                          <td>{{ tarea.actividad }}</td>
+                          <td>{{ tarea.usuario.nombre }} {{ tarea.usuario.apellido }}</td>
+                          <td>
+                            <select id="usuario-modificar-{{ tarea.id }}" class="form-select">
+                                <option value="{{ tarea.usuario.id }}">{{ tarea.usuario.nombre }} {{ tarea.usuario.apellido }}</option>
+                                {% for usuario in usuarios %}
+                                    <option value="{{ usuario.id }}">{{ usuario.nombre }} {{ usuario.apellido }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-warning mt-2" onclick="modificarAsignacion({{ tarea.id }})">Modificar</button>
+                        </td>
+                      
+                      </tr>
+                      {% empty %}
+                      <tr>
+                          <td colspan="7">No hay tareas asignadas.</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              
+              </div>
+              <!-- End Bordered Tabs -->
 
             </div>
+          
+         
           </div>
+          <!--final de card body 1-->
+          
         
         </div>
+        
         <div class="col-xl-4">
+          
         <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
 
-          <div class="card">
-            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-            </div>
-          </div>
+          
 
         </div>
       </div>
     </section>
 
   </main><!-- End #main -->
+  
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">

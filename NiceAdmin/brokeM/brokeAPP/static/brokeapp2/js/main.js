@@ -5,24 +5,203 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
-//codigo para ver tablas en asignar
-document.addEventListener('DOMContentLoaded', function() {
-  const searchInput = document.getElementById('searchInput');
-  const tableRows = document.querySelectorAll('#asignarTareasTable tbody tr');
+// Función para obtener el token CSRF desde el meta tag
 
-  searchInput.addEventListener('input', function() {
-      const filter = searchInput.value.toLowerCase();
-      tableRows.forEach(row => {
-          const nombre = row.cells[1].textContent.toLowerCase();
-          row.style.display = nombre.includes(filter) ? '' : 'none';
+
+
+function asignarTarea(tareaId) {
+  const usuarioId = document.getElementById(`usuario-select-${tareaId}`).value;
+  if (usuarioId) {
+      fetch(`/asignar_tarea/${tareaId}/`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}' // Importante para seguridad
+          },
+          body: JSON.stringify({ usuario_id: usuarioId })
+      })
+      .then(response => {
+          if (response.ok) {
+              location.reload();  // Recargar la página para reflejar los cambios
+          }
       });
-  });
+  }
+}
 
-  const asignarModal = document.getElementById('asignarModal');
-  asignarModal.addEventListener('show.bs.modal', function(event) {
-      const button = event.relatedTarget;
-      const trabajadorId = button.getAttribute('data-id');
-      // Aquí puedes capturar el ID y usarlo para asignar la tarea
+function modificarAsignacion(tareaId) {
+  const usuarioId = document.getElementById(`usuario-modificar-${tareaId}`).value;
+  const csrftoken = getCookie('csrftoken');  // Obtenemos el token CSRF de las cookies
+
+  if (usuarioId) {
+      fetch(`/modificar_asignacion/${tareaId}/`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken  // Incluimos el token CSRF en los headers
+          },
+          body: JSON.stringify({ usuario_id: usuarioId })
+      })
+      .then(response => {
+          if (response.ok) {
+              location.reload();  // Recargar la página después de modificar
+          } else {
+              console.error('Error al modificar la asignación.');
+          }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+}
+
+
+
+
+// Función para obtener el CSRF token (debe estar incluida en tu main.js)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Comprueba si este cookie comienza con el nombre que buscamos
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+//-----------------------------
+
+
+
+
+function cambiarAsignacion(tareaId) {
+    const selectElement = document.getElementById(`usuario-select-asignado-${tareaId}`);
+    const usuarioId = selectElement.value;
+
+    // Hacer una solicitud AJAX para cambiar la asignación
+    fetch(`/cambiar_asignacion/${tareaId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Asegúrate de tener la función getCookie definida
+        },
+        body: JSON.stringify({ usuario_id: usuarioId }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Asignación actualizada correctamente.');
+            location.reload(); // Recarga la página para ver los cambios
+        } else {
+            alert('Error al actualizar la asignación.');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+// Función para obtener el CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Comprobar si esta cookie comienza con el nombre dado
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+
+//---------------
+
+
+
+
+
+
+
+
+
+//asignar tareas cambiando el id del usuario asignado______________________________
+
+function asignarTarea(tareaId) {
+  const usuarioId = document.getElementById(`usuario-select-${tareaId}`).value;
+  
+  if (!usuarioId) {
+      alert("Seleccione un usuario para asignar la tarea.");
+      return;
+  }
+
+  fetch(`/asignar_tarea/${tareaId}/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de enviar el token CSRF para evitar errores de seguridad.
+      },
+      body: JSON.stringify({ usuario_id: usuarioId })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          alert('Tarea asignada correctamente.');
+          location.reload();  // Recargar la página para que se actualice el estado de las tareas.
+      } else {
+          alert('Error al asignar la tarea.');
+      }
+  });
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+//codigo para ver tablas en asignar
+ // Función para buscar tareas
+ document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById('searchInput');
+  const tareaTableBody = document.getElementById('tareaTableBody');
+
+  searchInput.addEventListener('keyup', function() {
+      const filter = searchInput.value.toLowerCase();
+      const rows = tareaTableBody.getElementsByTagName('tr');
+
+      Array.from(rows).forEach(row => {
+          const cells = row.getElementsByTagName('td');
+          let match = false;
+
+          for (let i = 0; i < cells.length; i++) {
+              if (cells[i].innerText.toLowerCase().includes(filter)) {
+                  match = true;
+                  break;
+              }
+          }
+
+          row.style.display = match ? '' : 'none'; // Muestra u oculta la fila
+      });
   });
 });
 

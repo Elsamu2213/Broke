@@ -9,6 +9,14 @@ from django.contrib import messages
 
 
 
+from .models import Tarea
+from .forms import TareaForm
+from .models import Tarea
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
 
 def index(request):
     return render(request, 'brokeAPP/index.html')
@@ -123,21 +131,61 @@ def borrar_usuario(request, id):
 
 # asignar tareas-----------------------------------------------------
 
-def asignar_tarea(request):
-    empleados = Usuario.objects.all()  # Obtener todos los empleados
-    tareas = Tarea.objects.all()  # Obtener todas las tareas
 
+
+
+# Vista para listar las tareas
+
+def listar_tareas(request):
+    tareas_no_asignadas = Tarea.objects.filter(usuario__isnull=True)  # Tareas no asignadas
+    tareas_asignadas = Tarea.objects.filter(usuario__isnull=False)  # Tareas asignadas
+    usuarios = Usuario.objects.all()  # Obtener todos los usuarios
+
+    return render(request, 'brokeapp1/asignar.html', {
+        'tareas_no_asignadas': tareas_no_asignadas,
+        'tareas_asignadas': tareas_asignadas,
+        'usuarios': usuarios
+    })
+
+@csrf_exempt
+def asignar_tarea(request, tarea_id):
     if request.method == 'POST':
-        usuario_id = request.POST.get('usuario')
-        descripcion = request.POST.get('descripcion')
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
+        data = json.loads(request.body)
+        usuario_id = data.get('usuario_id')
 
-        usuario = get_object_or_404(Usuario, id=usuario_id)
-        tarea = Tarea(usuario=usuario, descripcion=descripcion, fecha_vencimiento=fecha_vencimiento)
-        tarea.save()
+        if not usuario_id:
+            return JsonResponse({'success': False, 'error': 'No se ha proporcionado un usuario'})
 
-        return redirect('asignar')  # Redirigir a la página de asignación
+        try:
+            tarea = Tarea.objects.get(id=tarea_id)
+            usuario = Usuario.objects.get(id=usuario_id)
+            tarea.usuario = usuario  # Asignar el usuario a la tarea
+            tarea.save()  # Guardar los cambios
 
-    return render(request, 'brokeapp1/asignar.html', {'empleados': empleados, 'tareas': tareas})
+            return JsonResponse({'success': True})
+        except Tarea.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Tarea no encontrada'})
+        except Usuario.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Usuario no encontrado'})
+
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+#tareas ya asignadas________________________________________________________
 
 
+
+def modificar_asignacion(request, tarea_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Cargar el cuerpo de la solicitud JSON
+            usuario_id = data.get('usuario_id')
+            tarea = get_object_or_404(Tarea, id=tarea_id)
+            usuario = get_object_or_404(Usuario, id=usuario_id)
+
+            # Asignar el nuevo usuario a la tarea
+            tarea.usuario = usuario
+            tarea.save()
+
+            return JsonResponse({'message': 'Asignación modificada exitosamente.'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)

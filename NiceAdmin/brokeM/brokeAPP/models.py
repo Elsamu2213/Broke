@@ -46,21 +46,26 @@ class Factura(models.Model):
     fecha = models.DateField()
     total = models.DecimalField(max_digits=10, decimal_places=2)
     pagada = models.BooleanField(default=False)
-
 class Tarea(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    descripcion = models.TextField()
-    fecha_asignacion = models.DateTimeField(auto_now_add=True)  # Equivalente a TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    fecha_vencimiento = models.DateField(null=True, blank=True)
-    estado = models.CharField(
-        max_length=50,
-        default='Pendiente',
-        choices=[
-            ('Pendiente', 'Pendiente'),
-            ('En Progreso', 'En Progreso'),
-            ('Completada', 'Completada'),
-        ]
-    )
+    descripcion = models.CharField(max_length=255)
+    fecha_asignacion = models.DateTimeField(auto_now_add=True)
+    fecha_vencimiento = models.DateTimeField(null=True, blank=True)
+    direccion = models.CharField(max_length=255, default="Dirección pendiente")
+    actividad = models.CharField(max_length=50, choices=[
+        ('Anclaje', 'Anclaje'),
+        ('Configuración', 'Configuración'),
+        ('Fibra', 'Fibra')
+    ], default='Anclaje')
+    usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)  # Campo para almacenar el usuario asignado
+
+    def __str__(self):
+        return f"Tarea {self.id}: {self.descripcion}"
+
+    # Agrega una propiedad para saber si la tarea está asignada
+    @property
+    def asignada(self):
+        return self.usuario is not None
+
 
 class MensajeWhatsApp(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)

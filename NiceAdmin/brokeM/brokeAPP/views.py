@@ -18,6 +18,26 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 
+#para corroborar los usuarios______________________________________inicio
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
+
+#para corroborar los usuarios______________________________________end
+
+from .decorators import admin_required
+
+
+
+from django.contrib.auth import login  # Importa la función login de Django
+
+
+from django.contrib.auth import login as auth_login  # Renombrar la función de inicio de sesión de Django
+
+
+
+
+
 def index(request):
     return render(request, 'brokeAPP/index.html')
 
@@ -25,7 +45,7 @@ def index(request):
 def asignar_view(request):
     return render(request, 'brokeapp1/asignar.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
-
+@admin_required
 def tablas_view(request):
     return render(request, 'brokeapp1/tablas.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
@@ -44,6 +64,9 @@ def Registrar_view(request):
 
 def Correo_view(request):
     return render(request, 'brokeapp1/Correo.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+
+def empleados(request):
+    return render(request, 'brokeapp1/empleadosPrueba.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 
 
@@ -173,7 +196,6 @@ def asignar_tarea(request, tarea_id):
 #tareas ya asignadas________________________________________________________
 
 
-
 def modificar_asignacion(request, tarea_id):
     if request.method == 'POST':
         try:
@@ -189,3 +211,71 @@ def modificar_asignacion(request, tarea_id):
             return JsonResponse({'message': 'Asignación modificada exitosamente.'}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+#para verificar usuarios Administrador_______________________________________
+
+
+
+
+
+
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Intentar obtener el usuario a partir del correo electrónico
+        try:
+            usuario = Usuario.objects.get(email=email)
+
+            # Verificar si la contraseña coincide (considera usar un método de hash)
+            if usuario.contrasena == password:
+                # Verifica si el usuario es un administrador
+                if usuario.rol == 'Admin':
+                    # Almacena el ID del usuario en la sesión
+                    request.session['user_id'] = usuario.id  
+                    return redirect('dashboardA')  # Redirige al panel de administrador
+                else:
+                    # Si el usuario es un empleado, muestra un error
+                    messages.error(request, 'No tienes acceso a la parte de administración.')
+                    return redirect('loginUser')  # Redirige al login de empleados
+            else:
+                messages.error(request, 'Credenciales inválidas.')
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Credenciales inválidas.')
+
+    return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
+
+
+
+#para verificar usuarios empleado_______________________________________
+
+def login_employee_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Intentar obtener el usuario a partir del correo electrónico
+        try:
+            usuario = Usuario.objects.get(email=email)
+
+            # Verificar si la contraseña coincide (considera usar un método de hash)
+            if usuario.contrasena == password:
+                # Verifica si el usuario es un empleado
+                if usuario.rol == 'Empleado':
+                    # Almacena el ID del usuario en la sesión
+                    request.session['user_id'] = usuario.id  
+                    return redirect('empleadosPrueba')  # Redirige al panel de empleados
+                else:
+                    # Si el usuario es un administrador, muestra un error
+                    messages.error(request, 'No tienes acceso a la parte de empleados.')
+                    return redirect('home')  # Redirige al login de administradores
+            else:
+                messages.error(request, 'Credenciales inválidas.')
+        except Usuario.DoesNotExist:
+            messages.error(request, 'Credenciales inválidas.')
+
+    return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
+
+

@@ -14,13 +14,12 @@ urlpatterns = [
     path('Registrar/', views.Registrar_view, name='Registrar'),  # Aquí defines una ruta para tu vista de perfil
     path('Correo/', views.Correo_view, name='Correo'),  # Aquí defines una ruta para tu vista de perfil
     path('crear_usuario/', views.crear_usuario, name='crear_usuario'),  # Aquí defines una ruta para tu vista de perfil
+    path('empleadosPrueba/', views.empleados, name='empleadosPrueba'),  # Aquí defines una ruta para tu vista de perfil
     
     
     path('usuarios/', views.lista_usuarios, name='lista_usuarios'),
     path('editar_usuario/<int:id>/', views.editar_usuario, name='editar_usuario'),
     path('borrar_usuario/<int:id>/', views.borrar_usuario, name='borrar_usuario'),
-
-    
 
     
     
@@ -32,5 +31,12 @@ urlpatterns = [
 #tareas ya asignadas____________________________
 
     path('modificar_asignacion/<int:tarea_id>/', views.modificar_asignacion, name='modificar_asignacion'),  # Asegúrate de esta línea
+
+#elogin a usuarios_______________________________
+
+    path('login/', views.login_view, name='login'),
+    path('loginE/', views.login_employee_view, name='loginE'),
+    
+
 
 ]

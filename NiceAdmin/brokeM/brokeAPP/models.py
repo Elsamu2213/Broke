@@ -1,20 +1,21 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class Usuario(models.Model):
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    telefono = models.CharField(max_length=15, blank=True)
+# Si necesitas agregar más campos, puedes extender el modelo de usuario de Django
+class UsuarioCustomizado(AbstractUser):
+    telefono = models.CharField(max_length=15, blank=True ,unique=True)
     rol = models.CharField(
         max_length=10,
         choices=[('Admin', 'Admin'), ('Empleado', 'Empleado')],
         default='Empleado'
     )
-    contrasena = models.CharField(max_length=255)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)  # Equivalente a TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+        return f"{self.first_name} {self.last_name}"  # El modelo de Django usa `first_name` y `last_name` en lugar de `nombre` y `apellido`.
+    
+    email = models.EmailField(unique=True)
+
+# Otras tablas como Cliente, Cotizacion, Factura, Tarea, etc.
 
 class Cliente(models.Model):
     nombre_empresa = models.CharField(max_length=100)
@@ -27,7 +28,7 @@ class Cliente(models.Model):
         return self.nombre_empresa
 
 class Cotizacion(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)  # Relación con el nuevo modelo
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     fecha = models.DateField()
     total = models.DecimalField(max_digits=10, decimal_places=2)
@@ -46,6 +47,7 @@ class Factura(models.Model):
     fecha = models.DateField()
     total = models.DecimalField(max_digits=10, decimal_places=2)
     pagada = models.BooleanField(default=False)
+
 class Tarea(models.Model):
     descripcion = models.CharField(max_length=255)
     fecha_asignacion = models.DateTimeField(auto_now_add=True)
@@ -56,22 +58,20 @@ class Tarea(models.Model):
         ('Configuración', 'Configuración'),
         ('Fibra', 'Fibra')
     ], default='Anclaje')
-    usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)  # Campo para almacenar el usuario asignado
+    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True)  # Usar el nuevo modelo
 
     def __str__(self):
         return f"Tarea {self.id}: {self.descripcion}"
 
-    # Agrega una propiedad para saber si la tarea está asignada
     @property
     def asignada(self):
         return self.usuario is not None
 
-
 class MensajeWhatsApp(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)
     mensaje = models.TextField()
     imagen_url = models.CharField(max_length=255, blank=True)
-    fecha_envio = models.DateTimeField(auto_now_add=True)  # Equivalente a TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_envio = models.DateTimeField(auto_now_add=True)
 
 class Notificacion(models.Model):
     tipo = models.CharField(
@@ -79,13 +79,13 @@ class Notificacion(models.Model):
         choices=[('Factura', 'Factura'), ('Tarea', 'Tarea'), ('Mensaje', 'Mensaje')],
         null=False
     )
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)
     descripcion = models.TextField()
-    fecha = models.DateTimeField(auto_now_add=True)  # Equivalente a TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha = models.DateTimeField(auto_now_add=True)
     leida = models.BooleanField(default=False)
 
 class Salario(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)
     tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE)
     lugar_trabajo = models.CharField(max_length=100)
     viaticos = models.DecimalField(max_digits=10, decimal_places=2)

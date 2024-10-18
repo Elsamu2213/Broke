@@ -393,12 +393,13 @@
               <td>{{ tarea.direccion }}</td>
               <td>{{ tarea.actividad }}</td>
               <td>
-                  <select id="usuario-select-{{ tarea.id }}" class="form-select">
-                      <option value="">Seleccione un usuario</option>
-                      {% for usuario in usuarios %}
-                          <option value="{{ usuario.id }}">{{ usuario.nombre }} {{ usuario.apellido }}</option>
-                      {% endfor %}
-                  </select>
+                <select id="usuario-select-{{ tarea.id }}" class="form-select" name="usuario_id" required>
+                  <option value="">Seleccione un usuario</option>
+                  {% for usuario in usuarios %}
+                      <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
+                  {% endfor %}
+              </select>
+              
               </td>
               <td>
                   <button class="btn btn-primary" onclick="asignarTarea({{ tarea.id }})">Asignar</button>
@@ -428,55 +429,64 @@
 
               <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                 <!---------------- Tareas asignadas----------------- -->
-               
+            
+                <div class="card-body mt-12">
+                    <div class="container mt-12">
+            
+                        <div class="table-responsive mt-4">
+                            <h2></h2>
+                            <div class="mb-3">
+                                <input type="text" id="searchInput1" class="form-control" placeholder="Buscar tareas...">
+                            </div>
+                            <table class="table table-bordered mt-12">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha de Asignación</th>
+                                        <th>Dirección</th>
+                                        <th>Actividad</th>
+                                        <th>Asignado a</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tareaAsignadaTableBody">
+                                    {% for tarea in tareas_asignadas %}
+                                    <tr>
+                                        <td>{{ tarea.id }}</td>
+                                        <td>{{ tarea.descripcion }}</td>
+                                        <td>{{ tarea.fecha_asignacion }}</td>
+                                        <td>{{ tarea.direccion }}</td>
+                                        <td>{{ tarea.actividad }}</td>
+                                        <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
+                                        <td>
+                                            <select id="usuario-modificar-{{ tarea.id }}" class="form-select" name="usuario_id" required>
+                                                <option value="">Seleccione un usuario</option>
+                                                {% for usuario in usuarios %}
+                                                <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button class="btn btn-warning mt-2" onclick="modificarAsignacion({{ tarea.id }})">Modificar</button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7">No hay tareas asignadas.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
               
-              <!-- Tabla de Tareas Asignadas -->
-              <table class="table table-bordered mt-12">
-                  <thead>
-                      <tr>
-                          <th>ID</th>
-                          <th>Descripción</th>
-                          <th>Fecha de Asignación</th>
-                          <th>Dirección</th>
-                          <th>Actividad</th>
-                          <th>Asignado a</th>
-                          <th>Acciones</th> <!-- Columna para modificar el usuario -->
-                      </tr>
-                  </thead>
-                  <tbody id="tareaAsignadaTableBody">
-                      {% for tarea in tareas_asignadas %}
-                      <tr>
-                          <td>{{ tarea.id }}</td>
-                          <td>{{ tarea.descripcion }}</td>
-                          <td>{{ tarea.fecha_asignacion }}</td>
-                          <td>{{ tarea.direccion }}</td>
-                          <td>{{ tarea.actividad }}</td>
-                          <td>{{ tarea.usuario.nombre }} {{ tarea.usuario.apellido }}</td>
-                          <td>
-                            <select id="usuario-modificar-{{ tarea.id }}" class="form-select">
-                                <option value="{{ tarea.usuario.id }}">{{ tarea.usuario.nombre }} {{ tarea.usuario.apellido }}</option>
-                                {% for usuario in usuarios %}
-                                    <option value="{{ usuario.id }}">{{ usuario.nombre }} {{ usuario.apellido }}</option>
-                                {% endfor %}
-                            </select>
-                            <button class="btn btn-warning mt-2" onclick="modificarAsignacion({{ tarea.id }})">Modificar</button>
-                        </td>
-                      
-                      </tr>
-                      {% empty %}
-                      <tr>
-                          <td colspan="7">No hay tareas asignadas.</td>
-                      </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
-              
-              </div>
               <!-- End Bordered Tabs -->
 
             </div>
-          
-         
+          </div>
+            
           </div>
           <!--final de card body 1-->
           

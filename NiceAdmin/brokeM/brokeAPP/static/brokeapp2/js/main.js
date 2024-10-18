@@ -8,6 +8,42 @@
 // Función para obtener el token CSRF desde el meta tag
 
 
+//filtrar en busqueda______________________________________________
+function filterTable() {
+  // Obtener el valor del input de búsqueda
+  var input = document.getElementById('searchInput');
+  var filter = input.value.toLowerCase(); // Convertir a minúsculas
+  var table = document.getElementById('tareaAsignadaTableBody');
+  var tr = table.getElementsByTagName('tr');
+
+  // Iterar sobre las filas de la tabla
+  for (var i = 0; i < tr.length; i++) {
+      var td = tr[i].getElementsByTagName('td');
+      var found = false;
+
+      // Iterar sobre las celdas en cada fila
+      for (var j = 0; j < td.length; j++) {
+          if (td[j]) {
+              var txtValue = td[j].textContent || td[j].innerText;
+              if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                  found = true; // Si se encuentra el texto en alguna celda
+                  break;
+              }
+          }
+      }
+
+      // Mostrar o ocultar la fila según el resultado de búsqueda
+      tr[i].style.display = found ? "" : "none";
+  }
+}
+
+
+
+
+
+
+
+//asignar tarea____________________________________________
 
 function asignarTarea(tareaId) {
   const usuarioId = document.getElementById(`usuario-select-${tareaId}`).value;
@@ -204,6 +240,34 @@ function getCookie(name) {
       });
   });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+  const searchInput1 = document.getElementById('searchInput1');
+  const tareaTableBody = document.getElementById('tareaAsignadaTableBody'); // Corregido el ID
+
+  searchInput1.addEventListener('keyup', function() {
+      const filter = searchInput1.value.toLowerCase();
+      const rows = tareaTableBody.getElementsByTagName('tr');
+
+      Array.from(rows).forEach(row => {
+          const cells = row.getElementsByTagName('td');
+          let match = false;
+
+          for (let i = 0; i < cells.length; i++) {
+              if (cells[i].innerText.toLowerCase().includes(filter)) {
+                  match = true;
+                  break;
+              }
+          }
+
+          row.style.display = match ? '' : 'none'; // Muestra u oculta la fila
+      });
+  });
+});
+
+
+
+
 
 
 

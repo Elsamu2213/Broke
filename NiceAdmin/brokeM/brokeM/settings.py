@@ -137,3 +137,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Añadir esta línea para que Django busque archivos estáticos en la carpeta 'static'
 STATICFILES_DIRS = [BASE_DIR / 'brokeAPP/static']
+
+AUTH_USER_MODEL = 'brokeAPP.UsuarioCustomizado'

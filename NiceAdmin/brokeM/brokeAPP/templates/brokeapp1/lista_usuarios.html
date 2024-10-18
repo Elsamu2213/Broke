@@ -366,6 +366,7 @@
               <th>Email</th>
               <th>Teléfono</th>
               <th>Rol</th>
+              <th>password</th>
               <th>Acciones</th>
           </tr>
       </thead>
@@ -373,11 +374,12 @@
           {% for usuario in usuarios %}
           <tr>
               <td>{{ usuario.id }}</td>
-              <td>{{ usuario.nombre }}</td>
-              <td>{{ usuario.apellido }}</td>
+              <td>{{ usuario.first_name }}</td>
+              <td>{{ usuario.last_name }}</td>
               <td>{{ usuario.email }}</td>
               <td>{{ usuario.telefono }}</td>
               <td>{{ usuario.rol }}</td>
+              <td>{{ usuario.password }}</td>
               <td>
                   <!-- Botón para editar -->
                   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ usuario.id }}">Editar</button>
@@ -399,33 +401,37 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                          <form method="POST" action="{% url 'editar_usuario' usuario.id %}">
-                              {% csrf_token %}
-                              <div class="mb-3">
-                                  <label for="nombre" class="form-label">Nombre</label>
-                                  <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.nombre }}" required>
-                              </div>
-                              <div class="mb-3">
-                                  <label for="apellido" class="form-label">Apellido</label>
-                                  <input type="text" class="form-control" id="apellido" name="apellido" value="{{ usuario.apellido }}" required>
-                              </div>
-                              <div class="mb-3">
-                                  <label for="email" class="form-label">Email</label>
-                                  <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
-                              </div>
-                              <div class="mb-3">
-                                  <label for="telefono" class="form-label">Teléfono</label>
-                                  <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}">
-                              </div>
-                              <div class="mb-3">
-                                  <label for="rol" class="form-label">Rol</label>
-                                  <select class="form-control" id="rol" name="rol" required>
-                                      <option value="Admin" {% if usuario.rol == 'Admin' %}selected{% endif %}>Admin</option>
-                                      <option value="Empleado" {% if usuario.rol == 'Empleado' %}selected{% endif %}>Empleado</option>
-                                  </select>
-                              </div>
-                              <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                          </form>
+                        <form method="POST" action="{% url 'editar_usuario' usuario.id %}">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                              <label for="nombre" class="form-label">Nombre</label>
+                              <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.first_name }}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="apellido" class="form-label">Apellido</label>
+                              <input type="text" class="form-control" id="apellido" name="apellido" value="{{ usuario.last_name }}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="email" class="form-label">Email</label>
+                              <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="telefono" class="form-label">Teléfono</label>
+                              <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}">
+                          </div>
+                          <div class="mb-3">
+                              <label for="password" class="form-label">Contraseña</label>
+                              <input type="text" class="form-control" id="password" name="password" value="{{ usuario.password }}">
+                          </div>
+                          <div class="mb-3">
+                              <label for="rol" class="form-label">Rol</label>
+                              <select class="form-control" id="rol" name="rol" required>
+                                  <option value="Admin" {% if usuario.rol == 'Admin' %}selected{% endif %}>Admin</option>
+                                  <option value="Empleado" {% if usuario.rol == 'Empleado' %}selected{% endif %}>Empleado</option>
+                              </select>
+                          </div>
+                          <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                      </form>
                       </div>
                   </div>
               </div>

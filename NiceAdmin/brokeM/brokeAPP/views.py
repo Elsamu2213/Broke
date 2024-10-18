@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .models import Usuario
 from django.shortcuts import render, get_object_or_404
 
 
@@ -12,6 +11,7 @@ from django.contrib import messages
 from .models import Tarea
 from .forms import TareaForm
 from .models import Tarea
+from .models import UsuarioCustomizado 
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -33,7 +33,10 @@ from django.contrib.auth import login  # Importa la función login de Django
 
 
 from django.contrib.auth import login as auth_login  # Renombrar la función de inicio de sesión de Django
+from django.contrib.auth import get_user_model
+Usuario = get_user_model()  # Obtiene el modelo de usuario actual
 
+from django.contrib.auth import authenticate, login
 
 
 
@@ -76,7 +79,9 @@ def empleados(request):
 
 
 # registro de usuarios 
-
+import re
+from django.db import IntegrityError
+from django.contrib import messages
 
 def crear_usuario(request):
     if request.method == 'POST':
@@ -87,24 +92,40 @@ def crear_usuario(request):
         rol = request.POST.get('rol', 'Empleado')
         contrasena = request.POST.get('contrasena')
 
-        usuario = Usuario(
-            nombre=nombre,
-            apellido=apellido,
+        # Validar que el nombre y apellido solo contengan letras
+        if not re.match("^[A-Za-záéíóúÁÉÍÓÚÑñ ]+$", nombre):
+            messages.error(request, 'El nombre solo puede contener letras.')
+            return render(request, 'brokeapp1/Registrar.html')  # Renderiza la plantilla nuevamente
+
+        if not re.match("^[A-Za-záéíóúÁÉÍÓÚÑñ ]+$", apellido):
+            messages.error(request, 'El apellido solo puede contener letras.')
+            return render(request, 'brokeapp1/Registrar.html')  # Renderiza la plantilla nuevamente
+
+        # Genera un username a partir del nombre y apellido
+        username = f"{nombre}.{apellido}".lower()
+
+        # Crea una instancia del usuario personalizado
+        usuario = UsuarioCustomizado(
+            username=username,
+            first_name=nombre,
+            last_name=apellido,
             email=email,
             telefono=telefono,
-            rol=rol,
-            contrasena=contrasena
+            rol=rol
         )
-
+        
+        # Guarda el usuario en la base de datos
         try:
+            usuario.set_password(contrasena)  # Establece la contraseña de manera segura
             usuario.save()
             messages.success(request, 'Usuario registrado exitosamente.')
+            #return redirect('nombre_de_la_vista_donde_redirigir')  # Cambia esto por la vista correspondiente
+        except IntegrityError:
+            messages.error(request, 'El número de teléfono ya está en uso. Por favor, ingrese uno diferente.')
         except Exception as e:
-            messages.error(request, f'Error al registrar usuario:')
+            messages.error(request, f'Error al registrar usuario: {str(e)}')
 
     return render(request, 'brokeapp1/Registrar.html')  # Renderiza la plantilla con los mensajes
-
-# registro de usuarios end------------------------------------
 
 
 
@@ -113,8 +134,10 @@ def lista_usuarios(request):
     usuarios = Usuario.objects.all()  # Obtén todos los usuarios
     return render(request, 'brokeapp1/lista_usuarios.html', {'usuarios': usuarios})
 
+
 def editar_usuario(request, id):
-    usuario = get_object_or_404(Usuario, id=id)
+    UsuarioCustomizado = get_user_model()
+    usuario = get_object_or_404(UsuarioCustomizado, id=id)
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -122,12 +145,18 @@ def editar_usuario(request, id):
         email = request.POST.get('email')
         telefono = request.POST.get('telefono')
         rol = request.POST.get('rol')
+        password = request.POST.get('password')  # Se toma la contraseña del formulario
 
-        usuario.nombre = nombre
-        usuario.apellido = apellido
+        # Actualizar los campos del usuario
+        usuario.first_name = nombre
+        usuario.last_name = apellido
         usuario.email = email
         usuario.telefono = telefono
         usuario.rol = rol
+
+        # Si se introdujo una nueva contraseña, actualízala directamente
+        if password:
+            usuario.password = password  # Guardar la contraseña tal cual (texto plano)
 
         try:
             usuario.save()
@@ -139,10 +168,9 @@ def editar_usuario(request, id):
 
     return render(request, 'brokeapp1/editar_usuario.html', {'usuario': usuario})
 
-    
-
 def borrar_usuario(request, id):
-    usuario = get_object_or_404(Usuario, id=id)
+    UsuarioCustomizado = get_user_model()
+    usuario = get_object_or_404(UsuarioCustomizado, id=id)
     try:
         usuario.delete()
         messages.success(request, 'Usuario borrado correctamente.')
@@ -181,14 +209,14 @@ def asignar_tarea(request, tarea_id):
 
         try:
             tarea = Tarea.objects.get(id=tarea_id)
-            usuario = Usuario.objects.get(id=usuario_id)
+            usuario = UsuarioCustomizado.objects.get(id=usuario_id)  # Cambia aquí para usar UsuarioCustomizado
             tarea.usuario = usuario  # Asignar el usuario a la tarea
             tarea.save()  # Guardar los cambios
 
             return JsonResponse({'success': True})
         except Tarea.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Tarea no encontrada'})
-        except Usuario.DoesNotExist:
+        except UsuarioCustomizado.DoesNotExist:  # Cambia aquí para usar UsuarioCustomizado
             return JsonResponse({'success': False, 'error': 'Usuario no encontrado'})
 
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
@@ -219,63 +247,43 @@ def modificar_asignacion(request, tarea_id):
 
 
 
-
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Intentar obtener el usuario a partir del correo electrónico
-        try:
-            usuario = Usuario.objects.get(email=email)
+        # Autenticar al usuario
+        usuario = authenticate(request, username=email, password=password)
 
-            # Verificar si la contraseña coincide (considera usar un método de hash)
-            if usuario.contrasena == password:
-                # Verifica si el usuario es un administrador
-                if usuario.rol == 'Admin':
-                    # Almacena el ID del usuario en la sesión
-                    request.session['user_id'] = usuario.id  
-                    return redirect('dashboardA')  # Redirige al panel de administrador
-                else:
-                    # Si el usuario es un empleado, muestra un error
-                    messages.error(request, 'No tienes acceso a la parte de administración.')
-                    return redirect('loginUser')  # Redirige al login de empleados
+        if usuario is not None:
+            login(request, usuario)  # Inicia sesión usando el sistema de autenticación de Django
+            if usuario.rol == 'Admin':
+                return redirect('dashboardA')  # Redirige al panel de administrador
             else:
-                messages.error(request, 'Credenciales inválidas.')
-        except Usuario.DoesNotExist:
+                messages.error(request, 'No tienes acceso a la parte de administración.')
+                return redirect('loginUser')  # Redirige al login de empleados
+        else:
             messages.error(request, 'Credenciales inválidas.')
 
     return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
 
-
-
-#para verificar usuarios empleado_______________________________________
 
 def login_employee_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Intentar obtener el usuario a partir del correo electrónico
-        try:
-            usuario = Usuario.objects.get(email=email)
+        # Autenticar al usuario
+        usuario = authenticate(request, username=email, password=password)
 
-            # Verificar si la contraseña coincide (considera usar un método de hash)
-            if usuario.contrasena == password:
-                # Verifica si el usuario es un empleado
-                if usuario.rol == 'Empleado':
-                    # Almacena el ID del usuario en la sesión
-                    request.session['user_id'] = usuario.id  
-                    return redirect('empleadosPrueba')  # Redirige al panel de empleados
-                else:
-                    # Si el usuario es un administrador, muestra un error
-                    messages.error(request, 'No tienes acceso a la parte de empleados.')
-                    return redirect('home')  # Redirige al login de administradores
+        if usuario is not None:
+            login(request, usuario)  # Inicia sesión usando el sistema de autenticación de Django
+            if usuario.rol == 'Empleado':
+                return redirect('empleadosPrueba')  # Redirige al panel de empleados
             else:
-                messages.error(request, 'Credenciales inválidas.')
-        except Usuario.DoesNotExist:
+                messages.error(request, 'No tienes acceso a la parte de empleados.')
+                return redirect('home')  # Redirige al login de administradores
+        else:
             messages.error(request, 'Credenciales inválidas.')
 
     return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
-
-

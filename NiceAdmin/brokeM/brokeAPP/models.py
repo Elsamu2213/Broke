@@ -3,17 +3,20 @@ from django.db import models
 
 # Si necesitas agregar más campos, puedes extender el modelo de usuario de Django
 class UsuarioCustomizado(AbstractUser):
-    telefono = models.CharField(max_length=15, blank=True ,unique=True)
+    telefono = models.CharField(max_length=15, blank=True, unique=True)
     rol = models.CharField(
         max_length=10,
         choices=[('Admin', 'Admin'), ('Empleado', 'Empleado')],
         default='Empleado'
     )
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = 'email'  # Cambia el campo para la autenticación
+    REQUIRED_FIELDS = []  # Puedes dejarlo vacío si no tienes campos requeridos adicionales
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"  # El modelo de Django usa `first_name` y `last_name` en lugar de `nombre` y `apellido`.
-    
-    email = models.EmailField(unique=True)
+        return f"{self.first_name} {self.last_name}"
+
 
 # Otras tablas como Cliente, Cotizacion, Factura, Tarea, etc.
 

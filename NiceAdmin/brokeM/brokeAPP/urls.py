@@ -37,6 +37,9 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('loginE/', views.login_employee_view, name='loginE'),
     
+#cerrar sesion_______________________________________
+
+    path('logout/', views.logout_view, name='logout'),
 
 
 ]

@@ -1,19 +1,21 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
+from django.contrib import messages
 
 def admin_required(view_func):
-    def wrapper(request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.rol == 'Administrador':  # Asegúrate de que el campo 'rol' sea correcto
-            return view_func(request, *args, **kwargs)
-        else:
-            raise PermissionDenied  # O puedes redirigirlo a otra página con: return redirect('ruta_no_autorizado')
-    return wrapper
-
-
-def usuario_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
-        if 'user_id' in request.session:  # Verifica si el usuario está autenticado
+        if request.user.is_authenticated and request.user.rol == 'Admin':
             return view_func(request, *args, **kwargs)
         else:
-            return HttpResponseForbidden("No tienes permiso para acceder a esta página.")
+            messages.error(request, 'Acceso denegado. Debes ser administrador para acceder a esta página.')
+            return redirect('home')  # Redirige al login o a otra vista si no es admin
+    return _wrapped_view
+
+def empleado_required(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.rol == 'Empleado':
+            return view_func(request, *args, **kwargs)
+        else:
+            messages.error(request, 'Acceso denegado. Solo los empleados pueden acceder a esta página.')
+            return redirect('home')  # Redirige al login o a otra vista si no es empleado
     return _wrapped_view

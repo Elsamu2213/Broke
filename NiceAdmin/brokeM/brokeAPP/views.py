@@ -38,13 +38,28 @@ Usuario = get_user_model()  # Obtiene el modelo de usuario actual
 
 from django.contrib.auth import authenticate, login
 
+import re
+
+from django.db import IntegrityError
+
+from django.contrib.auth import update_session_auth_hash
+
+
+from django.contrib.auth import logout  
+
+
+
+
+
+
+
 
 
 
 def index(request):
     return render(request, 'brokeAPP/index.html')
 
-
+@admin_required
 def asignar_view(request):
     return render(request, 'brokeapp1/asignar.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
@@ -52,7 +67,7 @@ def asignar_view(request):
 def tablas_view(request):
     return render(request, 'brokeapp1/tablas.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
-
+@admin_required
 def dashboardA_view(request):
     return render(request, 'brokeapp1/dashboardA.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
@@ -61,12 +76,13 @@ def loginAdmin_view(request):
     
 def loginUser_view(request):
     return render(request, 'brokeapp1/loginUser.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
-
+@admin_required
 def Registrar_view(request):
     return render(request, 'brokeapp1/Registrar.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
-
+@admin_required
 def Correo_view(request):
     return render(request, 'brokeapp1/Correo.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+
 
 def empleados(request):
     return render(request, 'brokeapp1/empleadosPrueba.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
@@ -79,9 +95,7 @@ def empleados(request):
 
 
 # registro de usuarios 
-import re
-from django.db import IntegrityError
-from django.contrib import messages
+
 
 def crear_usuario(request):
     if request.method == 'POST':
@@ -91,15 +105,21 @@ def crear_usuario(request):
         telefono = request.POST.get('telefono', '')
         rol = request.POST.get('rol', 'Empleado')
         contrasena = request.POST.get('contrasena')
+        confirmar_contrasena = request.POST.get('confirmar_contrasena')
+
+        # Validar que las contraseñas coincidan
+        if contrasena != confirmar_contrasena:
+            messages.error(request, 'Las contraseñas no coinciden.')
+            return render(request, 'brokeapp1/Registrar.html')
 
         # Validar que el nombre y apellido solo contengan letras
         if not re.match("^[A-Za-záéíóúÁÉÍÓÚÑñ ]+$", nombre):
             messages.error(request, 'El nombre solo puede contener letras.')
-            return render(request, 'brokeapp1/Registrar.html')  # Renderiza la plantilla nuevamente
+            return render(request, 'brokeapp1/Registrar.html')
 
         if not re.match("^[A-Za-záéíóúÁÉÍÓÚÑñ ]+$", apellido):
             messages.error(request, 'El apellido solo puede contener letras.')
-            return render(request, 'brokeapp1/Registrar.html')  # Renderiza la plantilla nuevamente
+            return render(request, 'brokeapp1/Registrar.html')
 
         # Genera un username a partir del nombre y apellido
         username = f"{nombre}.{apellido}".lower()
@@ -113,59 +133,63 @@ def crear_usuario(request):
             telefono=telefono,
             rol=rol
         )
-        
+
         # Guarda el usuario en la base de datos
         try:
             usuario.set_password(contrasena)  # Establece la contraseña de manera segura
             usuario.save()
             messages.success(request, 'Usuario registrado exitosamente.')
-            #return redirect('nombre_de_la_vista_donde_redirigir')  # Cambia esto por la vista correspondiente
+            return redirect('lista_usuarios')  # Redirige a la vista correspondiente
         except IntegrityError:
             messages.error(request, 'El número de teléfono ya está en uso. Por favor, ingrese uno diferente.')
         except Exception as e:
             messages.error(request, f'Error al registrar usuario: {str(e)}')
 
-    return render(request, 'brokeapp1/Registrar.html')  # Renderiza la plantilla con los mensajes
-
-
+    return render(request, 'brokeapp1/Registrar.html')
 
 #editar y borrar_____________________________________________________________
+@admin_required
 def lista_usuarios(request):
     usuarios = Usuario.objects.all()  # Obtén todos los usuarios
     return render(request, 'brokeapp1/lista_usuarios.html', {'usuarios': usuarios})
 
 
 def editar_usuario(request, id):
-    UsuarioCustomizado = get_user_model()
-    usuario = get_object_or_404(UsuarioCustomizado, id=id)
-
+    usuario = UsuarioCustomizado.objects.get(id=id)
+    
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellido = request.POST.get('apellido')
         email = request.POST.get('email')
         telefono = request.POST.get('telefono')
         rol = request.POST.get('rol')
-        password = request.POST.get('password')  # Se toma la contraseña del formulario
+        password = request.POST.get('password')
+        confirmar_password = request.POST.get('confirmar_password')
 
-        # Actualizar los campos del usuario
+        # Actualiza los campos básicos
         usuario.first_name = nombre
         usuario.last_name = apellido
         usuario.email = email
         usuario.telefono = telefono
         usuario.rol = rol
-
-        # Si se introdujo una nueva contraseña, actualízala directamente
+        
+        # Si se ha proporcionado una nueva contraseña
         if password:
-            usuario.password = password  # Guardar la contraseña tal cual (texto plano)
+            if password == confirmar_password:
+                usuario.set_password(password)  # Establece la nueva contraseña
+                update_session_auth_hash(request, usuario)  # Actualiza la sesión para que no se cierre al cambiar la contraseña
+                messages.success(request, 'Contraseña actualizada correctamente.')
+            else:
+                messages.error(request, 'Las contraseñas no coinciden.')
+                return render(request, 'brokeapp1/editar_usuario.html', {'usuario': usuario})
 
         try:
-            usuario.save()
+            usuario.save()  # Guarda los cambios en el usuario
             messages.success(request, 'Usuario actualizado correctamente.')
+            return redirect('lista_usuarios')  # Cambia esta redirección según sea necesario
         except Exception as e:
             messages.error(request, f'Error al actualizar usuario: {str(e)}')
-
-        return redirect('lista_usuarios')
-
+    
     return render(request, 'brokeapp1/editar_usuario.html', {'usuario': usuario})
 
 def borrar_usuario(request, id):
@@ -186,7 +210,7 @@ def borrar_usuario(request, id):
 
 
 # Vista para listar las tareas
-
+@admin_required
 def listar_tareas(request):
     tareas_no_asignadas = Tarea.objects.filter(usuario__isnull=True)  # Tareas no asignadas
     tareas_asignadas = Tarea.objects.filter(usuario__isnull=False)  # Tareas asignadas
@@ -197,6 +221,7 @@ def listar_tareas(request):
         'tareas_asignadas': tareas_asignadas,
         'usuarios': usuarios
     })
+
 
 @csrf_exempt
 def asignar_tarea(request, tarea_id):
@@ -246,13 +271,12 @@ def modificar_asignacion(request, tarea_id):
 
 
 
-
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Autenticar al usuario
+        # Autenticar al usuario con su email
         usuario = authenticate(request, username=email, password=password)
 
         if usuario is not None:
@@ -260,12 +284,13 @@ def login_view(request):
             if usuario.rol == 'Admin':
                 return redirect('dashboardA')  # Redirige al panel de administrador
             else:
-                messages.error(request, 'No tienes acceso a la parte de administración.')
-                return redirect('loginUser')  # Redirige al login de empleados
+                return redirect('empleadosPrueba')  # Redirige al panel de empleados
         else:
             messages.error(request, 'Credenciales inválidas.')
-
+    
     return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
+
+
 
 
 def login_employee_view(request):
@@ -287,3 +312,15 @@ def login_employee_view(request):
             messages.error(request, 'Credenciales inválidas.')
 
     return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
+
+
+
+
+#cerrar sesion_________________________________________________________________________________________________________
+
+def logout_view(request):
+    logout(request)  # Cierra la sesión del usuario
+    return redirect('home')  # Redirige al login
+
+#decoradores _________________________________________________________________________________________________________
+

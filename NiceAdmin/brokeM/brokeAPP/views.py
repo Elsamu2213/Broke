@@ -48,6 +48,13 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import logout  
 
 
+#discord_____________________________
+import asyncio
+import discord
+from django.http import HttpResponse
+from django.conf import settings
+
+
 
 
 
@@ -86,6 +93,10 @@ def Correo_view(request):
 
 def empleados(request):
     return render(request, 'brokeapp1/empleadosPrueba.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+
+@admin_required
+def chatAdmin(request):
+    return render(request, 'brokeapp1/chatAdmin.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 
 
@@ -304,7 +315,7 @@ def login_employee_view(request):
         if usuario is not None:
             login(request, usuario)  # Inicia sesión usando el sistema de autenticación de Django
             if usuario.rol == 'Empleado':
-                return redirect('empleadosPrueba')  # Redirige al panel de empleados
+                return redirect('AccesoUs')  # Redirige al panel de empleados
             else:
                 messages.error(request, 'No tienes acceso a la parte de empleados.')
                 return redirect('home')  # Redirige al login de administradores
@@ -322,5 +333,38 @@ def logout_view(request):
     logout(request)  # Cierra la sesión del usuario
     return redirect('home')  # Redirige al login
 
-#decoradores _________________________________________________________________________________________________________
+#discord _________________________________________________________________________________________________________
+def AccesoUs_view(request):
+    return render(request, 'brokeapp1/AccesoUs.html')
 
+
+def Chat_view(request):
+    return render(request, 'brokeapp1/Chat.html')
+
+def PagoUsuario_view(request):
+    return render(request, 'brokeapp1/PagoUsuario.html')
+
+
+
+# Reemplaza 'your_token_here' con el token de tu bot
+TOKEN = 'MTI5ODU0MjUyNTkwODM4NTgxMw.GN504t.7M-B0owLgS2e7mlWbmC6Jzr4T53Vy7CVm1VxHU'
+
+# Reemplaza 'your_channel_id_here' con el ID del canal donde quieres enviar mensajes
+CHANNEL_ID = 1298417233290072087  # Asegúrate de que sea un entero
+
+async def enviar_mensaje_a_discord(mensaje):
+    client = discord.Client(intents=discord.Intents.default())
+    await client.login(TOKEN)
+    channel = await client.fetch_channel(CHANNEL_ID)
+    await channel.send(mensaje)
+    await client.close()
+
+def enviar_mensajeD(request):
+    if request.method == 'POST':
+        # Obtén el mensaje personalizado del formulario o request POST
+        mensaje_personalizado = request.POST.get('mensaje', 'Hola desde Django!')
+        # Envía el mensaje usando discord.py
+        asyncio.run(enviar_mensaje_a_discord(mensaje_personalizado))
+        return HttpResponse("Mensaje enviado a Discord!")
+    else:
+        return HttpResponse("Método no soportado.", status=405)

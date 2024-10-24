@@ -6,9 +6,15 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Correo</title>
+  <title>Sitios Asignados</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Favicons  samuel se la come -->
   <link href="{% static 'brokeapp2/img/logo1.png'%}" rel="icon">
@@ -27,6 +33,9 @@
   <link href="{% static 'brokeapp2/vendor/remixicon/remixicon.css'%}" rel="stylesheet">
   <link href="{% static 'brokeapp2/vendor/simple-datatables/style.css'%}" rel="stylesheet">
 
+  
+ <!-- Carga los estilos de Leaflet -->
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <!-- Template Main CSS File -->
   <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
   <script src="{% static 'brokeapp2/js/main.js' %}"></script>
@@ -47,11 +56,12 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
-        <img src="{% static 'brokeapp2/img/logo1.png'%}" alt="">
-        <span class="d-none d-lg-block">BROKMAKE</span>
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">NiceAdmin</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
+
     <div class="search-bar">
       <form class="search-form d-flex align-items-center" method="POST" action="#">
         <input type="text" name="query" placeholder="Search" title="Enter search keyword">
@@ -87,7 +97,7 @@
             <li class="notification-item">
               <i class="bi bi-exclamation-circle text-warning"></i>
               <div>
-                <h4 class="pepe1">Lorem Ipsum zzzzzz</h4>
+                <h4>Lorem Ipsum</h4>
                 <p>Quae dolorem earum veritatis oditseno</p>
                 <p>30 min. ago</p>
               </div>
@@ -161,7 +171,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="{% static 'brokeapp2/img/messages-1.jpg'%}" alt="" class="rounded-circle">
+                <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle">
                 <div>
                   <h4>Maria Hudson</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -175,7 +185,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="{% static 'brokeapp2/img/messages-2.jpg'%}" alt="" class="rounded-circle">
+                <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle">
                 <div>
                   <h4>Anna Nelson</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -189,7 +199,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="{% static 'brokeapp2/img/messages-3.jpg'%}" alt="" class="rounded-circle">
+                <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
                 <div>
                   <h4>David Muldon</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -208,132 +218,55 @@
           </ul><!-- End Messages Dropdown Items -->
 
         </li><!-- End Messages Nav -->
+          <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
 
-        <li class="nav-item dropdown pe-3">
-
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="{% static 'brokeapp2/img/profile-img.jpg'%}" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-          </a><!-- End Profile Iamge Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
+      <ul class="sidebar-nav" id="sidebar-nav">
+  
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="{% url 'AccesoUs' %}">
+                <i class="bi bi-envelope"></i>
+                <span>Principal</span>
               </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
+            </li><!-- End Contact Page Nav -->
+  
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'Chat_view' %}">
+            <i class="bi bi-envelope"></i>
+            <span>Mensaje</span>
+          </a>
+        </li><!-- End Contact Page Nav -->
+  
+  
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'PagoUsuario' %}">
+            <i class="bi bi-card-list"></i>
+            <span>Pago</span>
+          </a>
+        </li><!-- End Register Page Nav -->
 
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'ubicacion_view' %}">
+            <i class="bi bi-envelope"></i>
+            <span>Ubicacion-Asignacion</span>
+          </a>
+        </li><!-- End Contact Page Nav -->
 
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
-
-          </ul><!-- End Profile Dropdown Items -->
-        </li><!-- End Profile Nav -->
+  
+      </ul>
+    <!-- End Sidebar-->
+          </ul>
+      
+        </aside> 
+        <!-- End Profile Nav -->
 
       </ul>
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboardA' %}">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="" href="{% url 'asignar' %}">
-            <i class="bi bi-menu-button-wide"></i><span>Asignar</span><i class=""></i>
-        </a>
-    </li><!-- End Components Nav -->
-    
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle=".html" href="{% url 'tablas' %}">
-          <i class="bi bi-journal-text"></i><span>Empleados</span><i class=""></i>
-        </a>
-       
-      </li>
-      <!-- End Forms Nav -->
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Correo' %}">
-          <i class="bi bi-envelope"></i>
-          <span>Mensaje</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Registrar' %}">
-          <i class="bi bi-card-list"></i>
-          <span>Registro</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'lista_usuarios' %}">
-          <i class="bi bi-lock"></i>
-          <span>Listas usuarios</span>
-        </a>
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'chatAdmin' %}">
-            <i class="bi bi-chat"></i>
-            <span>Discord</span>
-          </a>
-        </li>
-      </li><!-- End Register Page Nav -->
-
-     
-    
-      
-
-    </ul>
-
-  </aside>
 
   <main id="main" class="main">
-
     <div class="pagetitle">
       <h1>Contact</h1>
       <nav>
@@ -344,75 +277,75 @@
         </ol>
       </nav>
     </div><!-- End Page Title -->
-
-    <section class="section contact">
-
-      <div class="row gy-4">
-
-        <div class="col-xl-6">
-
-          <div class="row">
-           
-           
-            <div class="col-lg-6">
-              <div class="info-box card">
-                <i class="bi bi-envelope"></i>
-                <h3>Email Us</h3>
-                <p>info@example.com<br>contact@example.com</p>
+    <!---
+        <div class="col-xl-7">
+          <div class="card p-5">
+            <form method="POST" action="{% url 'Chat_view' %}" >
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="message">Escribe tu mensaje:</label>
+                <textarea class="form-control" id="message" name="message" rows="3" placeholder="Escribe tu mensaje aquí..."></textarea>
               </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="info-box card">
-                <i class="bi bi-clock"></i>
-                <h3>Open Hours</h3>
-                <p>Monday - Friday<br>9:00AM - 05:00PM</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="col-xl-6">
-          <div class="card p-4">
-            <form action="forms/contact.php" method="post" class="php-email-form">
-              <div class="row gy-4">
-
-                <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Your Name" required>
-                </div>
-
-                <div class="col-md-6 ">
-                  <input type="email" class="form-control" name="email" placeholder="Your Email" required>
-                </div>
-
-                <div class="col-md-12">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject" required>
-                </div>
-
-                <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
-                </div>
-
-                <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                  <button type="submit">Send Message</button>
-                </div>
-
-              </div>
+              <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
             </form>
           </div>
-
         </div>
+      -->
+      <!-- Carga los estilos de Leaflet -->
+            <div class="col-xl-7">
+                <div class="card p-5">
+                    <div class="container mt-5">
+                        <p>Sitios Asignados</p>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fecha de Asignación</th>
+                                    <th scope="col">Dirección</th>
+                                    <th scope="col">Actividad</th>
+                                    <th scope="col">ID del Usuario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-10-17</td>
+                                    <td>
+                                        <div class="d-flex flex-column justify-content-center align-items-center">
+                                            Av. Reforma 123, CDMX
+                                            <br>
+                                            <a href="#" class="btn btn-primary btn-sm mt-2" onclick="mostrarMapa(19.432608, -99.133209)">Dirigirse</a>
+                                        </div>
+                                    </td>
+                                    <td>Instalación de fibra óptica</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-10-18</td>
+                                    <td>
+                                        <div class="d-flex flex-column justify-content-center align-items-center">
+                                            Calle Juárez 45, Estado de México
+                                            <br>
+                                            <a href="#" class="btn btn-primary btn-sm mt-2" onclick="mostrarMapa(19.283726, -99.689431)">Dirigirse</a>
+                                        </div>
+                                    </td>
+                                    <td>Configuración de red</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+              </div>
 
-      </div>
-
+            <div class="col-xl-12">
+                <div class="card p-5">
+                    <div class="container mt-5">
+                        <div id="map1"></div> <!-- Contenedor para el mapa -->
+                    </div>
+                </div>
+            </div>
     </section>
-
-  </main><!-- End #main -->
-
+  </main>
+  <!-- End #main -->
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
@@ -430,6 +363,7 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'brokeapp2/vendor/apexcharts/apexcharts.min.js'%}"></script>
     <script src="{% static 'brokeapp2/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
     <script src="{% static 'brokeapp2/vendor/chart.js/chart.umd.js'%}"></script>
@@ -441,8 +375,7 @@
   
     <!-- Template Main JS File -->
     <script src="{% static 'brokeapp2/js/main.js'%}"></script>
- 
-
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- Referencia al archivo JavaScript con tu lógica -->
 </body>
-
 </html>

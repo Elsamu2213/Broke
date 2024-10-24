@@ -1,12 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Asignar / </title>
+  <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
+  <title>Pago / </title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -30,16 +29,14 @@
   <!-- Template Main CSS File -->
   <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
 </head>
-
-
 <body>
 
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="#" class="logo d-flex align-items-center">
-        <img src="{% static 'brokeapp2/img/logo1.png'%}" alt="">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="{% static 'brokeapp2/img/logo.png '%}" alt="">
         <span class="d-none d-lg-block">BROKMAKE</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -182,7 +179,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="{% static 'brokeapp2/img/messages-3.jpg'%}" alt="" class="rounded-circle">
+                <img src="assets/img/messages-3.jpg" alt="" class="rounded-circle">
                 <div>
                   <h4>David Muldon</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -249,7 +246,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+              <a class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -262,256 +259,131 @@
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
-
+  <!-- ======= MENUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU ======= -->
   <!-- ======= Sidebar ======= -->
   <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboardA' %}">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="" href="{% url 'asignar' %}">
-            <i class="bi bi-menu-button-wide"></i><span>Asignar</span><i class=""></i>
-        </a>
-    </li><!-- End Components Nav -->
-    
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle=".html" href="{% url 'tablas' %}">
-          <i class="bi bi-journal-text"></i><span>Empleados</span><i class=""></i>
-        </a>
-       
-      </li>
-      <!-- End Forms Nav -->
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Correo' %}">
+        <a class="nav-link collapsed" href="{% url 'AccesoUs' %}">
           <i class="bi bi-envelope"></i>
-          <span>Mensaje</span>
+          <span>Principal</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+     
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'Chat_view' %}">
+          <i class="bi bi-envelope"></i>
+          <span>Discord</span>
         </a>
       </li><!-- End Contact Page Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Registrar' %}">
-          <i class="bi bi-card-list"></i>
-          <span>Registro</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'lista_usuarios' %}">
-          <i class="bi bi-lock"></i>
-          <span>Listas usuarios</span>
-        </a>
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'chatAdmin' %}">
-            <i class="bi bi-chat"></i>
-            <span>Discord</span>
-          </a>
-        </li>
-        <!-- End Register Page Nav -->
-      </li><!-- End Register Page Nav -->
 
-     
-    
-      
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'PagoUsuario' %}">
+          <i class="bi bi-card-list"></i>
+          <span>Pago</span>
+        </a>
+      </li><!-- End Register Page Nav -->
 
     </ul>
 
   </aside>
   <!-- End Sidebar-->
+  <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
 
   <main id="main" class="main">
+    <div class="container">
+        <!-- Fila centralizada con la tarjeta -->
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8">
+                <!-- Tarjeta con sombra y bordes redondeados -->
+                <div class="card shadow rounded bg-light">
+                    <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-    <div class="pagetitle">
-      <h1>Asignar</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{% url 'dashboardA' %}">Home</a></li>
-          <li class="breadcrumb-item active">Asignar</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+                        <!-- Logo -->
+                        <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
 
-    <section class="section profile">
-      <div class="row">
+                        <!-- Título -->
+                        <p class="custom-title display-5 font-weight-bold text-primary">REVISA TU SEMANA</p>
 
-        <div class="col-xl-12"><!-- tabla -->
-
-          <div class="card">
-            <div class="card-body pt-12">
-              <!-- Bordered Tabs -->
-              <ul class="nav nav-tabs nav-tabs-bordered">
-
-                <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Lista de Tareas</button>
-                </li>
-
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Asignados</button>
-                </li>
-
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Settings</button>
-                </li>
-
-                <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
-                </li>
-
-              </ul>
-
-              <div class="tab-content pt-12">
-                <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                  
-                  <div class="card-body mt-12">
-                    <div class="container mt-12">
-
-                      <div class="table-responsive mt-4">
-                        <h2></h2>
-                        <div class="mb-3">
-                          <input type="text" id="searchInput" class="form-control" placeholder="Buscar tareas...">
-    </div>
-
-    <table class="table table-bordered mt-12">
-      <thead>
-          <tr>
-              <th>ID</th>
-              <th>Descripción</th>
-              <th>Fecha de Asignación</th>
-              <th>Dirección</th>
-              <th>Actividad</th>
-              <th>Asignar Usuario</th> <!-- Columna para seleccionar usuario -->
-              <th>Acciones</th> <!-- Columna para el botón de asignar -->
-          </tr>
-      </thead>
-      <tbody id="tareaTableBody">
-          {% for tarea in tareas_no_asignadas %}
-          <tr>
-              <td>{{ tarea.id }}</td>
-              <td>{{ tarea.descripcion }}</td>
-              <td>{{ tarea.fecha_asignacion }}</td>
-              <td>{{ tarea.direccion }}</td>
-              <td>{{ tarea.actividad }}</td>
-              <td>
-                <select id="usuario-select-{{ tarea.id }}" class="form-select" name="usuario_id" required>
-                  <option value="">Seleccione un usuario</option>
-                  {% for usuario in usuarios %}
-                      <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
-                  {% endfor %}
-              </select>
-              
-              </td>
-              <td>
-                  <button class="btn btn-primary" onclick="asignarTarea({{ tarea.id }})">Asignar</button>
-              </td>
-          </tr>
-          {% empty %}
-          <tr>
-              <td colspan="7">No hay tareas no asignadas.</td>
-          </tr>
-          {% endfor %}
-      </tbody>
-  </table>
-                  </div>
-      
-                  </div>
-
-
-
-
-
-                </div>
-              
-              </div>
-
-              
-
-
-              <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
-                <!---------------- Tareas asignadas----------------- -->
-            
-                <div class="card-body mt-12">
-                    <div class="container mt-12">
-            
-                        <div class="table-responsive mt-4">
-                            <h2></h2>
-                            <div class="mb-3">
-                                <input type="text" id="searchInput1" class="form-control" placeholder="Buscar tareas...">
+                        <!-- Lista de empleados -->
+                        <div class="employee-list w-100 text-center mt-3">
+                            <p class="h5 text-muted">Selecciona un empleado:</p>
+                            <div class="list-group">
+                                <button class="list-group-item list-group-item-action" onclick="showEmployeeData(1)">GAEL OMC</button>
+                                <button class="list-group-item list-group-item-action" onclick="showEmployeeData(2)">SAMUEL NE</button>
+                                <button class="list-group-item list-group-item-action" onclick="showEmployeeData(3)">CECILIA LM</button>
+                                <button class="list-group-item list-group-item-action" onclick="showEmployeeData(4)">LUIS OM</button>
+                                <button class="list-group-item list-group-item-action" onclick="showEmployeeData(5)">DAVID</button>
                             </div>
-                            <table class="table table-bordered mt-12">
-                                <thead>
+                        </div>
+
+                        <!-- Tabla de pagos -->
+                        <div class="table-responsive mt-4 w-100">
+                            <table id="paymentTable" class="table table-striped table-hover">
+                                <thead class="thead-dark">
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha de Asignación</th>
-                                        <th>Dirección</th>
-                                        <th>Actividad</th>
-                                        <th>Asignado a</th>
-                                        <th>Acciones</th>
+                                        <th>Sitio</th>
+                                        <th>Fecha</th>
+                                        <th>Pago</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tareaAsignadaTableBody">
-                                    {% for tarea in tareas_asignadas %}
-                                    <tr>
-                                        <td>{{ tarea.id }}</td>
-                                        <td>{{ tarea.descripcion }}</td>
-                                        <td>{{ tarea.fecha_asignacion }}</td>
-                                        <td>{{ tarea.direccion }}</td>
-                                        <td>{{ tarea.actividad }}</td>
-                                        <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
-                                        <td>
-                                            <select id="usuario-modificar-{{ tarea.id }}" class="form-select" name="usuario_id" required>
-                                                <option value="">Seleccione un usuario</option>
-                                                {% for usuario in usuarios %}
-                                                <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                            <button class="btn btn-warning mt-2" onclick="modificarAsignacion({{ tarea.id }})">Modificar</button>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="7">No hay tareas asignadas.</td>
-                                    </tr>
-                                    {% endfor %}
+                                <tbody id="paymentData">
+                                    <!-- Filas de datos ficticios generadas dinámicamente -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            
-              
-              <!-- End Bordered Tabs -->
-
-            </div>
-          </div>
-            
-          </div>
-          <!--final de card body 1-->
-          
-        
         </div>
-        
-        <div class="col-xl-4">
-          
-        <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
+    </div>
+</main>
 
-          
+<script>
+    // Datos ficticios de empleados
+    const employeePayments = {
+        1: [
+            { sitio: "Planta Norte", fecha: "2024-10-01", pago: "$1200" },
+            { sitio: "Oficina Central", fecha: "2024-10-03", pago: "$800" }
+        ],
+        2: [
+            { sitio: "Sede Sur", fecha: "2024-10-02", pago: "$950" },
+            { sitio: "Taller Norte", fecha: "2024-10-04", pago: "$1100" }
+        ],
+        3: [
+            { sitio: "Oficina Central", fecha: "2024-10-01", pago: "$1300" },
+            { sitio: "Planta Este", fecha: "2024-10-05", pago: "$850" }
+        ],
+        4: [
+            { sitio: "Taller Sur", fecha: "2024-10-01", pago: "$1000" },
+            { sitio: "Sede Oeste", fecha: "2024-10-06", pago: "$1050" }
+        ],
+        5: [
+            { sitio: "Oficina Central", fecha: "2024-10-07", pago: "$950" },
+            { sitio: "Planta Oeste", fecha: "2024-10-09", pago: "$1150" }
+        ]
+    };
 
-        </div>
-      </div>
-    </section>
+    // Función para mostrar los datos de pagos del empleado seleccionado
+    function showEmployeeData(employeeId) {
+        const paymentTableBody = document.getElementById('paymentData');
+        paymentTableBody.innerHTML = ""; // Limpiar la tabla antes de cargar nuevos datos
 
-  </main><!-- End #main -->
-  
+        // Cargar los datos del empleado seleccionado
+        const payments = employeePayments[employeeId];
+        payments.forEach(payment => {
+            const row = `<tr>
+                <td>${payment.sitio}</td>
+                <td>${payment.fecha}</td>
+                <td>${payment.pago}</td>
+            </tr>`;
+            paymentTableBody.innerHTML += row;
+        });
+    }
+</script>
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -543,6 +415,4 @@
   <script src="{% static 'brokeapp2/js/main.js'%}"></script>
 
 </body>
-
 </html>
-st

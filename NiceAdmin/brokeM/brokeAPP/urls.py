@@ -42,4 +42,21 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
 
+#_____________________discord Gael_________________________
+
+path('AccesoUs/', views.AccesoUs_view, name='AccesoUs'),
+
+path('Chat_view/', views.Chat_view, name='Chat_view'),
+
+
+path('PagoUsuario/', views.PagoUsuario_view, name='PagoUsuario'),
+
+path('enviar_mensajeD/', views.enviar_mensajeD, name='enviar_mensajeD'),
+
+
+path('chatAdmin/', views.chatAdmin, name='chatAdmin'),
+
+
+
+
 ]

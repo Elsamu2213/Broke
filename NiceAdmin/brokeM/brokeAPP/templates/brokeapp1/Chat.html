@@ -1,10 +1,4 @@
 {% load static %}
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-{% endif %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,11 +6,10 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Forms / Layouts - NiceAdmin Bootstrap Template</title>
+  <title>Pages / Contact - NiceAdmin Bootstrap Template</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
-  
   <!-- Favicons  samuel se la come -->
   <link href="{% static 'brokeapp2/img/logo1.png'%}" rel="icon">
   <link href="{% static 'brokeapp2/img/logo1.png'%}" rel="logo1">
@@ -53,9 +46,9 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="#" class="logo d-flex align-items-center">
-        <img src="{% static 'brokeapp2/img/logo1.png'%}" alt="">
-        <span class="d-none d-lg-block">BROKMAKE</span>
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">NiceAdmin</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -216,237 +209,99 @@
           </ul><!-- End Messages Dropdown Items -->
 
         </li><!-- End Messages Nav -->
+          <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
 
-        <li class="nav-item dropdown pe-3">
-
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
-          </a><!-- End Profile Iamge Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6>Kevin Anderson</h6>
-              <span>Web Designer</span>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
+      <ul class="sidebar-nav" id="sidebar-nav">
+  
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="{% url 'AccesoUs' %}">
+                <i class="bi bi-envelope"></i>
+                <span>Principal</span>
               </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
-
-          </ul><!-- End Profile Dropdown Items -->
-        </li><!-- End Profile Nav -->
+            </li><!-- End Contact Page Nav -->
+  
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'Chat_view' %}">
+            <i class="bi bi-envelope"></i>
+            <span>Discord</span>
+          </a>
+        </li><!-- End Contact Page Nav -->
+  
+  
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'PagoUsuario' %}">
+            <i class="bi bi-card-list"></i>
+            <span>Pago</span>
+          </a>
+        </li><!-- End Register Page Nav -->
+  
+      </ul>
+    <!-- End Sidebar-->
+          </ul>
+      
+        </aside> 
+        <!-- End Profile Nav -->
 
       </ul>
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
-
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboardA' %}">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="" href="{% url 'asignar' %}">
-            <i class="bi bi-menu-button-wide"></i><span>Asignar</span><i class=""></i>
-        </a>
-    </li><!-- End Components Nav -->
-    
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle=".html" href="{% url 'tablas' %}">
-          <i class="bi bi-journal-text"></i><span>Empleados</span><i class=""></i>
-        </a>
-       
-      </li>
-      <!-- End Forms Nav -->
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Correo' %}">
-          <i class="bi bi-envelope"></i>
-          <span>Mensaje</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Registrar' %}">
-          <i class="bi bi-card-list"></i>
-          <span>Registro</span>
-        </a>
-      </li><!-- End Register Page Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'lista_usuarios' %}">
-          <i class="bi bi-lock"></i>
-          <span>Listas usuarios</span>
-        </a>
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'chatAdmin' %}">
-            <i class="bi bi-chat"></i>
-            <span>Discord</span>
-          </a>
-        </li>
-      </li><!-- End Register Page Nav -->
-
-     
-    
-      
-
-    </ul>
-
-  </aside>
-  <!-- End Sidebar-->
-
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Form Layouts</h1>
+      <h1>Contact</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Forms</li>
-          <li class="breadcrumb-item active">Layouts</li>
+          <li class="breadcrumb-item">Pages</li>
+          <li class="breadcrumb-item active">Contact</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
-    <section class="section">
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Registro de Usuario</h5>
-          
-              <!-- Formulario de Registro de Usuario -->
-              <form method="POST" action="{% url 'crear_usuario' %}">
-                {% csrf_token %}
-                
-                <div class="form-group">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese su nombre" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese su apellido" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Ingrese su email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <input type="text" class="form-control" name="telefono" id="telefono" placeholder="Ingrese su número de teléfono">
-                </div>
-                
-                <div class="form-group">
-                    <label for="rol">Rol</label>
-                    <select class="form-control" name="rol" id="rol">
-                        <option value="Empleado">Empleado</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                </div>
-                
-                <!-- Campo para la contraseña -->
-                <div class="form-group">
-                    <label for="contrasena">Contraseña</label>
-                    <input type="password" class="form-control" name="contrasena" id="contrasena" placeholder="Ingrese su contraseña" required>
-                </div>
-                
-                <!-- Campo para repetir la contraseña -->
-                <div class="form-group">
-                    <label for="confirmar_contrasena">Repetir Contraseña</label>
-                    <input type="password" class="form-control" name="confirmar_contrasena" id="confirmar_contrasena" placeholder="Repita su contraseña" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Registrar</button>
+    <!---
+        <div class="col-xl-7">
+          <div class="card p-5">
+            <form method="POST" action="{% url 'Chat_view' %}" >
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="message">Escribe tu mensaje:</label>
+                <textarea class="form-control" id="message" name="message" rows="3" placeholder="Escribe tu mensaje aquí..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
             </form>
-            
-            
-            
-
+          </div>
+        </div>
+      -->
+      <div class="row">
+        <!-- Columna para el widget de Discord -->
+        <div class="col-xl-6">
+          <div class="card p-2">
+            <h1>Chat de Discord</h1>
+            <div id="discord-widget">
+              <!-- Aquí está el iframe para mostrar el widget de Discord -->
+              <iframe src="https://discord.com/widget?id=1298417233290072084&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
             </div>
           </div>
         </div>
-
-        <div class="col-lg-6">
+      
+        <!-- Columna para el formulario -->
+        <div class="col-xl-6">
+          <div class="card p-5">
+            <h1>Chat de Discord</h1>
+            <form action="{% url 'enviar_mensajeD' %}" method="POST">
+              {% csrf_token %}
+              <label for="mensaje">Mensaje para Discord:</label>
+              <input type="text" id="mensaje" name="mensaje" class="form-control">
+              <button type="submit" class="btn btn-primary mt-3">Enviar Mensaje</button>
+            </form>        
+          </div>
         </div>
-
-      </div>
-    </section>
-    
-
-  </main><!-- End #main -->
-
-<!-- Modal -->
-<div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="resultadoModalLabel">Resultado del Registro</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p id="modalMessage"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Almacena los mensajes de Django en un div oculto -->
-{% if messages %}
-  <div id="django-messages" data-messages="{% for message in messages %}{{ message }}{% if not forloop.last %};{% endif %}{% endfor %}"></div>
-{% endif %}
-
-
+    </section>
+  </main><!-- End #main -->
+  <script src="{% static 'brokeapp2/js/main.js'%}"></script>
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
@@ -463,19 +318,19 @@
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-  <script src="{% static 'brokeapp2/vendor/apexcharts/apexcharts.min.js'%}"></script>
-  <script src="{% static 'brokeapp2/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-  <script src="{% static 'brokeapp2/vendor/chart.js/chart.umd.js'%}"></script>
-  <script src="{% static 'brokeapp2/vendor/echarts/echarts.min.js'%}"></script>
-  <script src="{% static 'brokeapp2/vendor/quill/quill.js'%}"></script>
-  <script src="{% static 'brokeapp2/vendor/simple-datatables/simple-datatables.js'%}"></script>
-  <script src="{% static 'brokeapp2/vendor/tinymce/tinymce.min.js'%}"></script>
-  <script src="{% static 'brokeapp2/vendor/php-email-form/validate.js'%}"></script>
-
-  <!-- Template Main JS File -->
-  <script src="{% static 'brokeapp2/js/main.js'%}"></script>
-
+    <!-- Vendor JS Files -->
+    <script src="{% static 'brokeapp2/vendor/apexcharts/apexcharts.min.js'%}"></script>
+    <script src="{% static 'brokeapp2/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+    <script src="{% static 'brokeapp2/vendor/chart.js/chart.umd.js'%}"></script>
+    <script src="{% static 'brokeapp2/vendor/echarts/echarts.min.js'%}"></script>
+    <script src="{% static 'brokeapp2/vendor/quill/quill.js'%}"></script>
+    <script src="{% static 'brokeapp2/vendor/simple-datatables/simple-datatables.js'%}"></script>
+    <script src="{% static 'brokeapp2/vendor/tinymce/tinymce.min.js'%}"></script>
+    <script src="{% static 'brokeapp2/vendor/php-email-form/validate.js'%}"></script>
+  
+    <!-- Template Main JS File -->
+    <script src="{% static 'brokeapp2/js/main.js'%}"></script>
+ 
 
 </body>
 

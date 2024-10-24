@@ -148,7 +148,7 @@ def crear_usuario(request):
     return render(request, 'brokeapp1/Registrar.html')
 
 #editar y borrar_____________________________________________________________
-@admin_required
+
 def lista_usuarios(request):
     usuarios = Usuario.objects.all()  # Obtén todos los usuarios
     return render(request, 'brokeapp1/lista_usuarios.html', {'usuarios': usuarios})

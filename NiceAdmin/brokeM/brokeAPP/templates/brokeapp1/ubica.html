@@ -1,20 +1,13 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Sitios Asignados</title>
+  <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
+  <title>Pago / </title>
   <meta content="" name="description">
   <meta content="" name="keywords">
-
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Favicons  samuel se la come -->
   <link href="{% static 'brokeapp2/img/logo1.png'%}" rel="icon">
@@ -24,31 +17,18 @@
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'brokeapp2/vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
-  <link href="{% static 'brokeapp2//vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
-  <link href="{% static 'brokeapp2/vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
-  <link href="{% static 'brokeapp2/vendor/quill/quill.snow.css'%}" rel="stylesheet">
-  <link href="{% static 'brokeapp2/vendor/quill/quill.bubble.css'%}" rel="stylesheet">
-  <link href="{% static 'brokeapp2/vendor/remixicon/remixicon.css'%}" rel="stylesheet">
-  <link href="{% static 'brokeapp2/vendor/simple-datatables/style.css'%}" rel="stylesheet">
+ <!-- Vendor CSS Files -->
+ <link href="{% static 'brokeapp2/vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+ <link href="{% static 'brokeapp2//vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
+ <link href="{% static 'brokeapp2/vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
+ <link href="{% static 'brokeapp2/vendor/quill/quill.snow.css'%}" rel="stylesheet">
+ <link href="{% static 'brokeapp2/vendor/quill/quill.bubble.css'%}" rel="stylesheet">
+ <link href="{% static 'brokeapp2/vendor/remixicon/remixicon.css'%}" rel="stylesheet">
+ <link href="{% static 'brokeapp2/vendor/simple-datatables/style.css'%}" rel="stylesheet">
 
-  
- <!-- Carga los estilos de Leaflet -->
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <!-- Template Main CSS File -->
   <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
-  <script src="{% static 'brokeapp2/js/main.js' %}"></script>
-
-  <!-- =======================================================
-  * Template Name: NiceAdmin
-  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-  * Updated: Apr 20 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
-
 <body>
 
   <!-- ======= Header ======= -->
@@ -56,8 +36,8 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.html" class="logo d-flex align-items-center">
-        <img src="assets/img/logo.png" alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
+        <img src="{% static 'brokeapp2/img/logo.png '%}" alt="">
+        <span class="d-none d-lg-block">BROKMAKE</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -171,7 +151,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="assets/img/messages-1.jpg" alt="" class="rounded-circle">
+                <img src="{% static 'brokeapp2/img/messages-1.jpg'%}" alt="" class="rounded-circle">
                 <div>
                   <h4>Maria Hudson</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -185,7 +165,7 @@
 
             <li class="message-item">
               <a href="#">
-                <img src="assets/img/messages-2.jpg" alt="" class="rounded-circle">
+                <img src="{% static 'brokeapp2/img/messages-2.jpg'%}" alt="" class="rounded-circle">
                 <div>
                   <h4>Anna Nelson</h4>
                   <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
@@ -218,134 +198,127 @@
           </ul><!-- End Messages Dropdown Items -->
 
         </li><!-- End Messages Nav -->
-          <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
 
-      <ul class="sidebar-nav" id="sidebar-nav">
-  
-          <li class="nav-item">
-              <a class="nav-link collapsed" href="{% url 'AccesoUs' %}">
-                <i class="bi bi-envelope"></i>
-                <span>Principal</span>
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{% static 'brokeapp2/img/profile-img.jpg'%}" alt="Asignar" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+          </a><!-- End Asignar Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>Kevin Anderson</h6>
+              <span>Web Designer</span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>My Asignar</span>
               </a>
-            </li><!-- End Contact Page Nav -->
-  
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'Chat_view' %}">
-            <i class="bi bi-envelope"></i>
-            <span>Mensaje</span>
-          </a>
-        </li><!-- End Contact Page Nav -->
-  
-  
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'PagoUsuario' %}">
-            <i class="bi bi-card-list"></i>
-            <span>Pago</span>
-          </a>
-        </li><!-- End Register Page Nav -->
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
 
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'ubicacion_view' %}">
-            <i class="bi bi-envelope"></i>
-            <span>Ubicacion-Asignacion</span>
-          </a>
-        </li><!-- End Contact Page Nav -->
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <i class="bi bi-gear"></i>
+                <span>Account Settings</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
 
-  
-      </ul>
-    <!-- End Sidebar-->
-          </ul>
-      
-        </aside> 
-        <!-- End Profile Nav -->
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                <i class="bi bi-question-circle"></i>
+                <span>Need Help?</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul><!-- End Asignar Dropdown Items -->
+        </li><!-- End Asignar Nav -->
 
       </ul>
     </nav><!-- End Icons Navigation -->
 
   </header><!-- End Header -->
+  <!-- ======= MENUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU ======= -->
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
 
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'AccesoUs' %}">
+          <i class="bi bi-envelope"></i>
+          <span>Principal</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+     
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'Chat_view' %}">
+          <i class="bi bi-envelope"></i>
+          <span>Discord</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'PagoUsuario' %}">
+          <i class="bi bi-card-list"></i>
+          <span>Pago</span>
+        </a>
+      </li><!-- End Register Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'Ubica1_view' %}">
+          <i class="bi bi-envelope"></i>
+          <span>Ubicacion</span>
+        </a>
+      </li><!-- End Contact Page Nav -->
+    </ul>
+
+  </aside>
+  <!-- End Sidebar-->
+  <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
 
   <main id="main" class="main">
-    <div class="pagetitle">
-      <h1>Contact</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Pages</li>
-          <li class="breadcrumb-item active">Contact</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
-    <!---
-        <div class="col-xl-7">
-          <div class="card p-5">
-            <form method="POST" action="{% url 'Chat_view' %}" >
-              {% csrf_token %}
-              <div class="form-group">
-                <label for="message">Escribe tu mensaje:</label>
-                <textarea class="form-control" id="message" name="message" rows="3" placeholder="Escribe tu mensaje aquí..."></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
-            </form>
-          </div>
-        </div>
-      -->
-      <!-- Carga los estilos de Leaflet -->
-            <div class="col-xl-7">
-                <div class="card p-5">
-                    <div class="container mt-5">
-                        <p>Sitios Asignados</p>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Fecha de Asignación</th>
-                                    <th scope="col">Dirección</th>
-                                    <th scope="col">Actividad</th>
-                                    <th scope="col">ID del Usuario</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2024-10-17</td>
-                                    <td>
-                                        <div class="d-flex flex-column justify-content-center align-items-center">
-                                            Av. Reforma 123, CDMX
-                                            <br>
-                                            <a href="#" class="btn btn-primary btn-sm mt-2" onclick="mostrarMapa(19.432608, -99.133209)">Dirigirse</a>
-                                        </div>
-                                    </td>
-                                    <td>Instalación de fibra óptica</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>2024-10-18</td>
-                                    <td>
-                                        <div class="d-flex flex-column justify-content-center align-items-center">
-                                            Calle Juárez 45, Estado de México
-                                            <br>
-                                            <a href="#" class="btn btn-primary btn-sm mt-2" onclick="mostrarMapa(19.283726, -99.689431)">Dirigirse</a>
-                                        </div>
-                                    </td>
-                                    <td>Configuración de red</td>
-                                    <td>2</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-              </div>
+    <div class="container">
+        <!-- Fila centralizada con la tarjeta -->
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8">
+                <!-- Tarjeta con sombra y bordes redondeados -->
+                <div class="card shadow rounded bg-light">
+                    <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-            <div class="col-xl-12">
-                <div class="card p-5">
-                    <div class="container mt-5">
-                        <div id="map1"></div> <!-- Contenedor para el mapa -->
+                        <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
+                        <p class="custom-title display-5 font-weight-bold text-primary">Ubicacion Sitio</p>
+                        
                     </div>
                 </div>
             </div>
-    </section>
-  </main>
-  <!-- End #main -->
+        </div>
+    </div>
+</main>
+
+
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
@@ -362,20 +335,18 @@
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    <!-- Vendor JS Files -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'brokeapp2/vendor/apexcharts/apexcharts.min.js'%}"></script>
-    <script src="{% static 'brokeapp2/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-    <script src="{% static 'brokeapp2/vendor/chart.js/chart.umd.js'%}"></script>
-    <script src="{% static 'brokeapp2/vendor/echarts/echarts.min.js'%}"></script>
-    <script src="{% static 'brokeapp2/vendor/quill/quill.js'%}"></script>
-    <script src="{% static 'brokeapp2/vendor/simple-datatables/simple-datatables.js'%}"></script>
-    <script src="{% static 'brokeapp2/vendor/tinymce/tinymce.min.js'%}"></script>
-    <script src="{% static 'brokeapp2/vendor/php-email-form/validate.js'%}"></script>
-  
-    <!-- Template Main JS File -->
-    <script src="{% static 'brokeapp2/js/main.js'%}"></script>
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-    <!-- Referencia al archivo JavaScript con tu lógica -->
+  <!-- Vendor JS Files -->
+  <script src="{% static 'brokeapp2/vendor/apexcharts/apexcharts.min.js'%}"></script>
+  <script src="{% static 'brokeapp2/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+  <script src="{% static 'brokeapp2/vendor/chart.js/chart.umd.js'%}"></script>
+  <script src="{% static 'brokeapp2/vendor/echarts/echarts.min.js'%}"></script>
+  <script src="{% static 'brokeapp2/vendor/quill/quill.js'%}"></script>
+  <script src="{% static 'brokeapp2/vendor/simple-datatables/simple-datatables.js'%}"></script>
+  <script src="{% static 'brokeapp2/vendor/tinymce/tinymce.min.js'%}"></script>
+  <script src="{% static 'brokeapp2/vendor/php-email-form/validate.js'%}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'brokeapp2/js/main.js'%}"></script>
+
 </body>
 </html>

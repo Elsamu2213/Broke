@@ -62,6 +62,8 @@ class Tarea(models.Model):
         ('Fibra', 'Fibra')
     ], default='Anclaje')
     usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True)  # Usar el nuevo modelo
+    num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")  # Con un valor por defecto único
+    observaciones = models.TextField(null=True, blank=True)  # Campo observaciones que permite nulos y vacíos
 
     def __str__(self):
         return f"Tarea {self.id}: {self.descripcion}"
@@ -69,6 +71,7 @@ class Tarea(models.Model):
     @property
     def asignada(self):
         return self.usuario is not None
+
 
 class MensajeWhatsApp(models.Model):
     usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)

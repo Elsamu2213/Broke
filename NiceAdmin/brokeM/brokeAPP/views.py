@@ -1,3 +1,9 @@
+
+
+
+from django.utils.decorators import method_decorator
+
+from .models import Tarea  # Asegúrate de importar tu modelo
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 
@@ -334,31 +340,33 @@ def logout_view(request):
     return redirect('home')  # Redirige al login
 
 #discord _________________________________________________________________________________________________________
+
+def Ubica_view(request):
+    return render(request, 'brokeapp1/ubica.html')
+
 def AccesoUs_view(request):
     return render(request, 'brokeapp1/AccesoUs.html')
 
-
 def Chat_view(request):
     return render(request, 'brokeapp1/Chat.html')
-
+ 
 def PagoUsuario_view(request):
     return render(request, 'brokeapp1/PagoUsuario.html')
 
-
-
+ 
+ 
 # Reemplaza 'your_token_here' con el token de tu bot
 TOKEN = 'MTI5ODU0MjUyNTkwODM4NTgxMw.GN504t.7M-B0owLgS2e7mlWbmC6Jzr4T53Vy7CVm1VxHU'
-
 # Reemplaza 'your_channel_id_here' con el ID del canal donde quieres enviar mensajes
 CHANNEL_ID = 1298417233290072087  # Asegúrate de que sea un entero
-
+ 
 async def enviar_mensaje_a_discord(mensaje):
     client = discord.Client(intents=discord.Intents.default())
     await client.login(TOKEN)
     channel = await client.fetch_channel(CHANNEL_ID)
     await channel.send(mensaje)
     await client.close()
-
+ 
 def enviar_mensajeD(request):
     if request.method == 'POST':
         # Obtén el mensaje personalizado del formulario o request POST
@@ -368,3 +376,28 @@ def enviar_mensajeD(request):
         return HttpResponse("Mensaje enviado a Discord!")
     else:
         return HttpResponse("Método no soportado.", status=405)
+    
+
+
+#Funcion de observaciones Tabla asignar
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+import json
+from .models import Tarea
+
+@csrf_exempt  # Si estás manejando el CSRF manualmente, pero es mejor usar el token CSRF
+@require_POST
+def guardar_observacion(request, tarea_id):
+    data = json.loads(request.body)
+    observacion = data.get('observacion')
+
+    try:
+        tarea = Tarea.objects.get(id=tarea_id)
+        tarea.observaciones = observacion
+        tarea.save()
+        return JsonResponse({'message': 'Observación guardada.'}, status=200)
+    except Tarea.DoesNotExist:
+        return JsonResponse({'message': 'Tarea no encontrada.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'message': str(e)}, status=500)

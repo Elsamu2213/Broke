@@ -2,7 +2,7 @@ from django.urls import path
 from . import views  # Asegúrate de importar views
 from django.urls import path
 from . import views
-from .views import listar_tareas
+from .views import listar_tareas, guardar_observacion
 
 
 urlpatterns = [
@@ -56,7 +56,11 @@ path('enviar_mensajeD/', views.enviar_mensajeD, name='enviar_mensajeD'),
 
 path('chatAdmin/', views.chatAdmin, name='chatAdmin'),
 
+path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
 
+
+#Observaciones tabla asignar 
+ path('guardar_observacion/<int:tarea_id>/', guardar_observacion, name='guardar_observacion'),
 
 ]

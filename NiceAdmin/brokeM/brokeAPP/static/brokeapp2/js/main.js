@@ -701,3 +701,33 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
 })();
+
+//esta parte es de la tabla asignacion para que el usuario agrege observaciones 
+function guardarObservacion(tareaId) {
+  const observacion = document.getElementById(`observacion-${tareaId}`).value; // Obtiene el valor de la observación
+
+  console.log('ID de tarea:', tareaId);
+  console.log('Observación:', observacion);
+
+  fetch(`/guardar_observacion/${tareaId}/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'  // Asegúrate de incluir el token CSRF
+      },
+      body: JSON.stringify({ observacion: observacion })
+  })
+  .then(response => {
+      return response.json().then(data => {
+          if (response.ok) {
+              alert('Observación guardada correctamente.');
+          } else {
+              alert('Error al guardar la observación: ' + data.message);
+          }
+      });
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}
+

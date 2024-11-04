@@ -401,3 +401,7 @@ def guardar_observacion(request, tarea_id):
         return JsonResponse({'message': 'Tarea no encontrada.'}, status=404)
     except Exception as e:
         return JsonResponse({'message': str(e)}, status=500)
+
+def vista_ubica(request):
+    tareas = Tarea.objects.values('fecha_asignacion', 'direccion', 'actividad', 'num_cajero')
+    return render(request, 'ubica.html', {'tareas': tareas})

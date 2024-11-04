@@ -1297,3 +1297,10 @@ h6 {
   font-size: 13px;
   color: #012970;
 }
+
+/* estilo de la barra de busqueda Ubica.html*/
+.input-largo {
+  width: 100%; /* Ajusta el porcentaje según lo necesites */
+  max-width: 600px; /* Ancho máximo */
+  height: 150%;
+}

@@ -307,17 +307,57 @@
                 <!-- Tarjeta con sombra y bordes redondeados -->
                 <div class="card shadow rounded bg-light">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
                         <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
-                        <p class="custom-title display-5 font-weight-bold text-primary">Ubicacion Sitio</p>
-                        
+                        <p class="custom-title display-5 font-weight-bold text-primary">Ubicación Sitio</p>
+
+                        <div class="table-responsive mt-4">
+                            <h2>Ubicación de Tareas</h2>
+                            <table class="table table-bordered mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha de Asignación</th>
+                                        <th>Dirección</th>
+                                        <th>Actividad</th>
+                                        <th>Num_Cajero</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tarea in tareas %}
+                                    <tr>
+                                        <td>{{ tarea.fecha_asignacion }}</td>
+                                        <td>{{ tarea.direccion }}</td>
+                                        <td>{{ tarea.actividad }}</td>
+                                        <td>{{ tarea.num_cajero }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4">No hay tareas disponibles.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row justify-content-center mt-4">
+                          <div class="col-xl-11 col-lg-8">
+                              <div class="mb-3">
+                                  <input type="text" id="direccionInput" class="form-control input-largo" placeholder="Ingrese una dirección" />
+                              </div>
+                              <div class="text-center">
+                                  <button id="buscarBtn" class="btn btn-primary">Buscar</button>
+                              </div>
+                          </div>
+                      </div>
+                        <!-- Contenedor del mapa -->
+                        <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</main>
 
+    <!-- Estilos y scripts de Leaflet -->
+   
+</main>
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -346,6 +386,8 @@
   <script src="{% static 'brokeapp2/vendor/php-email-form/validate.js'%}"></script>
 
   <!-- Template Main JS File -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <script src="{% static 'brokeapp2/js/main.js'%}"></script>
 
 </body>

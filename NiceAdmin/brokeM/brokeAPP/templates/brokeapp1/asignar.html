@@ -455,8 +455,9 @@
                                       <th>Fecha de Asignación</th>
                                       <th>Dirección</th>
                                       <th>Actividad</th>
+                                      <th>Num_Cajero</th>
                                       <th>Asignado a</th>
-                                      <th>Acciones</th>
+                                      <th>Reasignar</th>
                                       <th>Observaciones</th>
                                   </tr>
                               </thead>
@@ -468,6 +469,7 @@
                                       <td>{{ tarea.fecha_asignacion }}</td>
                                       <td>{{ tarea.direccion }}</td>
                                       <td>{{ tarea.actividad }}</td>
+                                      <td>{{ tarea.num_cajero }}</td>
                                       <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
                                       <td>
                                           <select id="usuario-modificar-{{ tarea.id }}" class="form-select" name="usuario_id" required>

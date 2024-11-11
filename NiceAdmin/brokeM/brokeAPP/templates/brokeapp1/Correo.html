@@ -356,11 +356,37 @@
            
             <div class="col-lg-6">
               <div class="info-box card">
-                <i class="bi bi-envelope"></i>
-                <h3>Email Us</h3>
-                <p>info@example.com<br>contact@example.com</p>
+                <div class="container">
+                  <div class="form-container">
+                      <h3 class="text-center mb-4" style="color: #ff69b4;">📧 Enviar un Correo Adorable</h3>
+                      <form action="{% url 'enviar_correo' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="destinatario">Destinatario:</label>
+                        <input type="email" name="destinatario" required>
+                        
+                        <label for="asunto">Asunto:</label>
+                        <input type="text" name="asunto" required>
+                        
+                        <label for="mensaje">Mensaje:</label>
+                        <textarea name="mensaje" required></textarea>
+                        
+                        <label for="archivo">Archivo adjunto (opcional):</label>
+                        <input type="file" name="archivo">
+                        
+                        <button type="submit">Enviar</button>
+                    </form>
+                  </div>
               </div>
-            </div>
+          
+              {% if messages %}
+                  <ul style="margin-top: 20px; padding: 0;">
+                      {% for message in messages %}
+                          <li style="list-style: none; padding: 10px; background-color: #f8f8f8; border-left: 4px solid #4CAF50; margin-bottom: 5px;">
+                              {{ message }}
+                          </li>
+                      {% endfor %}
+                  </ul>
+              {% endif %}
             <div class="col-lg-6">
               <div class="info-box card">
                 <i class="bi bi-clock"></i>

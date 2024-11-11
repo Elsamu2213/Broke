@@ -138,4 +138,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Añadir esta línea para que Django busque archivos estáticos en la carpeta 'static'
 STATICFILES_DIRS = [BASE_DIR / 'brokeAPP/static']
 
+# uso de modelo de base de datos  personalizado
 AUTH_USER_MODEL = 'brokeAPP.UsuarioCustomizado'
+
+
+# para uso de correo 
+
+
+
+# JETTT______________________________________________________
+MAILJET_API_KEY = '84fcb24e7287379c43123e6b882746a7'
+MAILJET_SECRET_KEY = '3fd7b61ca969df6e54209c67da69313e'

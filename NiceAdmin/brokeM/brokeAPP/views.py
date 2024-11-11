@@ -55,6 +55,14 @@ from django.http import HttpResponse
 from django.conf import settings
 
 
+#correos_______________________________
+from django.core.mail import EmailMessage
+from django.conf import settings
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .utils import enviar_correo_mailjet
+
 
 
 
@@ -368,3 +376,39 @@ def enviar_mensajeD(request):
         return HttpResponse("Mensaje enviado a Discord!")
     else:
         return HttpResponse("Método no soportado.", status=405)
+
+
+
+#correo enviar_____________________________________________
+
+
+
+
+#correo archivos______________________________
+
+import base64
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .utils import enviar_correo_mailjet
+
+def enviar_correo_view(request):
+    if request.method == 'POST':
+        destinatario = request.POST['destinatario']
+        asunto = request.POST['asunto']
+        mensaje = request.POST['mensaje']
+        archivo_adjunto = request.FILES.get('archivo')
+        
+        adjunto_b64 = None
+        if archivo_adjunto:
+            adjunto_b64 = base64.b64encode(archivo_adjunto.read()).decode('utf-8')
+
+        if enviar_correo_mailjet(destinatario, asunto, mensaje, adjunto_b64):
+            messages.success(request, 'Correo enviado con éxito.')
+        else:
+            messages.error(request, 'Hubo un error al enviar el correo.')
+        
+        return redirect('enviar_correo')
+    
+    return render(request, 'brokeapp1/Correo.html')
+

@@ -236,6 +236,13 @@
           </a>
         </li><!-- End Register Page Nav -->
   
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="{% url 'Ubica1_view' %}">
+            <i class="bi bi-envelope"></i>
+            <span>Ubicacion</span>
+          </a>
+        </li><!-- End Contact Page Nav -->
+      </ul>
       </ul>
     <!-- End Sidebar-->
           </ul>
@@ -276,27 +283,12 @@
       <div class="row">
         <!-- Columna para el widget de Discord -->
         <div class="col-xl-6">
-          <div class="card p-2">
+          <div class="card p-5">
             <h1>Chat de Discord</h1>
-            <div id="discord-widget">
-              <!-- Aquí está el iframe para mostrar el widget de Discord -->
-              <iframe src="https://discord.com/widget?id=1298417233290072084&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
             </div>
           </div>
         </div>
-      
-        <!-- Columna para el formulario -->
-        <div class="col-xl-6">
-          <div class="card p-5">
-            <h1>Chat de Discord</h1>
-            <form action="{% url 'enviar_mensajeD' %}" method="POST">
-              {% csrf_token %}
-              <label for="mensaje">Mensaje para Discord:</label>
-              <input type="text" id="mensaje" name="mensaje" class="form-control">
-              <button type="submit" class="btn btn-primary mt-3">Enviar Mensaje</button>
-            </form>        
-          </div>
-        </div>
+      <!-- Columna para el formulario -->
       </div>
     </div>
     </section>
@@ -315,9 +307,7 @@
       Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
   </footer><!-- End Footer -->
-
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
     <!-- Vendor JS Files -->
     <script src="{% static 'brokeapp2/vendor/apexcharts/apexcharts.min.js'%}"></script>
     <script src="{% static 'brokeapp2/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
@@ -327,7 +317,7 @@
     <script src="{% static 'brokeapp2/vendor/simple-datatables/simple-datatables.js'%}"></script>
     <script src="{% static 'brokeapp2/vendor/tinymce/tinymce.min.js'%}"></script>
     <script src="{% static 'brokeapp2/vendor/php-email-form/validate.js'%}"></script>
-  
+
     <!-- Template Main JS File -->
     <script src="{% static 'brokeapp2/js/main.js'%}"></script>
  

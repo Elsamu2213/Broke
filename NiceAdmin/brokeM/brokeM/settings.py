@@ -41,7 +41,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'brokeM.urls'
 
 TEMPLATES = [
@@ -66,7 +65,7 @@ WSGI_APPLICATION = 'brokeM.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-"""
+
 # Database Gael
 DATABASES = {
     'default': {
@@ -78,9 +77,9 @@ DATABASES = {
         'PORT': '3306',  
     }
 }
- */
-"""
 
+
+"""
 # Database Samuel
 DATABASES = {
     'default': {
@@ -92,7 +91,7 @@ DATABASES = {
         'PORT': '3306',  
     }
 }
-
+"""
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

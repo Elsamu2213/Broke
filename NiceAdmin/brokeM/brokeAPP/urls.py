@@ -3,8 +3,7 @@ from . import views  # Asegúrate de importar views
 from django.urls import path
 from . import views
 from .views import listar_tareas
-from django.urls import path
-from . import views
+
 
 urlpatterns = [
      # Aquí defines una ruta para tu vista de perfil recuerda que al tener base de datos en tablas las vistas cambian
@@ -57,16 +56,10 @@ path('enviar_mensajeD/', views.enviar_mensajeD, name='enviar_mensajeD'),
 
 path('chatAdmin/', views.chatAdmin, name='chatAdmin'),
 
-#_______________________correos__________________________________
-
-
-# brokeAPP/urls.py
 
 
 
-
-path('enviar_correo/', views.enviar_correo_view, name='enviar_correo'),
-
-
+#Observaciones tabla asignar 
+ path('guardar_observacion/<int:tarea_id>/', guardar_observacion, name='guardar_observacion'),
 
 ]

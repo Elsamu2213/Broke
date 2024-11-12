@@ -383,6 +383,7 @@
       <thead>
           <tr>
               <th>ID</th>
+              <th>Num_Cajero</th>
               <th>Descripción</th>
               <th>Fecha de Asignación</th>
               <th>Dirección</th>
@@ -395,6 +396,7 @@
           {% for tarea in tareas_no_asignadas %}
           <tr>
               <td>{{ tarea.id }}</td>
+              <td>{{ tarea.num_cajero }}</td>
               <td>{{ tarea.descripcion }}</td>
               <td>{{ tarea.fecha_asignacion }}</td>
               <td>{{ tarea.direccion }}</td>
@@ -446,43 +448,51 @@
                                 <input type="text" id="searchInput1" class="form-control" placeholder="Buscar tareas...">
                             </div>
                             <table class="table table-bordered mt-12">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha de Asignación</th>
-                                        <th>Dirección</th>
-                                        <th>Actividad</th>
-                                        <th>Asignado a</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tareaAsignadaTableBody">
-                                    {% for tarea in tareas_asignadas %}
-                                    <tr>
-                                        <td>{{ tarea.id }}</td>
-                                        <td>{{ tarea.descripcion }}</td>
-                                        <td>{{ tarea.fecha_asignacion }}</td>
-                                        <td>{{ tarea.direccion }}</td>
-                                        <td>{{ tarea.actividad }}</td>
-                                        <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
-                                        <td>
-                                            <select id="usuario-modificar-{{ tarea.id }}" class="form-select" name="usuario_id" required>
-                                                <option value="">Seleccione un usuario</option>
-                                                {% for usuario in usuarios %}
-                                                <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                            <button class="btn btn-warning mt-2" onclick="modificarAsignacion({{ tarea.id }})">Modificar</button>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="7">No hay tareas asignadas.</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                              <thead>
+                                  <tr>
+                                      <th>ID</th>
+                                      <th>Descripción</th>
+                                      <th>Fecha de Asignación</th>
+                                      <th>Dirección</th>
+                                      <th>Actividad</th>
+                                      <th>Num_Cajero</th>
+                                      <th>Asignado a</th>
+                                      <th>Reasignar</th>
+                                      <th>Observaciones</th>
+                                  </tr>
+                              </thead>
+                              <tbody id="tareaAsignadaTableBody">
+                                  {% for tarea in tareas_asignadas %}
+                                  <tr>
+                                      <td>{{ tarea.id }}</td>
+                                      <td>{{ tarea.descripcion }}</td>
+                                      <td>{{ tarea.fecha_asignacion }}</td>
+                                      <td>{{ tarea.direccion }}</td>
+                                      <td>{{ tarea.actividad }}</td>
+                                      <td>{{ tarea.num_cajero }}</td>
+                                      <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
+                                      <td>
+                                          <select id="usuario-modificar-{{ tarea.id }}" class="form-select" name="usuario_id" required>
+                                              <option value="">Seleccione un usuario</option>
+                                              {% for usuario in usuarios %}
+                                              <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
+                                              {% endfor %}
+                                          </select>
+                                          <button class="btn btn-warning mt-2" onclick="modificarAsignacion({{ tarea.id }})">Modificar</button>
+                                      </td>
+                                      <td>
+                                          <input type="text" id="observacion-{{ tarea.id }}" class="form-control" placeholder="Escriba una observación" />
+                                          <button class="btn btn-primary mt-2" onclick="guardarObservacion({{ tarea.id }})">Guardar</button>
+                                      </td>
+                                  </tr>
+                                  {% empty %}
+                                  <tr>
+                                      <td colspan="7">No hay tareas asignadas.</td>
+                                  </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                          
                         </div>
                     </div>
                 </div>

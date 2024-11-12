@@ -1,3 +1,9 @@
+
+
+
+from django.utils.decorators import method_decorator
+
+from .models import Tarea  # Asegúrate de importar tu modelo
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 
@@ -342,31 +348,33 @@ def logout_view(request):
     return redirect('home')  # Redirige al login
 
 #discord _________________________________________________________________________________________________________
+
+def Ubica_view(request):
+    return render(request, 'brokeapp1/ubica.html')
+
 def AccesoUs_view(request):
     return render(request, 'brokeapp1/AccesoUs.html')
 
-
 def Chat_view(request):
     return render(request, 'brokeapp1/Chat.html')
-
+ 
 def PagoUsuario_view(request):
     return render(request, 'brokeapp1/PagoUsuario.html')
 
-
-
+ 
+ 
 # Reemplaza 'your_token_here' con el token de tu bot
 TOKEN = 'MTI5ODU0MjUyNTkwODM4NTgxMw.GN504t.7M-B0owLgS2e7mlWbmC6Jzr4T53Vy7CVm1VxHU'
-
 # Reemplaza 'your_channel_id_here' con el ID del canal donde quieres enviar mensajes
 CHANNEL_ID = 1298417233290072087  # Asegúrate de que sea un entero
-
+ 
 async def enviar_mensaje_a_discord(mensaje):
     client = discord.Client(intents=discord.Intents.default())
     await client.login(TOKEN)
     channel = await client.fetch_channel(CHANNEL_ID)
     await channel.send(mensaje)
     await client.close()
-
+ 
 def enviar_mensajeD(request):
     if request.method == 'POST':
         # Obtén el mensaje personalizado del formulario o request POST
@@ -376,39 +384,3 @@ def enviar_mensajeD(request):
         return HttpResponse("Mensaje enviado a Discord!")
     else:
         return HttpResponse("Método no soportado.", status=405)
-
-
-
-#correo enviar_____________________________________________
-
-
-
-
-#correo archivos______________________________
-
-import base64
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .utils import enviar_correo_mailjet
-
-def enviar_correo_view(request):
-    if request.method == 'POST':
-        destinatario = request.POST['destinatario']
-        asunto = request.POST['asunto']
-        mensaje = request.POST['mensaje']
-        archivo_adjunto = request.FILES.get('archivo')
-        
-        adjunto_b64 = None
-        if archivo_adjunto:
-            adjunto_b64 = base64.b64encode(archivo_adjunto.read()).decode('utf-8')
-
-        if enviar_correo_mailjet(destinatario, asunto, mensaje, adjunto_b64):
-            messages.success(request, 'Correo enviado con éxito.')
-        else:
-            messages.error(request, 'Hubo un error al enviar el correo.')
-        
-        return redirect('enviar_correo')
-    
-    return render(request, 'brokeapp1/Correo.html')
-

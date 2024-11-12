@@ -701,3 +701,91 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
 })();
+
+//esta parte es de la tabla asignacion para que el usuario agrege observaciones 
+function guardarObservacion(tareaId) {
+  const observacion = document.getElementById(`observacion-${tareaId}`).value; // Obtiene el valor de la observación
+
+  console.log('ID de tarea:', tareaId);
+  console.log('Observación:', observacion);
+
+  fetch(`/guardar_observacion/${tareaId}/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'  // Asegúrate de incluir el token CSRF
+      },
+      body: JSON.stringify({ observacion: observacion })
+  })
+  .then(response => {
+      return response.json().then(data => {
+          if (response.ok) {
+              alert('Observación guardada correctamente.');
+          } else {
+              alert('Error al guardar la observación: ' + data.message);
+          }
+      });
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}
+
+//Mapa que ya quedo---------------------------------------------------------------------------------------------------------------------
+// Inicialización del mapa
+const map = L.map('map').setView([19.4326, -99.1332], 12); // Centrar el mapa en una ubicación inicial
+
+// Agregar capa de mosaico (tiles)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+
+// Función para buscar la dirección ingresada
+function buscarDireccion() {
+    const direccion = document.getElementById("direccionInput").value.trim();
+
+    // Validar la longitud de la dirección
+    if (direccion.length === 0) {
+        alert('Por favor, ingrese una dirección.');
+        return;
+    }
+    if (direccion.length > 100) {
+        alert('La dirección es demasiado larga. Por favor, ingrese una dirección más corta.');
+        return;
+    }
+
+    // API de Nominatim para geocodificación
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&addressdetails=1&limit=1`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                const { lat, lon } = data[0]; // Obtener las coordenadas de la primera coincidencia
+                map.setView([lat, lon], 15); // Mover el mapa a la ubicación
+
+                // Agregar un marcador en la ubicación
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(`Dirección: ${direccion}`)
+                    .openPopup();
+            } else {
+                alert('No se encontraron resultados para la dirección ingresada. Intente ser más específico.');
+            }
+        })
+        .catch(error => {
+            console.error('Error en la búsqueda:', error);
+            alert('Error al buscar la dirección. Por favor intenta nuevamente.');
+        });
+}
+
+// Agregar un evento de escucha al botón de búsqueda
+document.getElementById("buscarBtn").addEventListener("click", buscarDireccion);
+
+// Si quieres, también puedes agregar la funcionalidad de búsqueda al presionar Enter
+document.getElementById("direccionInput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        buscarDireccion();
+    }
+});

@@ -67,6 +67,7 @@ WSGI_APPLICATION = 'brokeM.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # Database Gael
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -77,9 +78,9 @@ DATABASES = {
         'PORT': '3306',  
     }
 }
-
-
 """
+
+
 # Database Samuel
 DATABASES = {
     'default': {
@@ -91,7 +92,7 @@ DATABASES = {
         'PORT': '3306',  
     }
 }
-"""
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

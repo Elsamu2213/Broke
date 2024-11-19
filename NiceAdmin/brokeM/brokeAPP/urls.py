@@ -2,7 +2,12 @@ from django.urls import path
 from . import views  # Asegúrate de importar views
 from django.urls import path
 from . import views
+
 from .views import listar_tareas, guardar_observacion, completar_tarea
+
+from .views import listar_tareas
+from django.urls import path
+from . import views
 
 
 urlpatterns = [
@@ -53,12 +58,33 @@ path('enviar_mensajeD/', views.enviar_mensajeD, name='enviar_mensajeD'),
 
 path('chatAdmin/', views.chatAdmin, name='chatAdmin'),
 
+
+
+
+
+
+
+
+
+
+#_______________________correos__________________________________
+
+
+# brokeAPP/urls.py
+
+
+
+
+path('enviar_correo/', views.enviar_correo_view, name='enviar_correo'),
+
 path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
 
-
 #Observaciones tabla asignar 
+
  path('guardar_observacion/<int:tarea_id>/', guardar_observacion, name='guardar_observacion'),
  path('asignar_tarea/completar/<int:tarea_id>/', views.completar_tarea, name='completar_tarea'),
  path('api/actualizar_estado/', views.actualizar_estado, name='actualizar_estado'),
+
+#path('guardar_observacion/<int:tarea_id>/', guardar_observacion, name='guardar_observacion'),
 ]

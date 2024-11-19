@@ -35,8 +35,8 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
-        <img src="{% static 'brokeapp2/img/logo.png '%}" alt="">
+      <a href="#" class="logo d-flex align-items-center">
+        <img src="{% static 'brokeapp2/img/logo1.png'%}" alt="">
         <span class="d-none d-lg-block">BROKMAKE</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -246,7 +246,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -271,15 +271,6 @@
           <span>Principal</span>
         </a>
       </li><!-- End Contact Page Nav -->
-     
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Chat_view' %}">
-          <i class="bi bi-envelope"></i>
-          <span>Discord</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
-
-
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'PagoUsuario' %}">
           <i class="bi bi-card-list"></i>
@@ -312,11 +303,11 @@
                         <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
 
                         <!-- Título -->
-                        <p class="custom-title display-5 font-weight-bold text-primary">REVISA TU SEMANA</p>
+                        <p class="custom-title display-5 font-weight-bold text-primary">Tu Semana</p>
 
                         <!-- Lista de empleados -->
                         <div class="employee-list w-100 text-center mt-3">
-                            <p class="h5 text-muted">Selecciona un empleado:</p>
+                            <p class="h5 text-muted">Haz click en tu nombre:</p>
                             <div class="list-group">
                                 <button class="list-group-item list-group-item-action" onclick="showEmployeeData(1)">GAEL OMC</button>
                                 <button class="list-group-item list-group-item-action" onclick="showEmployeeData(2)">SAMUEL NE</button>

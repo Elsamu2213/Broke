@@ -60,15 +60,6 @@ import discord
 from django.http import HttpResponse
 from django.conf import settings
 
-
-
-
-
-
-
-
-
-
 def index(request):
     return render(request, 'brokeAPP/index.html')
 
@@ -96,19 +87,12 @@ def Registrar_view(request):
 def Correo_view(request):
     return render(request, 'brokeapp1/Correo.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
-
 def empleados(request):
     return render(request, 'brokeapp1/empleadosPrueba.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 @admin_required
 def chatAdmin(request):
     return render(request, 'brokeapp1/chatAdmin.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
-
-
-
-
-
-
 
 
 # registro de usuarios 
@@ -230,12 +214,14 @@ def borrar_usuario(request, id):
 @admin_required
 def listar_tareas(request):
     tareas_no_asignadas = Tarea.objects.filter(usuario__isnull=True)  # Tareas no asignadas
-    tareas_asignadas = Tarea.objects.filter(usuario__isnull=False)  # Tareas asignadas
+    tareas_asignadas = Tarea.objects.filter(usuario__isnull=False, completada=False)  # Tareas asignadas pero no completadas
+    tareas_completadas = Tarea.objects.filter(completada=True)  # Tareas completadas
     usuarios = Usuario.objects.all()  # Obtener todos los usuarios
 
     return render(request, 'brokeapp1/asignar.html', {
         'tareas_no_asignadas': tareas_no_asignadas,
         'tareas_asignadas': tareas_asignadas,
+        'tareas_completadas': tareas_completadas,
         'usuarios': usuarios
     })
 
@@ -262,8 +248,24 @@ def asignar_tarea(request, tarea_id):
             return JsonResponse({'success': False, 'error': 'Usuario no encontrado'})
 
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
-
 #tareas ya asignadas________________________________________________________
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import Tarea, UsuarioCustomizado
+
+@csrf_exempt
+def completar_tarea(request, tarea_id):
+    if request.method == 'POST':
+        print("Solicitud para completar tarea recibida")  # Mensaje de depuración
+        try:
+            tarea = Tarea.objects.get(id=tarea_id)
+            tarea.completada = True
+            tarea.save()
+            return JsonResponse({'success': True})
+        except Tarea.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Tarea no encontrada'})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
 
 def modificar_asignacion(request, tarea_id):
@@ -283,10 +285,6 @@ def modificar_asignacion(request, tarea_id):
             return JsonResponse({'error': str(e)}, status=400)
 
 #para verificar usuarios Administrador_______________________________________
-
-
-
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -347,14 +345,9 @@ def Ubica_view(request):
 def AccesoUs_view(request):
     return render(request, 'brokeapp1/AccesoUs.html')
 
-def Chat_view(request):
-    return render(request, 'brokeapp1/Chat.html')
- 
 def PagoUsuario_view(request):
     return render(request, 'brokeapp1/PagoUsuario.html')
 
- 
- 
 # Reemplaza 'your_token_here' con el token de tu bot
 TOKEN = 'MTI5ODU0MjUyNTkwODM4NTgxMw.GN504t.7M-B0owLgS2e7mlWbmC6Jzr4T53Vy7CVm1VxHU'
 # Reemplaza 'your_channel_id_here' con el ID del canal donde quieres enviar mensajes
@@ -405,3 +398,36 @@ def guardar_observacion(request, tarea_id):
 def vista_ubica(request):
     tareas = Tarea.objects.values('fecha_asignacion', 'direccion', 'actividad', 'num_cajero')
     return render(request, 'ubica.html', {'tareas': tareas})
+
+
+# Estado de la tabla proceso 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Tarea
+import json
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import TareaAvanzada  # Asegúrate de importar la clase correcta
+import json
+
+@csrf_exempt
+def actualizar_estado(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            tarea_id = data.get("id")
+            nuevo_estado = data.get("estado")
+
+            tarea = Tarea.objects.get(id=tarea_id)
+            tarea.estado = nuevo_estado
+            tarea.save()
+
+            return JsonResponse({"success": True, "message": "Estado actualizado exitosamente"})
+        except Tarea.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Tarea no encontrada"})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    else:
+        return JsonResponse({"success": False, "error": "Método no permitido"})
+

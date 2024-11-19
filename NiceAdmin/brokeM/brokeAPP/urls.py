@@ -2,7 +2,7 @@ from django.urls import path
 from . import views  # Asegúrate de importar views
 from django.urls import path
 from . import views
-from .views import listar_tareas, guardar_observacion
+from .views import listar_tareas, guardar_observacion, completar_tarea
 
 
 urlpatterns = [
@@ -46,9 +46,6 @@ urlpatterns = [
 
 path('AccesoUs/', views.AccesoUs_view, name='AccesoUs'),
 
-path('Chat_view/', views.Chat_view, name='Chat_view'),
-
-
 path('PagoUsuario/', views.PagoUsuario_view, name='PagoUsuario'),
 
 path('enviar_mensajeD/', views.enviar_mensajeD, name='enviar_mensajeD'),
@@ -62,5 +59,6 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
 #Observaciones tabla asignar 
  path('guardar_observacion/<int:tarea_id>/', guardar_observacion, name='guardar_observacion'),
-
+ path('asignar_tarea/completar/<int:tarea_id>/', views.completar_tarea, name='completar_tarea'),
+ path('api/actualizar_estado/', views.actualizar_estado, name='actualizar_estado'),
 ]

@@ -8,5 +8,5 @@ urlpatterns = [
     path('loginAdmin/', TemplateView.as_view(template_name='brokeapp1/loginAdmin.html'), name='loginAdmin'),  # Ruta para loginAdmin.html
     path('loginUser/', TemplateView.as_view(template_name='brokeapp1/loginUser.html'), name='loginUser'),  # Ruta para loginUser.html
     path('', include('brokeAPP.urls')),  # Incluye las URLs de brokeAPP que necesiten ser autentificadas 
-    
+
 ]

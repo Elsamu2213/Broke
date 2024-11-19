@@ -789,3 +789,102 @@ document.getElementById("direccionInput").addEventListener("keypress", function(
         buscarDireccion();
     }
 });
+
+
+
+
+//notificacion
+const usuarioId = "{{ request.user.id }}";  // Obtén el ID del usuario en el frontend
+const socket = new WebSocket(`ws://${window.location.host}/ws/notificaciones/`);
+
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    alert(data.message);  // Muestra el mensaje como una alerta; puedes personalizar el estilo de la notificación
+};
+
+socket.onopen = function() {
+    console.log("Conexión WebSocket establecida para notificaciones de tareas.");
+};
+
+socket.onclose = function() {
+    console.log("Conexión WebSocket cerrada.");
+};
+
+// boton de completado
+function completarTarea(tareaId) {
+  fetch(`/asignar_tarea/completar/${tareaId}/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de obtener el token CSRF
+      }
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          alert('Tarea marcada como completada');
+          location.reload();  // Recargar la página para actualizar la tabla
+      } else {
+          alert(data.error || 'Error al completar la tarea');
+      }
+  })
+  .catch(error => console.error('Error:', error));
+}
+
+// Función para obtener el token CSRF
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+// aceptar tarea empleado 
+function aceptarTarea(tareaId, usuarioId) {
+  fetch(`/ruta-a-tu-vista-de-asignar-tarea/${tareaId}`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken  // Asegúrate de incluir el token CSRF
+      },
+      body: JSON.stringify({ usuario_id: usuarioId })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          // Cerrar el modal
+          $('#notificacionModal').modal('hide');
+
+          // Añadir la tarea a la tabla si se ha asignado correctamente
+          if (data.tarea) {
+              const tarea = data.tarea;
+              
+              // Crear una nueva fila en la tabla
+              const nuevaFila = `
+                  <tr>
+                      <td>${tarea.fecha_asignacion}</td>
+                      <td>${tarea.direccion}</td>
+                      <td>${tarea.actividad}</td>
+                      <td>${tarea.num_cajero}</td>
+                  </tr>
+              `;
+              
+              // Insertar la fila en el cuerpo de la tabla
+              document.querySelector("table tbody").insertAdjacentHTML("beforeend", nuevaFila);
+          }
+      } else {
+          alert("Hubo un error al aceptar la tarea.");
+      }
+  })
+  .catch(error => {
+      console.error("Error:", error);
+  });
+}

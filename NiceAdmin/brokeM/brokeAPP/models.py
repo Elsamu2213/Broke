@@ -17,7 +17,6 @@ class UsuarioCustomizado(AbstractUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-
 # Otras tablas como Cliente, Cotizacion, Factura, Tarea, etc.
 
 class Cliente(models.Model):
@@ -29,7 +28,7 @@ class Cliente(models.Model):
 
     def __str__(self):
         return self.nombre_empresa
-
+    
 class Cotizacion(models.Model):
     usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)  # Relación con el nuevo modelo
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
@@ -64,7 +63,13 @@ class Tarea(models.Model):
     usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True)  # Usar el nuevo modelo
     num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")  # Con un valor por defecto único
     observaciones = models.TextField(null=True, blank=True)  # Campo observaciones que permite nulos y vacíos
-
+    completada = models.BooleanField(default=False)  # Campo para marcar si está completada
+    estado = models.CharField(max_length=20, choices=[
+        ('iniciado', 'Iniciado'),
+        ('en_proceso', 'En Proceso'),
+        ('completado', 'Completado'),
+    ], default='iniciado')  # Agregar campo estado
+    
     def __str__(self):
         return f"Tarea {self.id}: {self.descripcion}"
 
@@ -102,3 +107,12 @@ class Salario(models.Model):
     def save(self, *args, **kwargs):
         self.total_pago = self.viaticos + self.pago_actividad
         super(Salario, self).save(*args, **kwargs)
+
+
+class TareaAvanzada(Tarea):
+    prioridad = models.CharField(max_length=50, choices=[('Alta', 'Alta'), ('Media', 'Media'), ('Baja', 'Baja')], default='Media')
+    responsable = models.CharField(max_length=100, null=True, blank=True)
+    comentarios = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Tarea Avanzada {self.id}: {self.descripcion} (Prioridad: {self.prioridad})"

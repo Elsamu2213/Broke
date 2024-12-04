@@ -468,3 +468,52 @@ def actualizar_estado(request):
     else:
         return JsonResponse({"success": False, "error": "Método no permitido"})
 
+
+import pandas as pd
+from django.shortcuts import render
+from django.http import HttpResponse
+from .models import Tarea
+
+from django.shortcuts import render
+from django.http import JsonResponse
+import pandas as pd
+from .models import Tarea
+
+import pandas as pd
+from django.core.exceptions import ValidationError
+
+def cargar_excel(request):
+    if request.method == "POST" and request.FILES.get("archivo_excel"):
+        archivo_excel = request.FILES["archivo_excel"]
+        try:
+            # Leer el archivo Excel
+            df = pd.read_excel(archivo_excel)
+
+            # Verificar si la columna 'CP' o 'Cod_postal' existe
+            if 'CP' not in df.columns and 'Cod_postal' not in df.columns:
+                raise ValidationError("Faltan las siguientes columnas requeridas: CP o Cod_postal")
+            
+            # Procesar cada fila del archivo y cargarla en la base de datos
+            for index, row in df.iterrows():
+                direccion = row['direccion']
+                Cod_postal = row['Cod_postal'] if 'CP' in row else row['Cod_postal']
+                num_cajero = row['num_cajero']
+                
+                # Crear la tarea
+                tarea = Tarea.objects.create(
+                    direccion=direccion,
+                    num_cajero=num_cajero,
+                    # Aquí deberías mapear otros campos necesarios
+                    # Por ejemplo, actividad, observaciones, etc.
+                )
+
+            return JsonResponse({"success": "Archivo procesado correctamente"})
+        
+        except ValidationError as e:
+            return JsonResponse({"error": str(e)}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error al procesar el archivo: {str(e)}"}, status=400)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
+
+
+

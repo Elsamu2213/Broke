@@ -64,6 +64,8 @@ class Tarea(models.Model):
     num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")  # Con un valor por defecto único
     observaciones = models.TextField(null=True, blank=True)  # Campo observaciones que permite nulos y vacíos
     completada = models.BooleanField(default=False)  # Campo para marcar si está completada
+    Cod_postal = models.CharField(max_length=255, default="Dirección pendiente")# Campo para marcar si está completada
+
     estado = models.CharField(max_length=20, choices=[
         ('iniciado', 'Iniciado'),
         ('en_proceso', 'En Proceso'),

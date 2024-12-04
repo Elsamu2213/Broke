@@ -330,11 +330,12 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Asignar</h1>
+      <h1>Asignar </h1>
     </div><!-- End Page Title -->
 
     <section class="section profile">
       <div class="row">
+       
 
         <div class="col-xl-12"><!-- tabla -->
 
@@ -358,7 +359,45 @@
                 <li class="nav-item">
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-complete">Tareas Completadas</button>
                 </li>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cargarExcelModal">
+                  <i class="bi bi-upload"></i> Subir y Cargar Datos
+                </button>
+
               </ul>
+
+<!-- Modal -->
+<div class="modal fade" id="cargarExcelModal" tabindex="-1" aria-labelledby="cargarExcelModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Encabezado del modal -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="cargarExcelModalLabel">Subir Archivo Excel</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="modal-body">
+        <form method="POST" action="{% url 'cargar_excel' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+              <label for="archivo_excel" class="form-label">Selecciona un archivo Excel:</label>
+              <input 
+                  type="file" 
+                  name="archivo_excel" 
+                  id="archivo_excel" 
+                  class="form-control" 
+                  accept=".xlsx, .xls" 
+                  required
+              >
+          </div>
+          <button type="submit" class="btn btn-success w-100">
+              <i class="bi bi-cloud-upload"></i> Cargar
+          </button>
+      </form>
+      
+      </div>
+    </div>
+  </div>
+</div>
 
               <div class="tab-content pt-12">
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">

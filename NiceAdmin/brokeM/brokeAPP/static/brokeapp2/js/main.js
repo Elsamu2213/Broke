@@ -1,11 +1,44 @@
-/**
-* Template Name: NiceAdmin
-* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-* Updated: Apr 20 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-// Función para obtener el token CSRF desde el meta tag
+//filtrar en busqueda  para actualizar en tiempo real "observaciones "______________________________________________
+
+                              document.addEventListener("DOMContentLoaded", function () {
+                                  // Capturar cambios en los campos de descripción
+                                  document.querySelectorAll(".descripcion-input").forEach(input => {
+                                      input.addEventListener("blur", function () {
+                                          const tareaId = this.getAttribute("data-id");
+                                          const nuevaDescripcion = this.value;
+                              
+                                          fetch(`/actualizar_tarea_descripcion/`, {
+                                              method: "POST",
+                                              headers: {
+                                                  "Content-Type": "application/json",
+                                                  "X-CSRFToken": "{{ csrf_token }}" // Incluye el token CSRF
+                                              },
+                                              body: JSON.stringify({
+                                                  id: tareaId,
+                                                  descripcion: nuevaDescripcion
+                                              })
+                                          })
+                                          .then(response => {
+                                              if (!response.ok) {
+                                                  throw new Error("Error al actualizar la descripción");
+                                              }
+                                              return response.json();
+                                          })
+                                          .then(data => {
+                                              alert("Descripción actualizada correctamente");
+                                          })
+                                          .catch(error => {
+                                              console.error(error);
+                                              alert("Hubo un problema al actualizar la descripción.");
+                                          });
+                                      });
+                                  });
+                              });
+                              
+
+
+
+
 
 
 //filtrar en busqueda______________________________________________

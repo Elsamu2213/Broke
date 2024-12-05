@@ -87,4 +87,9 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
  path('api/actualizar_estado/', views.actualizar_estado, name='actualizar_estado'),
  path('cargar_excel/', views.cargar_excel, name='cargar_excel'),
 #path('guardar_observacion/<int:tarea_id>/', guardar_observacion, name='guardar_observacion'),
+
+
+
+
+    path('actualizar_tarea_descripcion/', views.actualizar_tarea_descripcion, name='actualizar_tarea_descripcion'),
 ]

@@ -517,3 +517,30 @@ def cargar_excel(request):
 
 
 
+
+# para guardar la descripcion:
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def actualizar_tarea_descripcion(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            tarea_id = data.get("id")
+            nueva_descripcion = data.get("descripcion")
+
+            # Buscar y actualizar la tarea
+            from .models import Tarea
+            tarea = Tarea.objects.get(id=tarea_id)
+            tarea.descripcion = nueva_descripcion
+            tarea.save()
+
+            return JsonResponse({"status": "success", "message": "Descripción actualizada"})
+        except Tarea.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Tarea no encontrada"}, status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    return JsonResponse({"status": "error", "message": "Método no permitido"}, status=405)

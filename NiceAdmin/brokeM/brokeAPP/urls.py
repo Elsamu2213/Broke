@@ -92,4 +92,5 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
 
     path('actualizar_tarea_descripcion/', views.actualizar_tarea_descripcion, name='actualizar_tarea_descripcion'),
+    
 ]

@@ -22,31 +22,48 @@ async def send_message_to_discord(message):
     else:
         print(f'No se encontró el canal con ID: {CHANNEL_ID}')
 
+ESTADOS_VALIDOS = ['iniciado', 'en_proceso', 'Anclaje_completado', 'cancelado','completado', 'pendiente_revision', 'reasignado']
+
 # Comando para actualizar el estado de la tarea
 @client.command(name='actualizar_estado')
 async def actualizar_estado(ctx, tarea_id: int, nuevo_estado: str):
-    url = API_URL  # Usamos la URL correcta 
+    if nuevo_estado not in ESTADOS_VALIDOS:
+        await ctx.send(f"Estado inválido. Los estados válidos son: {', '.join(ESTADOS_VALIDOS)}.")
+        return
+    
+    url = API_URL
     data = {
         'id': tarea_id,
         'estado': nuevo_estado
     }
-    
-    headers = {
-        # Si la API no requiere autenticación, puedes eliminar este encabezado
-        'Authorization': 'Bearer MTI5ODU0MjUyNTkwODM4NTgxMw.GN504t.7M-B0owLgS2e7mlWbmC6Jzr4T53Vy7CVm1VxHU'  # Asegúrate de reemplazarlo si es necesario
-    }
 
     try:
-        # Realizar la solicitud POST a la API de Django con el encabezado de autenticación
-        response = requests.post(url, json=data, headers=headers)
-
-        # Verificar si la solicitud fue exitosa
+        response = requests.post(url, json=data)
         if response.status_code == 200:
-            await send_message_to_discord(f"El estado del sitio {tarea_id} ha sido actualizado a {nuevo_estado}.")
+            await send_message_to_discord(f"El estado de la tarea {tarea_id} ha sido actualizado a {nuevo_estado}.")
         else:
             await send_message_to_discord(f"No se pudo actualizar el estado de la tarea {tarea_id}. Error: {response.json().get('error')}")
     except Exception as e:
         await send_message_to_discord(f"Hubo un error al intentar actualizar el estado: {e}")
+
+@client.command(name='info_tarea')
+async def info_tarea(ctx, tarea_id: int):
+    try:
+        # Hacer una solicitud GET a tu API para obtener los detalles de la tarea
+        response = requests.get(f"http://127.0.0.1:8000/api/tarea/{tarea_id}/")
+        if response.status_code == 200:
+            data = response.json()
+            mensaje = (
+                f"Tarea ID: {data['id']}\n"
+                f"Estado: {data['estado']}\n"
+                f"Asignada a: {data['usuario']}\n"
+                
+            )
+            await ctx.send(mensaje)
+        else:
+            await ctx.send(f"No se pudo encontrar la tarea con ID {tarea_id}.")
+    except Exception as e:
+        await ctx.send(f"Error al obtener la información de la tarea: {e}")
 
 # Iniciar el bot
 client.run(TOKEN)

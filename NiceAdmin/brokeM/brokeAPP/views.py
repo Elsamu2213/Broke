@@ -277,6 +277,9 @@ def completar_tarea(request, tarea_id):
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
 
+
+
+
 def modificar_asignacion(request, tarea_id):
     if request.method == 'POST':
         try:
@@ -456,11 +459,17 @@ def actualizar_estado(request):
             tarea_id = data.get("id")
             nuevo_estado = data.get("estado")
 
+            # Verificar que el estado proporcionado sea válido
+            ESTADOS_VALIDOS = ['iniciado', 'en_proceso','Anclaje_completado', 'cancelado', 'completado', 'pendiente_revision', 'reasignado']
+            if nuevo_estado not in ESTADOS_VALIDOS:
+                return JsonResponse({"success": False, "error": "Estado inválido. Los estados permitidos son: " + ", ".join(ESTADOS_VALIDOS)})
+
+            # Buscar la tarea y actualizar su estado
             tarea = Tarea.objects.get(id=tarea_id)
             tarea.estado = nuevo_estado
             tarea.save()
 
-            return JsonResponse({"success": True, "message": "Estado actualizado exitosamente"})
+            return JsonResponse({"success": True, "message": f"Estado actualizado exitosamente a {nuevo_estado}"})
         except Tarea.DoesNotExist:
             return JsonResponse({"success": False, "error": "Tarea no encontrada"})
         except Exception as e:
@@ -481,7 +490,6 @@ from .models import Tarea
 
 import pandas as pd
 from django.core.exceptions import ValidationError
-
 def cargar_excel(request):
     if request.method == "POST" and request.FILES.get("archivo_excel"):
         archivo_excel = request.FILES["archivo_excel"]
@@ -489,22 +497,34 @@ def cargar_excel(request):
             # Leer el archivo Excel
             df = pd.read_excel(archivo_excel)
 
-            # Verificar si la columna 'CP' o 'Cod_postal' existe
-            if 'CP' not in df.columns and 'Cod_postal' not in df.columns:
-                raise ValidationError("Faltan las siguientes columnas requeridas: CP o Cod_postal")
+            # Verificar si las columnas 'LATITUD' y 'LONGITUD' existen
+            if 'LATITUD' not in df.columns or 'LONGITUD' not in df.columns:
+                raise ValidationError("Faltan las siguientes columnas requeridas: LATITUD o LONGITUD")
             
             # Procesar cada fila del archivo y cargarla en la base de datos
             for index, row in df.iterrows():
                 direccion = row['direccion']
-                Cod_postal = row['Cod_postal'] if 'CP' in row else row['Cod_postal']
+                Cod_postal = row['Cod_postal'] if 'Cod_postal' in row else row['Cod_postal']
                 num_cajero = row['num_cajero']
+                fecha_anclaje = row['ENTREGA/ANCLAJE']
+                hora_anclaje = row['HORA DE ENTREGA']
+                fecha_vencimiento = row['CONFIG']
+                hora_venconfig = row['HORA LOCAL']
                 
+                # Combinar LATITUD y LONGITUD en el formato 'LATITUD,LONGITUD'
+                latitud = str(row['LATITUD'])
+                longitud = str(row['LONGITUD'])
+                cordenadas = f"{latitud},{longitud}"
+
                 # Crear la tarea
                 tarea = Tarea.objects.create(
                     direccion=direccion,
                     num_cajero=num_cajero,
-                    # Aquí deberías mapear otros campos necesarios
-                    # Por ejemplo, actividad, observaciones, etc.
+                    fecha_anclaje=fecha_anclaje,
+                    hora_anclaje=hora_anclaje,
+                    fecha_vencimiento=fecha_vencimiento,
+                    hora_venconfig=hora_venconfig,
+                    cordenadas=cordenadas,  # Almacenar las coordenadas
                 )
 
             return JsonResponse({"success": "Archivo procesado correctamente"})
@@ -514,9 +534,6 @@ def cargar_excel(request):
         except Exception as e:
             return JsonResponse({"error": f"Error al procesar el archivo: {str(e)}"}, status=400)
     return JsonResponse({"error": "Método no permitido"}, status=405)
-
-
-
 
 # para guardar la descripcion:
 from django.http import JsonResponse

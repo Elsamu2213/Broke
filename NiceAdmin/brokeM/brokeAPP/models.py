@@ -52,8 +52,10 @@ class Factura(models.Model):
 
 class Tarea(models.Model):
     descripcion = models.CharField(max_length=255)
-    fecha_asignacion = models.DateTimeField(auto_now_add=True)
-    fecha_vencimiento = models.DateTimeField(null=True, blank=True)
+    fecha_anclaje = models.CharField(max_length=20, null=True, blank=True)  # Cambiado a CharField
+    hora_anclaje = models.CharField(max_length=10, null=True, blank=True)
+    fecha_vencimiento = models.CharField(max_length=20, null=True, blank=True)  # Cambiado a CharField
+    hora_venconfig = models.CharField(max_length=10, null=True, blank=True)
     direccion = models.CharField(max_length=255, default="Dirección pendiente")
     actividad = models.CharField(max_length=50, choices=[
         ('Anclaje', 'Anclaje'),
@@ -65,12 +67,16 @@ class Tarea(models.Model):
     observaciones = models.TextField(null=True, blank=True)  # Campo observaciones que permite nulos y vacíos
     completada = models.BooleanField(default=False)  # Campo para marcar si está completada
     Cod_postal = models.CharField(max_length=255, default="Dirección pendiente")# Campo para marcar si está completada
+    cordenadas = models.CharField(max_length=255, default="cordenadas pendiente")# Campo para marcar si está completada
 
     estado = models.CharField(max_length=20, choices=[
-        ('iniciado', 'Iniciado'),
+         ('iniciado', 'Iniciado'),
         ('en_proceso', 'En Proceso'),
         ('completado', 'Completado'),
-    ], default='iniciado')  # Agregar campo estado
+        ('cancelado', 'Cancelado'),
+        ('pendiente_revision', 'Pendiente de Revisión'),
+        ('reasignado', 'Reasignado'),
+    ], default='en_proceso')  # Agregar campo estado
     
     def __str__(self):
         return f"Tarea {self.id}: {self.descripcion}"

@@ -345,7 +345,11 @@
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Lista de Tareas</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Anclajes </button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link " data-bs-toggle="tab" data-bs-target="#profile-config">configuraciones  </button>
                 </li>
 
                 <li class="nav-item">
@@ -357,7 +361,7 @@
                 </li>
 
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-complete">Tareas Completadas</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-complete">Anclajes completados</button>
                 </li>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cargarExcelModal">
                   <i class="bi bi-upload"></i> Subir y Cargar Datos
@@ -417,7 +421,9 @@
               <th>ID</th>
               <th>Num_Cajero</th>
               <th>Descripción</th>
-              <th>Fecha de Asignación</th>
+              <th>Fecha de Anclaje</th>
+              <th>hora de  Anclaje</th>
+              
               <th>Dirección</th>
               <th>Actividad</th>
               <th>Asignar Usuario</th> <!-- Columna para seleccionar usuario -->
@@ -426,15 +432,18 @@
       </thead>
       <tbody id="tareaTableBody">
           {% for tarea in tareas_no_asignadas %}
+          {% if tarea.actividad == "Anclaje" %}
           <tr>
               <td>{{ tarea.id }}</td>
               <td>{{ tarea.num_cajero }}</td>
               <td>{{ tarea.descripcion }}</td>
-              <td>{{ tarea.fecha_asignacion }}</td>
+              <td>{{ tarea.fecha_anclaje }}</td>
+              <td>{{ tarea.hora_anclaje }}</td>
+              
               <td>{{ tarea.direccion }}</td>
               <td>{{ tarea.actividad }}</td>
               <td>
-                <select id="usuario-select-{{ tarea.id }}" class="form-select" name="usuario_id" required>
+                <select id="tabla1-usuario-select-{{ tarea.id }}" class="form-select" name="usuario_id" required>
                   <option value="">Seleccione un usuario</option>
                   {% for usuario in usuarios %}
                       <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
@@ -443,9 +452,10 @@
               
               </td>
               <td>
-                  <button class="btn btn-primary" onclick="asignarTarea({{ tarea.id }})">Asignar</button>
+                <button class="btn btn-primary" onclick="asignarTarea('tabla1', {{ tarea.id }})">Asignar</button>
               </td>
           </tr>
+          {% endif %}
           {% empty %}
           <tr>
               <td colspan="7">No hay tareas no asignadas.</td>
@@ -458,6 +468,71 @@
                   </div>
                 </div>
                 </div>
+            <!-- _________________________________Lista tareas Configuracion_________________________________________________________________ -->    
+            <div class="tab-pane fade profile-edit pt-3" id="profile-config">
+                  
+              <div class="card-body mt-12">
+                <div class="container mt-12">
+
+                  <div class="table-responsive mt-4">
+                    <h2></h2>
+                    <div class="mb-3">
+                      <input type="text" id="searchInput" class="form-control" placeholder="Buscar tareas...">
+                    </div>
+
+                <table class="table table-bordered mt-12">
+  <thead>
+      <tr>
+          <th>ID</th>
+          <th>Num_Cajero</th>
+          <th>Descripción</th>
+          <th>Fecha de Anclaje</th>
+          <th>hora de  Anclaje</th>
+          
+          <th>Dirección</th>
+          <th>Actividad</th>
+          <th>Asignar Usuario</th> <!-- Columna para seleccionar usuario -->
+          <th>Acciones</th> <!-- Columna para el botón de asignar -->
+      </tr>
+  </thead>
+  <tbody id="tareaTableBody">
+      {% for tarea in tareas_no_asignadas %}
+      {% if tarea.actividad == "Configuración" %}
+      <tr>
+          <td>{{ tarea.id }}</td>
+          <td>{{ tarea.num_cajero }}</td>
+          <td>{{ tarea.descripcion }}</td>
+          <td>{{ tarea.fecha_anclaje }}</td>
+          <td>{{ tarea.hora_anclaje }}</td>
+          
+          <td>{{ tarea.direccion }}</td>
+          <td>{{ tarea.actividad }}</td>
+          <td>
+            <select id="tabla2-usuario-select-{{ tarea.id }}" class="form-select" name="usuario_id" required>
+              <option value="">Seleccione un usuario</option>
+              {% for usuario in usuarios %}
+                  <option value="{{ usuario.id }}">{{ usuario.first_name }} {{ usuario.last_name }}</option>
+              {% endfor %}
+          </select>
+          
+          </td>
+          <td>
+            <button class="btn btn-primary" onclick="asignarTarea('tabla2', {{ tarea.id }})">Asignar</button>
+          </td>
+      </tr>
+      {% endif %}
+      {% empty %}
+      <tr>
+          <td colspan="7">No hay tareas no asignadas.</td>
+      </tr>
+      {% endfor %}
+  </tbody>
+                      </table>
+              </div>
+  
+              </div>
+            </div>
+            </div>
 <!--------------------------- Tabla Asignados ----------------------------------------------------------------------------->
               <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
                 <div class="card-body mt-12">
@@ -511,7 +586,7 @@
                                                 <td>
                                                     <input type="text" id="observacion-{{ tarea.id }}" class="form-control" placeholder="Escriba una observación" />
                                                     <button class="btn btn-primary mt-2" onclick="guardarObservacion({{ tarea.id }})">Guardar</button>
-                                                    <button class="btn btn-success mt-2" onclick="completarTarea({{ tarea.id }})">Completado</button>
+                                                    <button class="btn btn-success mt-2" onclick="completarTarea({{ tarea.id }})">Confirmar</button>
                                                 </td>
                                             </tr>
                                         {% endif %}
@@ -546,31 +621,46 @@
                           </tr>
                       </thead>
                       <tbody id="tareaCompletadaTableBody">
-                          {% for tarea in tareas_completadas %}
-                              <tr>
-                                  <td>{{ tarea.id }}</td>
-                                  <td>{{ tarea.descripcion }}</td>
-                                  <td>{{ tarea.fecha_asignacion }}</td>
-                                  <td>{{ tarea.direccion }}</td>
-                                  <td>{{ tarea.actividad }}</td>
-                                  <td>{{ tarea.num_cajero }}</td>
-                                  <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
-                                  <td>
-                                      {% if tarea.estado == "iniciado" %}
-                                          <span class="badge bg-primary">Iniciado</span>
-                                      {% elif tarea.estado == "en_proceso" %}
-                                          <span class="badge bg-warning text-dark">En Proceso</span>
-                                      {% elif tarea.estado == "completado" %}
-                                          <span class="badge bg-success">Completado</span>
-                                      {% endif %}
-                                  </td>
-                              </tr>
-                          {% empty %}
-                              <tr>
-                                  <td colspan="8">No hay tareas completadas.</td>
-                              </tr>
-                          {% endfor %}
-                      </tbody>
+                        {% for tarea in tareas_completadas %}
+                            <tr>
+                                <td>{{ tarea.id }}</td>
+                                <td>{{ tarea.descripcion }}</td>
+                                <td>{{ tarea.fecha_asignacion }}</td>
+                                <td>{{ tarea.direccion }}</td>
+                                <td>{{ tarea.actividad }}</td>
+                                <td>{{ tarea.num_cajero }}</td>
+                                <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if tarea.estado == 'iniciado' %}
+                                            bg-primary
+                                        {% elif tarea.estado == 'en_proceso' %}
+                                            bg-warning text-dark
+                                        {% elif tarea.estado == 'completado' %}
+                                            bg-success 
+                                        {% elif tarea.estado == 'Anclaje_completado' %}
+                                            bg-success text-dark
+                                        {% elif tarea.estado == 'pendiente_revision' %}
+                                            bg-secondary
+                                        {% elif tarea.estado == 'cancelado' %}
+                                            bg-danger
+                                        {% elif tarea.estado == 'reasignado' %}
+                                            bg-info text-dark
+                                        {% else %}
+                                            bg-light text-dark
+                                        {% endif %}
+                                    ">
+                                        {{ tarea.estado|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8">No hay tareas completadas.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    
                   </table>
               </div>
               
@@ -586,24 +676,34 @@
                       <tr>
                           <th>ID</th>
                           <th>Descripción</th>
-                          <th>Fecha de Asignación</th>
                           <th>Dirección</th>
                           <th>Actividad</th>
                           <th>Num_Cajero</th>
                           <th>Asignado a</th>
+                          
+                          <th>Acciones</th>
+
+
                       </tr>
                   </thead>
                   <tbody id="tareaCompletadaTableBody">
                       {% for tarea in tareas_completadas %}
+                      {% if tarea.estado == "Anclaje_completado" %}
                           <tr>
                               <td>{{ tarea.id }}</td>
                               <td>{{ tarea.descripcion }}</td>
-                              <td>{{ tarea.fecha_asignacion }}</td>
+                            
                               <td>{{ tarea.direccion }}</td>
                               <td>{{ tarea.actividad }}</td>
                               <td>{{ tarea.num_cajero }}</td>
                               <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
+                             
+                            <td>
+                              <!--asignar boton a una funcion que actualice a "configuracion "-->
+                              <button class="btn btn-success mt-2" onclick="confAncla({{ tarea.id }})">confirmar</button>
+                            </td>
                           </tr>
+                          {% endif %}
                       {% empty %}
                           <tr>
                               <td colspan="7">No hay tareas completadas.</td>

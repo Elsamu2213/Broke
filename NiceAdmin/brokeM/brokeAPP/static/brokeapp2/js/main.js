@@ -97,6 +97,8 @@ function asignarTarea(tareaId) {
   }
 }
 
+
+
 function modificarAsignacion(tareaId) {
   const usuarioId = document.getElementById(`usuario-modificar-${tareaId}`).value;
   const csrftoken = getCookie('csrftoken');  // Obtenemos el token CSRF de las cookies
@@ -206,9 +208,10 @@ function getCookie(name) {
 
 //asignar tareas cambiando el id del usuario asignado______________________________
 
-function asignarTarea(tareaId) {
-  const usuarioId = document.getElementById(`usuario-select-${tareaId}`).value;
-  
+function asignarTarea(tabla, tareaId) {
+  const usuarioSelectId = `${tabla}-usuario-select-${tareaId}`;
+  const usuarioId = document.getElementById(usuarioSelectId).value;
+
   if (!usuarioId) {
       alert("Seleccione un usuario para asignar la tarea.");
       return;
@@ -218,7 +221,7 @@ function asignarTarea(tareaId) {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de enviar el token CSRF para evitar errores de seguridad.
+          'X-CSRFToken': getCookie('csrftoken') // Asegúrate de enviar el token CSRF.
       },
       body: JSON.stringify({ usuario_id: usuarioId })
   })
@@ -226,12 +229,13 @@ function asignarTarea(tareaId) {
   .then(data => {
       if (data.success) {
           alert('Tarea asignada correctamente.');
-          location.reload();  // Recargar la página para que se actualice el estado de las tareas.
+          location.reload(); // Recargar la página para que se actualice el estado de las tareas.
       } else {
           alert('Error al asignar la tarea.');
       }
   });
 }
+
 
 function getCookie(name) {
   let cookieValue = null;

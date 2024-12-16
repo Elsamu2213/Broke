@@ -1,3 +1,72 @@
+//finalizar tarea boton
+function quitarDeProcesos(tareaId) {
+  if (confirm("¿Está seguro de que desea quitar esta tarea de los procesos y marcarla como finalizada?")) {
+      finalizarTarea(tareaId);
+  }
+}
+
+function finalizarTarea(tareaId) {
+  fetch('/actualizar_tarea/', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken') // Asegúrate de que esta función esté definida para manejar CSRF tokens
+      },
+      body: JSON.stringify({
+          id: tareaId,
+          estado: 'finalizado',  // Cambiamos el estado a finalizado
+      })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          alert("La tarea se ha marcado como finalizada.");
+          location.reload(); // Recargar la página para reflejar los cambios
+      } else {
+          alert("Error al actualizar la tarea: " + data.error);
+      }
+  })
+  .catch(error => {
+      console.error("Error:", error);
+  });
+}
+
+
+
+//por si hay errores
+document.getElementById("formExcel").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  let formData = new FormData(this);
+  fetch("{% url 'cargar_excel' %}", {
+      method: "POST",
+      headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.error) {
+          // Mostrar modal de error
+          document.getElementById("errorModalBody").innerText = data.error;
+          new bootstrap.Modal(document.getElementById("errorModal")).show();
+      } else if (data.success) {
+          // Mostrar modal de éxito
+          document.getElementById("successModalBody").innerText = data.success;
+          new bootstrap.Modal(document.getElementById("successModal")).show();
+      }
+  })
+  .catch(error => {
+      console.error("Error en la petición:", error);
+      document.getElementById("errorModalBody").innerText = "Error inesperado al comunicarse con el servidor.";
+      new bootstrap.Modal(document.getElementById("errorModal")).show();
+  });
+});
+
+
+
+
 //filtrar en busqueda  para actualizar en tiempo real "observaciones "______________________________________________
 
                               document.addEventListener("DOMContentLoaded", function () {
@@ -78,24 +147,7 @@ function filterTable() {
 
 //asignar tarea____________________________________________
 
-function asignarTarea(tareaId) {
-  const usuarioId = document.getElementById(`usuario-select-${tareaId}`).value;
-  if (usuarioId) {
-      fetch(`/asignar_tarea/${tareaId}/`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': '{{ csrf_token }}' // Importante para seguridad
-          },
-          body: JSON.stringify({ usuario_id: usuarioId })
-      })
-      .then(response => {
-          if (response.ok) {
-              location.reload();  // Recargar la página para reflejar los cambios
-          }
-      });
-  }
-}
+
 
 
 
@@ -924,4 +976,48 @@ function aceptarTarea(tareaId, usuarioId) {
   .catch(error => {
       console.error("Error:", error);
   });
+}
+
+
+
+
+
+function actualizarActividad(tareaId, nuevaActividad) {
+  fetch(`/actualizar_actividad/${tareaId}/`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken') // Asegúrate de incluir el token CSRF
+      },
+      body: JSON.stringify({ actividad: nuevaActividad })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          alert('Actividad actualizada correctamente.');
+          location.reload(); // Recargar la página para reflejar los cambios
+      } else {
+          alert('Error al actualizar la actividad: ' + data.error);
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      alert('Hubo un error al actualizar la actividad.');
+  });
+}
+
+// Función para obtener el token CSRF
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
 }

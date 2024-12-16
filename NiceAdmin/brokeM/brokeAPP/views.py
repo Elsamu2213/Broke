@@ -1,5 +1,12 @@
 
 
+from io import BytesIO
+from io import BytesIO
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from .models import Tarea
+
 
 from django.utils.decorators import method_decorator
 
@@ -485,11 +492,22 @@ from .models import Tarea
 
 from django.shortcuts import render
 from django.http import JsonResponse
-import pandas as pd
-from .models import Tarea
 
-import pandas as pd
-from django.core.exceptions import ValidationError
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+
+from django.core.exceptions import ValidationError  # Importar ValidationError
+
+
+
+
+
+
+
+
+
 def cargar_excel(request):
     if request.method == "POST" and request.FILES.get("archivo_excel"):
         archivo_excel = request.FILES["archivo_excel"]
@@ -504,7 +522,7 @@ def cargar_excel(request):
             # Procesar cada fila del archivo y cargarla en la base de datos
             for index, row in df.iterrows():
                 direccion = row['direccion']
-                Cod_postal = row['Cod_postal'] if 'Cod_postal' in row else row['Cod_postal']
+                Cod_postal = row['Cod_postal'] if 'Cod_postal' in row else None
                 num_cajero = row['num_cajero']
                 fecha_anclaje = row['ENTREGA/ANCLAJE']
                 hora_anclaje = row['HORA DE ENTREGA']
@@ -517,25 +535,39 @@ def cargar_excel(request):
                 cordenadas = f"{latitud},{longitud}"
 
                 # Crear la tarea
-                tarea = Tarea.objects.create(
+                Tarea.objects.create(
                     direccion=direccion,
+                    Cod_postal=Cod_postal,
                     num_cajero=num_cajero,
                     fecha_anclaje=fecha_anclaje,
                     hora_anclaje=hora_anclaje,
                     fecha_vencimiento=fecha_vencimiento,
                     hora_venconfig=hora_venconfig,
-                    cordenadas=cordenadas,  # Almacenar las coordenadas
+                    cordenadas=cordenadas,  # Almacenar las cordenadas
                 )
 
-            return JsonResponse({"success": "Archivo procesado correctamente"})
+            # Agregar un mensaje de éxito
+            messages.success(request, "Archivo procesado correctamente.")
+            return redirect('asignar')  # Redirige a la página principal de asignar tareas
         
         except ValidationError as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            # Agregar un mensaje de error
+            messages.error(request, f"Error de validación: {str(e)}")
         except Exception as e:
-            return JsonResponse({"error": f"Error al procesar el archivo: {str(e)}"}, status=400)
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+            # Agregar un mensaje de error
+            messages.error(request, f"Error al procesar el archivo: {str(e)}")
+        
+        return redirect('asignar')  # Redirige incluso si hubo errores
+    else:
+        # Agregar un mensaje para métodos no permitidos
+        messages.error(request, "Método no permitido.")
+        return redirect('asignar')
 
-# para guardar la descripcion:
+
+
+
+
+# ______________________________________________________para guardar la descripcion:
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -561,3 +593,195 @@ def actualizar_tarea_descripcion(request):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
     return JsonResponse({"status": "error", "message": "Método no permitido"}, status=405)
+
+
+@csrf_exempt
+def actualizar_actividad(request, tarea_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            nueva_actividad = data.get('actividad')
+
+            if not nueva_actividad:
+                return JsonResponse({'success': False, 'error': 'No se proporcionó una actividad'})
+
+            tarea = Tarea.objects.get(id=tarea_id)
+            tarea.actividad = nueva_actividad
+
+            # Resetear usuario solo si la actividad cambia a "Configuración"
+            if nueva_actividad == "Configuración":
+                tarea.usuario = None  # Reinicia el usuario asignado
+                tarea.estado = "Pendiente"  # Opcional: Reinicia el estado
+                tarea.completada = 0
+
+            tarea.save()
+
+            return JsonResponse({'success': True, 'message': 'Actividad actualizada exitosamente'})
+        except Tarea.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Tarea no encontrada'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+
+
+
+
+def vista_tareas(request):
+    tareas_completadas = Tarea.objects.filter(estado="Anclaje_completado")  # Tareas en la tabla de Anclajes Completados
+    tareas_no_asignadas = Tarea.objects.filter(actividad="Configuración", estado="Pendiente")  # Tareas para Configuraciones
+    usuarios = Usuario.objects.all()  # Usuarios disponibles para asignar
+
+    return render(request, 'nombre_template.html', {
+        'tareas_completadas': tareas_completadas,
+        'tareas_no_asignadas': tareas_no_asignadas,
+        'usuarios': usuarios,
+    })
+
+#para boton de finalizar tarea
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def actualizar_tarea(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            tarea_id = data.get("id")
+            nuevo_estado = data.get("estado")
+
+            # Buscar la tarea por ID
+            tarea = Tarea.objects.get(id=tarea_id)
+            
+            # Si la tarea está en estado "en_proceso", cambiarla a "finalizado"
+            if nuevo_estado == 'finalizado':
+                tarea.estado = 'finalizado'
+                tarea.completada = 1  # Marcar la tarea como completada
+                tarea.save()
+
+            return JsonResponse({"success": True, "message": "Estado actualizado exitosamente"})
+        except Tarea.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Tarea no encontrada"})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    else:
+        return JsonResponse({"success": False, "error": "Método no permitido"})
+
+
+        #para generar reportes de las tareas____________________________________________
+import openpyxl
+from django.http import HttpResponse
+from .models import Tarea
+
+def generar_reporte_excel(request):
+    # Crear un libro de trabajo de Excel
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Tareas"
+
+    # Escribir los encabezados de las columnas
+    headers = [
+        "ID", "Descripción", "Fecha Vencimiento", "Dirección", "Actividad", 
+        "Usuario", "Num Cajero", "Observaciones", "Completada", "Cod Postal", 
+        "Estado", "Fecha Anclaje", "Hora Anclaje", "Hora Ven Config", "Cordenadas"
+    ]
+    ws.append(headers)
+
+    # Obtener las tareas
+    tareas = Tarea.objects.all()
+
+    # Escribir los datos de cada tarea en el archivo Excel
+    for tarea in tareas:
+        descripcion = tarea.descripcion or "No disponible"
+        fecha_vencimiento = str(tarea.fecha_vencimiento) if tarea.fecha_vencimiento else "No disponible"
+        direccion = tarea.direccion or "No disponible"
+        actividad = tarea.actividad or "No disponible"
+        usuario = f"{tarea.usuario.first_name} {tarea.usuario.last_name}" if tarea.usuario else "No asignado"
+        num_cajero = tarea.num_cajero or "No disponible"
+        observaciones = tarea.observaciones or "No disponible"
+        completada = str(tarea.completada) if tarea.completada is not None else "No disponible"
+        estado = tarea.estado or "No disponible"
+        fecha_anclaje = str(tarea.fecha_anclaje) if tarea.fecha_anclaje else "No disponible"
+        hora_anclaje = str(tarea.hora_anclaje) if tarea.hora_anclaje else "No disponible"
+        hora_venconfig = str(tarea.hora_venconfig) if tarea.hora_venconfig else "No disponible"
+        cordenadas = tarea.cordenadas or "No disponible"
+
+        # Comprobamos si el campo Cod_postal existe en el modelo
+        cod_postal = getattr(tarea, 'Cod_postal', None) or "No disponible"
+
+        # Escribir una fila con los datos de la tarea
+        ws.append([
+            tarea.id, descripcion, fecha_vencimiento, direccion, actividad, 
+            usuario, num_cajero, observaciones, completada, cod_postal, 
+            estado, fecha_anclaje, hora_anclaje, hora_venconfig, cordenadas
+        ])
+
+    # Crear la respuesta HTTP con el archivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="reporte_tareas.xlsx"'
+
+    # Guardar el archivo Excel en la respuesta
+    wb.save(response)
+
+    return response
+
+
+
+
+#_______________________________________borrado de tareas___________________________________
+from django.db import connection
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from openpyxl import Workbook
+from .models import Tarea
+
+def borrar_datos_y_generar_excel(request):
+    if request.method == 'POST':
+        # Generar el archivo Excel antes de borrar los datos
+        tareas = Tarea.objects.all()
+
+       
+        # Crear el archivo Excel
+        wb = Workbook()
+        ws = wb.active
+        ws.append(["ID", "Descripción", "Fecha de Vencimiento", "Dirección", "Actividad", "Nombre del Usuario", "Num_Cajero", "Observaciones", "Completada", "Cod_postal", "Estado", "Fecha de Anclaje", "Hora de Anclaje", "Hora Venconfig", "Coordenadas"])
+
+        for tarea in tareas:
+                ws.append([
+                    tarea.id,
+                tarea.descripcion,
+                tarea.fecha_vencimiento,
+                tarea.direccion,
+                tarea.actividad,
+                f"{tarea.usuario.first_name} {tarea.usuario.last_name}" if tarea.usuario else "No asignado",  # Comprobación añadida
+                tarea.num_cajero,
+                tarea.observaciones,
+                tarea.completada,
+                tarea.Cod_postal if tarea.Cod_postal else "No disponible",
+                tarea.estado,
+                tarea.fecha_anclaje,
+                tarea.hora_anclaje,
+                tarea.hora_venconfig,
+                tarea.cordenadas,
+        ])
+
+        # Guardar el archivo Excel
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="tareas_reporte.xlsx"'
+        wb.save(response)
+        
+        # Borrar los datos de la tabla de tareas
+        Tarea.objects.all().delete()
+
+        # Reiniciar el contador AUTO_INCREMENT
+        with connection.cursor() as cursor:
+            cursor.execute("ALTER TABLE brokeapp_tarea AUTO_INCREMENT = 1;")
+
+        # Redirigir después de completar la acción
+        return response  # Devuelve el Excel directamente como respuesta
+    # Si no es un POST, mostrar un mensaje en la misma página
+    return render(request, 'brokeapp1/asignar.html', {
+        'mensaje': '¿Está seguro de que desea borrar todas las tareas? Esta acción no se puede deshacer.',
+    })

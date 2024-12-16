@@ -76,7 +76,7 @@ class Tarea(models.Model):
         ('cancelado', 'Cancelado'),
         ('pendiente_revision', 'Pendiente de Revisión'),
         ('reasignado', 'Reasignado'),
-    ], default='en_proceso')  # Agregar campo estado
+    ], default='pendiente')  # Agregar campo estado
     
     def __str__(self):
         return f"Tarea {self.id}: {self.descripcion}"

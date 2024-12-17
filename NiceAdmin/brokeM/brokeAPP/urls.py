@@ -97,4 +97,7 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
     path('generar-reporte-excel/', views.generar_reporte_excel, name='generar_reporte_excel'),
     path('borrar-datos-y-generar-excel/', views.borrar_datos_y_generar_excel, name='borrar_datos_y_generar_excel'),
     path('actualizar-descripcion/', views.actualizar_descripcion, name='actualizar_descripcion'),
+
+
+    path('api/tarea/<int:id>/', views.obtener_tarea, name='obtener_tarea'),
 ]

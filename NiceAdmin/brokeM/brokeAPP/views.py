@@ -793,3 +793,20 @@ def borrar_datos_y_generar_excel(request):
     return render(request, 'brokeapp1/asignar.html', {
         'mensaje': '¿Está seguro de que desea borrar todas las tareas? Esta acción no se puede deshacer.',
     })
+
+
+from django.http import JsonResponse
+from .models import Tarea
+
+def obtener_tarea(request, id):
+    try:
+        tarea = Tarea.objects.get(pk=id)
+        data = {
+            "id": tarea.id,
+            "estado": tarea.estado,
+            "actividad": tarea.actividad,
+            
+        }
+        return JsonResponse(data)
+    except Tarea.DoesNotExist:
+        return JsonResponse({"error": "La tarea no existe."}, status=404)

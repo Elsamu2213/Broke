@@ -567,32 +567,40 @@ def cargar_excel(request):
 
 
 
-# ______________________________________________________para guardar la descripcion:
+# ______________________________________________________para guardar la descripcion:______________________________
+
+
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
+from .models import Tarea
 
-@csrf_exempt
-def actualizar_tarea_descripcion(request):
+def actualizar_descripcion(request):
     if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            tarea_id = data.get("id")
-            nueva_descripcion = data.get("descripcion")
+        # Obtener el id de la tarea y la nueva descripción del formulario
+        tarea_id = request.POST.get('tarea_id')
+        nueva_descripcion = request.POST.get('descripcion')
 
-            # Buscar y actualizar la tarea
-            from .models import Tarea
-            tarea = Tarea.objects.get(id=tarea_id)
-            tarea.descripcion = nueva_descripcion
-            tarea.save()
+        # Obtener la tarea correspondiente
+        tarea = get_object_or_404(Tarea, id=tarea_id)
 
-            return JsonResponse({"status": "success", "message": "Descripción actualizada"})
-        except Tarea.DoesNotExist:
-            return JsonResponse({"status": "error", "message": "Tarea no encontrada"}, status=404)
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+        # Actualizar la descripción
+        tarea.descripcion = nueva_descripcion
+        tarea.save()
 
-    return JsonResponse({"status": "error", "message": "Método no permitido"}, status=405)
+        # Retornar una respuesta en JSON para confirmar la actualización
+        return JsonResponse({'mensaje': 'Descripción actualizada exitosamente.'})
+
+    return redirect('asignar')  # Si no es POST, redirigir a la vista principal
+
+
+
+
+
+
+
+
+
+
 
 
 @csrf_exempt

@@ -67,42 +67,70 @@ document.getElementById("formExcel").addEventListener("submit", function (e) {
 
 
 
-//filtrar en busqueda  para actualizar en tiempo real "observaciones "______________________________________________
+//filtrar en busqueda  para actualizar en tiempo real "descripcion "______________________________________________
+document.addEventListener("DOMContentLoaded", function () {
+  // Capturar clic en el botón de actualizar
+  document.querySelectorAll(".btn-actualizar").forEach(button => {
+      button.addEventListener("click", function () {
+          const tareaId = this.getAttribute("data-id");
+          const nuevaDescripcion = this.closest("tr").querySelector(".descripcion-input").value;
 
-                              document.addEventListener("DOMContentLoaded", function () {
-                                  // Capturar cambios en los campos de descripción
-                                  document.querySelectorAll(".descripcion-input").forEach(input => {
-                                      input.addEventListener("blur", function () {
-                                          const tareaId = this.getAttribute("data-id");
-                                          const nuevaDescripcion = this.value;
-                              
-                                          fetch(`/actualizar_tarea_descripcion/`, {
-                                              method: "POST",
-                                              headers: {
-                                                  "Content-Type": "application/json",
-                                                  "X-CSRFToken": "{{ csrf_token }}" // Incluye el token CSRF
-                                              },
-                                              body: JSON.stringify({
-                                                  id: tareaId,
-                                                  descripcion: nuevaDescripcion
-                                              })
-                                          })
-                                          .then(response => {
-                                              if (!response.ok) {
-                                                  throw new Error("Error al actualizar la descripción");
-                                              }
-                                              return response.json();
-                                          })
-                                          .then(data => {
-                                              alert("Descripción actualizada correctamente");
-                                          })
-                                          .catch(error => {
-                                              console.error(error);
-                                              alert("Hubo un problema al actualizar la descripción.");
-                                          });
-                                      });
-                                  });
-                              });
+          // Enviar la nueva descripción al servidor
+          fetch(`/actualizar_tarea_descripcion/`, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": "{{ csrf_token }}" // Incluye el token CSRF
+              },
+              body: JSON.stringify({
+                  id: tareaId,
+                  descripcion: nuevaDescripcion
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.status === "success") {
+                  mostrarModal("Éxito", "Descripción actualizada correctamente.");
+              } else {
+                  mostrarModal("Error", data.message || "Hubo un problema al actualizar la descripción.");
+              }
+          })
+          .catch(error => {
+              console.error(error);
+              mostrarModal("Error", "Hubo un problema al actualizar la descripción.");
+          });
+      });
+  });
+
+  // Función para mostrar el modal con el mensaje
+  function mostrarModal(titulo, mensaje) {
+      const modalHTML = `
+          <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="messageModalLabel">${titulo}</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <p>${mensaje}</p>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      const modal = new bootstrap.Modal(document.getElementById('messageModal'));
+      modal.show();
+  }
+});
+
+
+
+
                               
 
 
@@ -138,6 +166,7 @@ function filterTable() {
       tr[i].style.display = found ? "" : "none";
   }
 }
+
 
 
 

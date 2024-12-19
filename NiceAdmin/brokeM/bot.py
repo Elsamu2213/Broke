@@ -22,7 +22,7 @@ async def send_message_to_discord(message):
     else:
         print(f'No se encontró el canal con ID: {CHANNEL_ID}')
 
-ESTADOS_VALIDOS = ['iniciado', 'en_proceso', 'Anclaje_completado', 'cancelado','completado', 'pendiente_revision', 'reasignado']
+ESTADOS_VALIDOS = ['iniciado', 'en_proceso', 'Anclaje_completado', 'cancelado','completado', 'pendiente_revision', 'reprogramado']
 
 # Comando para actualizar el estado de la tarea
 @client.command(name='actualizar_estado')

@@ -317,68 +317,46 @@
   </aside>
 
   <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>Contact</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item">Pages</li>
-          <li class="breadcrumb-item active">Contact</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
-
     <section class="section contact">
-
-      <div class="row gy-4">
-
-
-        <div class="col-xl-6">
-
-          <div class="row">
-           
-           
-            <div class="col-lg-6">
-              <div class="info-box card">
-                <div class="container">
-                  <div class="form-container">
-                      <h3 class="text-center mb-4" style="color: #ff69b4;">📧 Enviar un Correo Adorable</h3>
-                      <form action="{% url 'enviar_correo' %}" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <label for="destinatario">Destinatario:</label>
-                        <input type="email" name="destinatario" required>
-                        
-                        <label for="asunto">Asunto:</label>
-                        <input type="text" name="asunto" required>
-                        
-                        <label for="mensaje">Mensaje:</label>
-                        <textarea name="mensaje" required></textarea>
-                        
-                        <label for="archivo">Archivo adjunto (opcional):</label>
-                        <input type="file" name="archivo">
-                        
-                        <button type="submit">Enviar</button>
-                    </form>
-                  </div>
-              </div>
-          
-              {% if messages %}
-                  <ul style="margin-top: 20px; padding: 0;">
-                      {% for message in messages %}
-                          <li style="list-style: none; padding: 10px; background-color: #f8f8f8; border-left: 4px solid #4CAF50; margin-bottom: 5px;">
-                              {{ message }}
-                          </li>
-                      {% endfor %}
-                  </ul>
-              {% endif %}
-            
-          </div>
-
+        <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+            <div class="card shadow-lg p-4" style="max-width: 600px; width: 100%; border: 2px solid #1e90ff; border-radius: 12px;">
+                <h3 class="text-center mb-4" style="color: #1e90ff;">📧 Enviar un Correo</h3>
+                <form action="{% url 'enviar_correo' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="destinatario" class="form-label" style="color: #1e90ff;">Destinatario:</label>
+                        <input type="email" id="destinatario" name="destinatario" class="form-control" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="asunto" class="form-label" style="color: #1e90ff;">Asunto:</label>
+                        <input type="text" id="asunto" name="asunto" class="form-control" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mensaje" class="form-label" style="color: #1e90ff;">Mensaje:</label>
+                        <textarea id="mensaje" name="mensaje" class="form-control" rows="4" style="border: 1px solid #1e90ff; border-radius: 8px;" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="archivo" class="form-label" style="color: #1e90ff;">Archivo adjunto (opcional):</label>
+                        <input type="file" id="archivo" name="archivo" class="form-control" style="border: 1px solid #1e90ff; border-radius: 8px;">
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn" style="background-color: #1e90ff; color: white; border-radius: 8px; width: 100%;">Enviar</button>
+                    </div>
+                </form>
+                {% if messages %}
+                    <ul class="list-unstyled mt-4">
+                        {% for message in messages %}
+                            <li class="alert alert-success" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
         </div>
-      </div>
     </section>
-  </main><!-- End #main -->
+</main>
+
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">

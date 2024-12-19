@@ -461,23 +461,7 @@
 
 
               </ul>
-<!-- Modal de Error -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="errorModalLabel">Error</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p id="errorMessage">Algo salió mal. Por favor, intenta nuevamente.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="cargarExcelModal" tabindex="-1" aria-labelledby="cargarExcelModalLabel" aria-hidden="true">
@@ -604,8 +588,8 @@
           <th>ID</th>
           <th>Num_Cajero</th>
           <th>Descripción</th>
-          <th>Fecha de Anclaje</th>
-          <th>hora de  Anclaje</th>
+          <th>Fecha de Configuración</th>
+          <th>hora de  Configuración</th>
           
           <th>Dirección</th>
           <th>Actividad</th>
@@ -620,8 +604,8 @@
         <td>{{ tarea.id }}</td>
         <td>{{ tarea.num_cajero }}</td>
         <td>{{ tarea.descripcion }}</td>
-        <td>{{ tarea.fecha_anclaje }}</td>
-        <td>{{ tarea.hora_anclaje }}</td>
+        <td>{{ tarea.fecha_vencimiento }}</td>
+        <td>{{ tarea.hora_venconfig }}</td>
         <td>{{ tarea.direccion }}</td>
         <td>{{ tarea.actividad }}</td>
         <td>
@@ -683,10 +667,41 @@
                                                 <td>{{ tarea.id }}</td>
                                                 <td>
                                                   <input type="text" 
-                                                        value="{{ tarea.descripcion }}" 
-                                                        class="form-control descripcion-input" 
-                                                        data-id="{{ tarea.id }}" />
-                                              </td>
+                                                  value="{{ tarea.descripcion }}" 
+                                                  class="form-control descripcion-input" 
+                                                  data-id="{{ tarea.id }}" />
+                                           
+                                           <!-- Script para enviar el cambio -->
+                                           <script>
+                                               document.querySelectorAll('.descripcion-input').forEach(input => {
+                                                   input.addEventListener('blur', function() {
+                                                       const tareaId = input.getAttribute('data-id');
+                                                       const nuevaDescripcion = input.value;
+                                           
+                                                       fetch("{% url 'actualizar_descripcion' %}", {
+                                                           method: 'POST',
+                                                           headers: {
+                                                               'Content-Type': 'application/x-www-form-urlencoded',
+                                                               'X-CSRFToken': '{{ csrf_token }}'  // Incluir CSRF Token para proteger la solicitud
+                                                           },
+                                                           body: `tarea_id=${tareaId}&descripcion=${nuevaDescripcion}`
+                                                       })
+                                                       .then(response => response.json())
+                                                       .then(data => {
+                                                           if (data.mensaje) {
+                                                               alert(data.mensaje);  // Mostrar mensaje de éxito
+                                                           }
+                                                       })
+                                                       .catch(error => {
+                                                           console.error('Error:', error);
+                                                       });
+                                                   });
+                                               });
+                                           </script>
+                                              
+                                                  
+                                              
+                                              
                                                 
                                                 <td>{{ tarea.fecha_asignacion }}</td>
                                                 <td>{{ tarea.direccion }}</td>
@@ -716,7 +731,8 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
-                            
+
+
                               
                         </div>
                     </div>

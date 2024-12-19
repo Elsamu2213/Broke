@@ -91,11 +91,13 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
 
 
-    path('actualizar_tarea_descripcion/', views.actualizar_tarea_descripcion, name='actualizar_tarea_descripcion'),
+    
     path('actualizar_actividad/<int:tarea_id>/', views.actualizar_actividad, name='actualizar_actividad'),
     path('actualizar_tarea/', views.actualizar_tarea, name='actualizar_tarea'),
     path('generar-reporte-excel/', views.generar_reporte_excel, name='generar_reporte_excel'),
     path('borrar-datos-y-generar-excel/', views.borrar_datos_y_generar_excel, name='borrar_datos_y_generar_excel'),
+    path('actualizar-descripcion/', views.actualizar_descripcion, name='actualizar_descripcion'),
+
 
 
 
@@ -104,5 +106,8 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
     path('tablas/', views.tablas, name='tablas'),
 
+
+
+    path('api/tarea/<int:id>/', views.obtener_tarea, name='obtener_tarea'),
 
 ]

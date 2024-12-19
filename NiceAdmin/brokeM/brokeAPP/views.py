@@ -82,14 +82,11 @@ def index(request):
 @admin_required
 def asignar_view(request):
     return render(request, 'brokeapp1/asignar.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+# Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 @admin_required
-def tablas_view(request):
-    return render(request, 'brokeapp1/tablas.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
-
-@admin_required
-def dashboardA_view(request):
-    return render(request, 'brokeapp1/dashboardA.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+# Cambiadef dashboardA_view(request):
+   # Cambia return render(request, 'brokeapp1/dashboardA.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 def loginAdmin_view(request):
     return render(request, 'brokeapp1/loginAdmin.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
@@ -470,7 +467,7 @@ def actualizar_estado(request):
             nuevo_estado = data.get("estado")
 
             # Verificar que el estado proporcionado sea válido
-            ESTADOS_VALIDOS = ['iniciado', 'en_proceso','Anclaje_completado', 'cancelado', 'completado', 'pendiente_revision', 'reasignado']
+            ESTADOS_VALIDOS = ['iniciado', 'en_proceso','Anclaje_completado', 'cancelado', 'completado', 'pendiente_revision', 'reprogramado']
             if nuevo_estado not in ESTADOS_VALIDOS:
                 return JsonResponse({"success": False, "error": "Estado inválido. Los estados permitidos son: " + ", ".join(ESTADOS_VALIDOS)})
 
@@ -502,13 +499,6 @@ from django.contrib import messages
 
 
 from django.core.exceptions import ValidationError  # Importar ValidationError
-
-
-
-
-
-
-
 
 
 def cargar_excel(request):
@@ -798,6 +788,125 @@ def borrar_datos_y_generar_excel(request):
     })
 
 
+from django.shortcuts import get_object_or_404, redirect
+from .models import Tarea, HistorialTarea
+
+def cambiar_estado_tarea(request, tarea_id):
+    tarea = get_object_or_404(Tarea, id=tarea_id)
+    nuevo_estado = request.POST.get('estado')
+
+    # Verifica que el estado sea válido
+    estados_validos = ['Anclaje_completado', 'cancelado', 'completado']
+    if nuevo_estado in estados_validos:
+        # Guarda un registro en HistorialTarea
+        HistorialTarea.objects.create(
+            tarea=tarea,
+            estado=nuevo_estado,
+            fecha_asignacion=tarea.fecha_anclaje,
+            direccion=tarea.direccion,
+            actividad=tarea.actividad,
+            num_cajero=tarea.num_cajero,
+            asignado_a=tarea.usuario
+        )
+        # Actualiza el estado de la tarea
+        tarea.estado = nuevo_estado
+        tarea.save()
+
+    return redirect('vista_de_tareas')  # Redirige a donde tengas la vista de tareas
+
+
+
+
+# HTML TABLAS-----------------------------------------------------------------------------------------------------------------------
+from django.shortcuts import render, redirect
+from .models import HistorialTarea, Salario, UsuarioCustomizado
+from .forms import SalarioForm
+
+def tablas(request):
+    # Obtener los registros de historial de tareas
+    sabrina = HistorialTarea.objects.all()
+
+    # Obtener todos los usuarios
+    usuarios = UsuarioCustomizado.objects.all()
+
+    # Filtrar salarios por el usuario seleccionado, si se ha elegido uno
+    if 'usuario' in request.GET:
+        usuario_id = request.GET['usuario']
+        salarios = Salario.objects.filter(usuario_id=usuario_id)
+    else:
+        salarios = Salario.objects.all()  # Si no se selecciona usuario, mostrar todos
+
+    # Verificar si se seleccionó un salario para actualizar
+    salario_id = request.GET.get('salario_id')
+    salario = None
+    if salario_id:
+        try:
+            salario = Salario.objects.get(id=salario_id)
+        except Salario.DoesNotExist:
+            salario = None
+
+    # Manejar el formulario de actualización
+    if request.method == 'POST':
+        salario_id = request.POST.get('salario_id')
+        try:
+            salario = Salario.objects.get(id=salario_id)
+            salario.viaticos = request.POST.get('viaticos')
+            salario.pago_sitio = request.POST.get('pago_sitio')
+            salario.total = request.POST.get('total')
+            salario.save()  # Actualizar el registro
+            return redirect('tablas')  # Redirigir a la misma página
+        except Salario.DoesNotExist:
+            pass
+
+    # Pasar los contextos a la plantilla
+    return render(request, 'brokeapp1/tablas.html', {
+        'sabrina': sabrina,
+        'salarios': salarios,
+        'usuarios': usuarios,
+        'salario': salario,  # Incluir el salario seleccionado para editar
+    })
+
+
+
+# HTML DASHBOARD-------------------------------------------------------------------------------------------------------------------
+
+from django.db.models import Count
+from django.shortcuts import render
+from .models import Tarea, UsuarioCustomizado
+import json
+
+def dashboardA_view(request):
+    # Contar cuántos usuarios tienen el rol de "Empleado"
+    total_empleados = UsuarioCustomizado.objects.filter(rol='Empleado').count()
+
+    # Obtener el usuario con más tareas asignadas
+    usuario_con_mas_tareas = UsuarioCustomizado.objects.annotate(num_tareas=Count('tarea')).order_by('-num_tareas').first()
+
+    # Obtener el conteo de tareas por estado
+    tarea_estados = {
+        'Anclaje_completado': Tarea.objects.filter(estado='Anclaje_completado').count(),
+        'Reprogramado': Tarea.objects.filter(estado='reprogramado').count(),
+        'Completado': Tarea.objects.filter(estado='completado').count(),
+        'Cancelado': Tarea.objects.filter(estado='cancelado').count(),
+        'Iniciado': Tarea.objects.filter(estado='iniciado').count(),
+        'En_Proceso': Tarea.objects.filter(estado='en_proceso').count(),
+    }
+
+    # Asegurarse de que todos los valores sean enteros (en caso de None)
+    for estado, count in tarea_estados.items():
+        tarea_estados[estado] = count if count is not None else 0
+
+    # Convertir los datos a formato JSON para usarlos en el script
+    tarea_estados_json = json.dumps(tarea_estados)
+
+    # Pasar el contexto a la plantilla
+    return render(request, 'brokeapp1/dashboardA.html', {
+        'total_empleados': total_empleados,
+        'usuario_con_mas_tareas': usuario_con_mas_tareas,
+        'tarea_estados_json': tarea_estados_json
+    })
+
+
 from django.http import JsonResponse
 from .models import Tarea
 
@@ -813,6 +922,7 @@ def obtener_tarea(request, id):
         return JsonResponse(data)
     except Tarea.DoesNotExist:
         return JsonResponse({"error": "La tarea no existe."}, status=404)
+
 
 #VISTA PARA NOTIFICACIONES ____________________________________________________
 

@@ -11,8 +11,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = commands.Bot(command_prefix='!', intents=intents)
 
-ESTADOS_VALIDOS = ['iniciado', 'en_proceso', 'Anclaje_completado', 'cancelado',
-                   'completado', 'pendiente_revision', 'reasignado']
+ESTADOS_VALIDOS = ['iniciado', 'en_proceso', 'Anclaje_completado', 'cancelado','completado', 'pendiente_revision', 'reprogramado']
 
 FLUJO_ESTADOS = {
     'pendiente': 'iniciado',
@@ -34,6 +33,8 @@ async def get_tarea_info(tarea_id):
             return None
     except requests.ConnectionError:
         return None
+
+# Comando para actualizar el estado de la tarea
 
 @client.command(name='actualizar_estado')
 async def actualizar_estado(ctx, tarea_id: int, nuevo_estado: str):

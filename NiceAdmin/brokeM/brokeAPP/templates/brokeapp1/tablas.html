@@ -312,77 +312,149 @@
     </aside>
     <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
 
-  <main id="main" class="main">
-    <div class="container">
-        <!-- Fila centralizada con la tarjeta -->
-        <div class="row justify-content-center">
-            <div class="col-xl-6 col-lg-8">
-                <!-- Tarjeta con sombra y bordes redondeados -->
-                <div class="card shadow rounded bg-light">
-                    <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+    <!-- tablas.html -->
+    <main id="main" class="main">
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-xl-12 col-lg-12">
+                  <h2 class="text-center my-4">EMPLEADOS</h2>
+                  
+                  <!-- Tabla con diseño Bootstrap -->
+                  <div class="table-responsive">
+                      <table class="table table-striped table-bordered table-hover">
+                          <thead class="table-dark">
+                              <tr>
+                                  <th scope="col">ID</th>
+                                  <th scope="col">Estado</th>
+                                  <th scope="col">Fecha de Asignación</th>
+                                  <th scope="col">Dirección</th>
+                                  <th scope="col">Actividad</th>
+                                  <th scope="col">Num Cajero</th>
+                                  <th scope="col">Asignado a</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for historialtarea in sabrina %}
+                                  <tr>
+                                      <td>{{ historialtarea.id }}</td>
+                                      <td>{{ historialtarea.estado }}</td>
+                                      <td>{{ historialtarea.fecha_asignacion }}</td>
+                                      <td>{{ historialtarea.direccion }}</td>
+                                      <td>{{ historialtarea.actividad }}</td>
+                                      <td>{{ historialtarea.num_cajero }}</td>
+                                      <td>{{ historialtarea.asignado_a }}</td>
+                                  </tr>
+                              {% empty %}
+                                  <tr>
+                                      <td colspan="7" class="text-center">No hay tareas en el historial.</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </main>
+<!-- =======--------------------------------------------------------HISTORIAL-----------------------------------------------------------------------------======= -->
+<main id="main" class="main">
+  <div class="container">
+      <div class="row justify-content-center">
+          <!-- Contenedor para el formulario de actualización con un ancho reducido y centrado -->
+          <div class="col-md-8 col-lg-6 mb-4">
+              <h2 class="text-center my-4">ACTUALIZAR SALARIO</h2>
+              <!-- Formulario para filtrar por usuario -->
+              <form method="GET" action="{% url 'tablas' %}">
+                  <div class="row">
+                      <div class="col-md-8">
+                          <select name="usuario" class="form-control">
+                              <option value="">Seleccione un usuario</option>
+                              {% for usuario in usuarios %}
+                                  <option value="{{ usuario.id }}" {% if request.GET.usuario == usuario.id|stringformat:"s" %}selected{% endif %}>
+                                      {{ usuario.username }}
+                                  </option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="col-md-4">
+                          <button type="submit" class="btn btn-primary">Filtrar</button>
+                      </div>
+                  </div>
+              </form>
+              <!-- Formulario para actualizar salario de un registro -->
+              <form method="POST" action="{% url 'tablas' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                      <label for="salario_id">ID Salario</label>
+                      <input type="text" class="form-control" id="salario_id" name="salario_id" value="{{ salario.id }}" readonly>
+                  </div>
+                  <div class="form-group">
+                      <label for="viaticos">Viáticos</label>
+                      <input type="number" class="form-control" id="viaticos" name="viaticos" value="{{ salario.viaticos }}" placeholder="Viáticos" oninput="calcularTotal()">
+                  </div>
+                  <div class="form-group">
+                      <label for="pago_sitio">Pago Sitio</label>
+                      <input type="number" class="form-control" id="pago_sitio" name="pago_sitio" value="{{ salario.pago_sitio }}" placeholder="Pago Sitio" oninput="calcularTotal()">
+                  </div>
+                  <div class="form-group">
+                      <label for="total">Total</label>
+                      <input type="number" class="form-control" id="total" name="total" value="{{ salario.total }}" placeholder="Total" readonly>
+                  </div>
+                  
+                  <!-- Botón de actualización, con margen superior y centrado -->
+                  <div class="text-center mt-4">
+                      <button type="submit" class="btn btn-success">Actualizar</button>
+                  </div>
+              </form>
+          </div>
+          
+          <!-- Contenedor para la tabla de salarios -->
+          <div class="col-xl-12 col-lg-12">
+              <h2 class="text-center my-4">SALARIO EMPLEADO</h2>
 
-                        <!-- Logo -->
-                        <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
-
-                        <!-- Título -->
-                        <p class="custom-title display-5 font-weight-bold text-primary">Pago Empleados</p>
-
-                        <!-- Lista de empleados -->
-                       
-                        <!-- Tabla de pagos -->
-                        <div class="table-responsive mt-4 w-100">
-                        
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+              <!-- Tabla para mostrar los salarios -->
+              <table class="table table-striped">
+                  <thead>
+                      <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Usuario</th>
+                          <th scope="col">Tarea</th>
+                          <th scope="col">Viáticos</th>
+                          <th scope="col">Pago Sitio</th>
+                          <th scope="col">Total</th>
+                          <th scope="col">Acción</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for salario in salarios %}
+                          <tr>
+                              <td>{{ salario.id }}</td>
+                              <td>{{ salario.usuario.username }}</td>
+                              <td>{{ salario.tarea_id }}</td>
+                              <td>{{ salario.viaticos }}</td>
+                              <td>{{ salario.pago_sitio }}</td>
+                              <td>{{ salario.total }}</td>
+                              <td>
+                                  <!-- Botón para llenar el formulario de edición -->
+                                  <a href="{% url 'tablas' %}?salario_id={{ salario.id }}" class="btn btn-primary">Editar</a>
+                              </td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
 </main>
-<script>
-    // Datos ficticios de empleados
-    const employeePayments = {
-        1: [
-            { sitio: "Planta Norte", fecha: "2024-10-01", pago: "$1200" },
-            { sitio: "Oficina Central", fecha: "2024-10-03", pago: "$800" }
-        ],
-        2: [
-            { sitio: "Sede Sur", fecha: "2024-10-02", pago: "$950" },
-            { sitio: "Taller Norte", fecha: "2024-10-04", pago: "$1100" }
-        ],
-        3: [
-            { sitio: "Oficina Central", fecha: "2024-10-01", pago: "$1300" },
-            { sitio: "Planta Este", fecha: "2024-10-05", pago: "$850" }
-        ],
-        4: [
-            { sitio: "Taller Sur", fecha: "2024-10-01", pago: "$1000" },
-            { sitio: "Sede Oeste", fecha: "2024-10-06", pago: "$1050" }
-        ],
-        5: [
-            { sitio: "Oficina Central", fecha: "2024-10-07", pago: "$950" },
-            { sitio: "Planta Oeste", fecha: "2024-10-09", pago: "$1150" }
-        ]
-    };
 
-    // Función para mostrar los datos de pagos del empleado seleccionado
-    function showEmployeeData(employeeId) {
-        const paymentTableBody = document.getElementById('paymentData');
-        paymentTableBody.innerHTML = ""; // Limpiar la tabla antes de cargar nuevos datos
+<!-- Incluir el archivo JavaScript al final -->
+<script src="{% static 'brokeapp2/js/main.js'%}"></script>
 
-        // Cargar los datos del empleado seleccionado
-        const payments = employeePayments[employeeId];
-        payments.forEach(payment => {
-            const row = `<tr>
-                <td>${payment.sitio}</td>
-                <td>${payment.fecha}</td>
-                <td>${payment.pago}</td>
-            </tr>`;
-            paymentTableBody.innerHTML += row;
-        });
-    }
-</script>
+<!-- =======-------------------------------------------------------SALARIO----------------------------------------------------------------------------------------- ======= -->
 
-  <!-- ======= Footer ======= -->
+
+
+      <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
       &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved

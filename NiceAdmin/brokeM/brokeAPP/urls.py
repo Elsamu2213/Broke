@@ -7,13 +7,13 @@ from .views import listar_tareas, guardar_observacion, completar_tarea
 
 from .views import listar_tareas
 from django.urls import path
-from . import views
-
+from django.urls import path
+from .views import cambiar_estado_tarea
 
 
 urlpatterns = [
      # Aquí defines una ruta para tu vista de perfil recuerda que al tener base de datos en tablas las vistas cambian
-    path('tablas/', views.tablas_view, name='tablas'),  # Aquí defines una ruta para tu vista de perfil
+     #   # Aquí defines una ruta para tu vista de perfil
     path('dashboardA/', views.dashboardA_view, name='dashboardA'),  # Aquí defines una ruta para tu vista de perfil
     path('loginAdmin/', views.loginAdmin_view, name='loginAdmin'),  # Aquí defines una ruta para tu vista de perfil
     path('loginUser/', views.loginUser_view, name='loginUser'),  # Aquí defines una ruta para tu vista de perfil
@@ -100,6 +100,15 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
     path('actualizar-descripcion/', views.actualizar_descripcion, name='actualizar_descripcion'),
 
 
+
+
+    path('tarea/<int:tarea_id>/cambiar_estado/', cambiar_estado_tarea, name='cambiar_estado_tarea'),
+
+
+    path('tablas/', views.tablas, name='tablas'),
+
+
+
     path('api/tarea/<int:id>/', views.obtener_tarea, name='obtener_tarea'),
 
 
@@ -107,4 +116,5 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
     path('notificaciones/', views.lista_notificaciones, name='lista_notificaciones'),
     
+
 ]

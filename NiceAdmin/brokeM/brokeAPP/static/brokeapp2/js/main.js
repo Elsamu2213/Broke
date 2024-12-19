@@ -34,6 +34,39 @@ function finalizarTarea(tareaId) {
 
 
 
+//filtrar en busqueda  para actualizar en tiempo real "observaciones "______________________________________________
+
+//por si hay errores
+document.getElementById("formExcel").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  let formData = new FormData(this);
+  fetch("{% url 'cargar_excel' %}", {
+      method: "POST",
+      headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.error) {
+          // Mostrar modal de error
+          document.getElementById("errorModalBody").innerText = data.error;
+          new bootstrap.Modal(document.getElementById("errorModal")).show();
+      } else if (data.success) {
+          // Mostrar modal de éxito
+          document.getElementById("successModalBody").innerText = data.success;
+          new bootstrap.Modal(document.getElementById("successModal")).show();
+      }
+  })
+  .catch(error => {
+      console.error("Error en la petición:", error);
+      document.getElementById("errorModalBody").innerText = "Error inesperado al comunicarse con el servidor.";
+      new bootstrap.Modal(document.getElementById("errorModal")).show();
+  });
+});
+
 
 
 //filtrar en busqueda  para actualizar en tiempo real "descripcion "______________________________________________
@@ -97,16 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
-
-
-                              
-
-
-
-
-
-
 //filtrar en busqueda______________________________________________
 function filterTable() {
   // Obtener el valor del input de búsqueda
@@ -137,16 +160,7 @@ function filterTable() {
 }
 
 
-
-
-
-
-
-
 //asignar tarea____________________________________________
-
-
-
 
 
 function modificarAsignacion(tareaId) {
@@ -976,10 +990,6 @@ function aceptarTarea(tareaId, usuarioId) {
   });
 }
 
-
-
-
-
 function actualizarActividad(tareaId, nuevaActividad) {
   fetch(`/actualizar_actividad/${tareaId}/`, {
       method: 'POST',
@@ -1018,4 +1028,40 @@ function getCookie(name) {
       }
   }
   return cookieValue;
+
 }
+
+
+
+
+// SALARIO-----------------------------------------------------------------------------------------------------------------------
+// Función para calcular el total automáticamente
+// Función para calcular el total automáticamente y validar los campos
+function calcularTotal() {
+  var viaticos = parseFloat(document.getElementById('viaticos').value) || 0;
+  var pagoSitio = parseFloat(document.getElementById('pago_sitio').value) || 0;
+  var total = viaticos + pagoSitio;
+  
+  // Asignar el valor calculado al campo "Total"
+  document.getElementById('total').value = total.toFixed(2);
+}
+
+function validarFormulario() {
+  var viaticos = document.getElementById('viaticos').value;
+  var pagoSitio = document.getElementById('pago_sitio').value;
+
+  // Verificar que los valores sean números válidos
+  if (isNaN(viaticos) || isNaN(pagoSitio)) {
+      alert("Por favor, ingrese valores válidos para Viáticos y Pago Sitio.");
+      return false;
+  }
+  return true;
+}
+
+// Asegurarse de que el formulario se valida antes de enviarlo
+document.querySelector("form").onsubmit = function(event) {
+  if (!validarFormulario()) {
+      event.preventDefault();  // Evitar que el formulario se envíe si la validación falla
+  }
+};
+

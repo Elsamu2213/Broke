@@ -36,36 +36,6 @@ function finalizarTarea(tareaId) {
 
 //filtrar en busqueda  para actualizar en tiempo real "observaciones "______________________________________________
 
-//por si hay errores
-document.getElementById("formExcel").addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  let formData = new FormData(this);
-  fetch("{% url 'cargar_excel' %}", {
-      method: "POST",
-      headers: {
-          "X-CSRFToken": "{{ csrf_token }}",
-      },
-      body: formData,
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.error) {
-          // Mostrar modal de error
-          document.getElementById("errorModalBody").innerText = data.error;
-          new bootstrap.Modal(document.getElementById("errorModal")).show();
-      } else if (data.success) {
-          // Mostrar modal de éxito
-          document.getElementById("successModalBody").innerText = data.success;
-          new bootstrap.Modal(document.getElementById("successModal")).show();
-      }
-  })
-  .catch(error => {
-      console.error("Error en la petición:", error);
-      document.getElementById("errorModalBody").innerText = "Error inesperado al comunicarse con el servidor.";
-      new bootstrap.Modal(document.getElementById("errorModal")).show();
-  });
-});
 
 
 

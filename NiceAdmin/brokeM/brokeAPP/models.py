@@ -98,7 +98,7 @@ class Tarea(models.Model):
         else:
             self._original_estado = self.estado  # Usar el estado actual cuando es una nueva tarea
 
-        super().save(*args, **kwargs)
+        
 
         # Si el estado está cambiando a uno de los estados relevantes
         if self.pk is not None:  # Solo si ya existe la tarea

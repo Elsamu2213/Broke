@@ -52,9 +52,9 @@ class Factura(models.Model):
 
 class Tarea(models.Model):
     descripcion = models.CharField(max_length=255)
-    fecha_anclaje = models.CharField(max_length=20, null=True, blank=True)  # Cambiado a CharField
+    fecha_anclaje = models.CharField(max_length=20, null=True, blank=True)
     hora_anclaje = models.CharField(max_length=10, null=True, blank=True)
-    fecha_vencimiento = models.CharField(max_length=20, null=True, blank=True)  # Cambiado a CharField
+    fecha_vencimiento = models.CharField(max_length=20, null=True, blank=True)
     hora_venconfig = models.CharField(max_length=10, null=True, blank=True)
     direccion = models.CharField(max_length=255, default="Dirección pendiente")
     actividad = models.CharField(max_length=50, choices=[
@@ -62,28 +62,37 @@ class Tarea(models.Model):
         ('Configuración', 'Configuración'),
         ('Fibra', 'Fibra')
     ], default='Anclaje')
-    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True)  # Usar el nuevo modelo
-    num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")  # Con un valor por defecto único
-    observaciones = models.TextField(null=True, blank=True)  # Campo observaciones que permite nulos y vacíos
-    completada = models.BooleanField(default=False)  # Campo para marcar si está completada
-    Cod_postal = models.CharField(max_length=255, default="Dirección pendiente")# Campo para marcar si está completada
-    cordenadas = models.CharField(max_length=255, default="cordenadas pendiente")# Campo para marcar si está completada
-
+    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True)
+    num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")
+    observaciones = models.TextField(null=True, blank=True)
+    completada = models.BooleanField(default=False)
+    Cod_postal = models.CharField(max_length=255, default="Dirección pendiente")
+    cordenadas = models.CharField(max_length=255, default="cordenadas pendiente")
     estado = models.CharField(max_length=20, choices=[
-         ('iniciado', 'Iniciado'),
+        ('iniciado', 'Iniciado'),
         ('en_proceso', 'En Proceso'),
         ('completado', 'Completado'),
         ('cancelado', 'Cancelado'),
         ('pendiente_revision', 'Pendiente de Revisión'),
         ('reasignado', 'Reasignado'),
-    ], default='pendiente')  # Agregar campo estado
-    
+    ], default='pendiente')
+
     def __str__(self):
         return f"Tarea {self.id}: {self.descripcion}"
 
     @property
     def asignada(self):
         return self.usuario is not None
+
+    def save(self, *args, **kwargs):
+        # Guardar el estado original solo si la tarea ya existe (tiene una pk asignada)
+        if self.pk:
+            original = Tarea.objects.get(pk=self.pk)
+            self._original_estado = original.estado
+        else:
+            self._original_estado = self.estado  # Usar el estado actual cuando es una nueva tarea
+
+        super().save(*args, **kwargs)
 
 
 class MensajeWhatsApp(models.Model):
@@ -92,16 +101,27 @@ class MensajeWhatsApp(models.Model):
     imagen_url = models.CharField(max_length=255, blank=True)
     fecha_envio = models.DateTimeField(auto_now_add=True)
 
+
+from django.db import models
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+# Usamos el modelo User si no tienes un modelo de usuario personalizado.
+# Si tienes un modelo personalizado de usuario, puedes referenciarlo directamente.
+UsuarioCustomizado = get_user_model()
+
 class Notificacion(models.Model):
-    tipo = models.CharField(
-        max_length=20,
-        choices=[('Factura', 'Factura'), ('Tarea', 'Tarea'), ('Mensaje', 'Mensaje')],
-        null=False
-    )
-    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)
     descripcion = models.TextField()
-    fecha = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, null=True)  # Permitir nulos
+    tarea = models.ForeignKey('Tarea', on_delete=models.CASCADE, null=False)
+    fecha_creacion = models.DateTimeField(default=timezone.now)
     leida = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Notificación {self.id}: {self.descripcion[:50]}..."
+
+
+
 
 class Salario(models.Model):
     usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)

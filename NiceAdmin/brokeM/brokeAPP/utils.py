@@ -1,11 +1,14 @@
 from mailjet_rest import Client
 from django.conf import settings
 
-def enviar_correo_mailjet(destinatario, asunto, mensaje, archivo_adjunto=None):
-    mailjet = Client(auth=(settings.MAILJET_API_KEY, settings.MAILJET_SECRET_KEY), version='v3.1')
-    
-    # Configuración del mensaje
-    datos = {
+
+MAILJET_API_KEY = '84fcb24e7287379c43123e6b882746a7'
+MAILJET_API_SECRET = '3fd7b61ca969df6e54209c67da69313e'
+
+
+def enviar_correo_mailjet(destinatario, asunto, mensaje, archivo_adjunto_b64=None, archivo_nombre=None):
+    mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
+    email_data = {
         'Messages': [
             {
                 "From": {
@@ -15,21 +18,24 @@ def enviar_correo_mailjet(destinatario, asunto, mensaje, archivo_adjunto=None):
                 "To": [
                     {
                         "Email": destinatario,
-                        "Name": "Nombre Destinatario"
+                        "Name": "Destinatario"
                     }
                 ],
                 "Subject": asunto,
                 "TextPart": mensaje,
-                "Attachments": [
-                    {
-                        "ContentType": "application/pdf",
-                        "Filename": "archivo.pdf",
-                        "Base64Content": archivo_adjunto
-                    }
-                ] if archivo_adjunto else []
+                "HTMLPart": f"<p>{mensaje}</p>"
             }
         ]
     }
-    
-    result = mailjet.send.create(data=datos)
+
+    if archivo_adjunto_b64 and archivo_nombre:
+        email_data['Messages'][0]['Attachments'] = [
+            {
+                "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Filename": archivo_nombre,
+                "Base64Content": archivo_adjunto_b64
+            }
+        ]
+
+    result = mailjet.send.create(data=email_data)
     return result.status_code == 200

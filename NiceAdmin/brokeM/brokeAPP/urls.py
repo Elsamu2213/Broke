@@ -10,6 +10,7 @@ from django.urls import path
 from . import views
 
 
+
 urlpatterns = [
      # Aquí defines una ruta para tu vista de perfil recuerda que al tener base de datos en tablas las vistas cambian
     path('tablas/', views.tablas_view, name='tablas'),  # Aquí defines una ruta para tu vista de perfil
@@ -100,4 +101,10 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
 
     path('api/tarea/<int:id>/', views.obtener_tarea, name='obtener_tarea'),
+
+
+
+
+    path('notificaciones/', views.lista_notificaciones, name='lista_notificaciones'),
+    
 ]

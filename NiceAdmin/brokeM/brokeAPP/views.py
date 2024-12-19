@@ -104,7 +104,7 @@ def Correo_view(request):
     return render(request, 'brokeapp1/Correo.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 def empleados(request):
-    return render(request, 'brokeapp1/empleadosPrueba.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+    return render(request, 'brokeapp1/components-buttons.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 @admin_required
 def chatAdmin(request):
@@ -405,10 +405,12 @@ def enviar_correo_view(request):
         archivo_adjunto = request.FILES.get('archivo')
         
         adjunto_b64 = None
+        archivo_nombre = None
         if archivo_adjunto:
             adjunto_b64 = base64.b64encode(archivo_adjunto.read()).decode('utf-8')
+            archivo_nombre = archivo_adjunto.name
 
-        if enviar_correo_mailjet(destinatario, asunto, mensaje, adjunto_b64):
+        if enviar_correo_mailjet(destinatario, asunto, mensaje, adjunto_b64, archivo_nombre):
             messages.success(request, 'Correo enviado con éxito.')
         else:
             messages.error(request, 'Hubo un error al enviar el correo.')
@@ -416,6 +418,7 @@ def enviar_correo_view(request):
         return redirect('enviar_correo')
     
     return render(request, 'brokeapp1/correo.html')
+
 
 
 
@@ -810,3 +813,13 @@ def obtener_tarea(request, id):
         return JsonResponse(data)
     except Tarea.DoesNotExist:
         return JsonResponse({"error": "La tarea no existe."}, status=404)
+
+#VISTA PARA NOTIFICACIONES ____________________________________________________
+
+
+from django.shortcuts import render
+from .models import Notificacion
+
+def lista_notificaciones(request):
+    notificaciones = Notificacion.objects.filter(usuario=request.user).order_by('-fecha_creacion')
+    return render(request, 'brokeapp1/lista_notificaciones.html', {'notificaciones': notificaciones})

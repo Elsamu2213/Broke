@@ -931,13 +931,6 @@ def obtener_tarea(request, id):
 #VISTA PARA NOTIFICACIONES ____________________________________________________
 
 
-from django.shortcuts import render
-from .models import Notificacion
-
-def lista_notificaciones(request):
-    notificaciones = Notificacion.objects.filter(usuario=request.user).order_by('-fecha_creacion')
-    return render(request, 'brokeapp1/lista_notificaciones.html', {'notificaciones': notificaciones})
-
 
 
 
@@ -970,4 +963,29 @@ def confirmar_actividad(request, tarea_id):
         tarea.save()  # Guardar los cambios en el modelo
         return redirect('tareas_empleado')  # Redirigir a la lista de tareas
     return redirect('tareas_empleado')  # Si no es un POST, redirigir a la lista de tareas
+
+
+
+#para ver al usuario de el pago_____________________
+from django.shortcuts import render
+from .models import Salario
+
+def ver_salarios(request):
+    # Obtén el usuario autenticado
+    usuario = request.user
+
+    # Filtra los registros de salario para mostrar solo los del usuario autenticado
+    salarios = Salario.objects.filter(usuario=usuario)
+
+    # Pasa los salarios al contexto para mostrarlos en la plantilla
+    context = {
+        'salarios': salarios,
+    }
+    
+    return render(request, 'brokeapp1/PagoUsuario.html', context)
+
+
+
+
+
 

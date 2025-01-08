@@ -86,7 +86,7 @@ def asignar_view(request):
 
 @admin_required
 # Cambiadef dashboardA_view(request):
-   # Cambia return render(request, 'brokeapp1/dashboardA.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
+# Cambia return render(request, 'brokeapp1/dashboardA.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
 def loginAdmin_view(request):
     return render(request, 'brokeapp1/loginAdmin.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas

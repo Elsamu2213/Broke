@@ -269,14 +269,14 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboardA' %}">
+        <a class="nav-link collapsed " href="{% url 'dashboardA' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="" href="{% url 'asignar' %}">
+        <a class="nav-link " data-bs-target="#components-nav" data-bs-toggle="" href="{% url 'asignar' %}">
             <i class="bi bi-menu-button-wide"></i><span>Asignar</span><i class=""></i>
         </a>
     </li><!-- End Components Nav -->
@@ -650,11 +650,12 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Descripción</th>
-                                        <th>Fecha de Asignación</th>
+                                        <th>Fecha de tarea</th>
                                         <th>Dirección</th>
                                         <th>Actividad</th>
                                         <th>Num_Cajero</th>
                                         <th>Asignado a</th>
+                                        <th>Aceptado</th>
                                         <th>Reasignar</th>
                                         <th>Observaciones</th>
                                     </tr>
@@ -669,44 +670,61 @@
                                                   value="{{ tarea.descripcion }}" 
                                                   class="form-control descripcion-input" 
                                                   data-id="{{ tarea.id }}" />
-                                           
-                                           <!-- Script para enviar el cambio -->
-                                           <script>
-                                               document.querySelectorAll('.descripcion-input').forEach(input => {
-                                                   input.addEventListener('blur', function() {
-                                                       const tareaId = input.getAttribute('data-id');
-                                                       const nuevaDescripcion = input.value;
-                                           
-                                                       fetch("{% url 'actualizar_descripcion' %}", {
-                                                           method: 'POST',
-                                                           headers: {
-                                                               'Content-Type': 'application/x-www-form-urlencoded',
+                                          
+                                          <!-- Script para enviar el cambio -->
+                                          <script>
+                                              document.querySelectorAll('.descripcion-input').forEach(input => {
+                                                  input.addEventListener('blur', function() {
+                                                      const tareaId = input.getAttribute('data-id');
+                                                      const nuevaDescripcion = input.value;
+                                                      fetch("{% url 'actualizar_descripcion' %}", {
+                                                          method: 'POST',
+                                                          headers: {
+                                                              'Content-Type': 'application/x-www-form-urlencoded',
                                                                'X-CSRFToken': '{{ csrf_token }}'  // Incluir CSRF Token para proteger la solicitud
-                                                           },
-                                                           body: `tarea_id=${tareaId}&descripcion=${nuevaDescripcion}`
-                                                       })
-                                                       .then(response => response.json())
-                                                       .then(data => {
-                                                           if (data.mensaje) {
+                                                          },
+                                                          body: `tarea_id=${tareaId}&descripcion=${nuevaDescripcion}`
+                                                      })
+                                                      .then(response => response.json())
+                                                      .then(data => {
+                                                          if (data.mensaje) {
                                                                alert(data.mensaje);  // Mostrar mensaje de éxito
-                                                           }
-                                                       })
-                                                       .catch(error => {
-                                                           console.error('Error:', error);
-                                                       });
-                                                   });
-                                               });
-                                           </script>
+                                                          }
+                                                      })
+                                                      .catch(error => {
+                                                          console.error('Error:', error);
+                                                      });
+                                                  });
+                                              });
+                                          </script>
                                               
                                                   
                                               
                                               
                                                 
-                                                <td>{{ tarea.fecha_asignacion }}</td>
+                                              <td>
+                                                {% if tarea.actividad == "Anclaje" %}
+                                                    {{ tarea.fecha_anclaje }}
+                                                {% elif tarea.actividad == "Configuración" %}
+                                                    {{ tarea.fecha_vencimiento }}
+                                                {% else %}
+                                                    No disponible
+                                                {% endif %}
+                                            </td>
                                                 <td>{{ tarea.direccion }}</td>
                                                 <td>{{ tarea.actividad }}</td>
                                                 <td>{{ tarea.num_cajero }}</td>
                                                 <td>{{ tarea.usuario.first_name }} {{ tarea.usuario.last_name }}</td>
+                                                <td>
+                                                  {% if tarea.confirmacion == 'confirmado' %}
+                                                      <img src="{% static 'brokeapp2/img/correct.png' %}" alt="Confirmado" />
+                                                  {% elif tarea.confirmacion == 'rechazado' %}
+                                                      <img src="{% static 'brokeapp2/img/cross.png' %}" alt="Rechazado" />
+                                                  {% else %}
+                                                      <img src="{% static 'brokeapp2/img/pendiente.png' %}" alt="Sin Confirmar" />
+                                                  {% endif %}
+                                              </td>
+                                                
                                                 <td>
                                                     <select id="usuario-modificar-{{ tarea.id }}" class="form-select" name="usuario_id" required>
                                                         <option value="">Seleccione un usuario</option>
@@ -746,7 +764,7 @@
                           <tr>
                               <th>ID</th>
                               <th>Descripción</th>
-                              <th>Fecha de Asignación</th>
+                              <th>Fecha de tarea</th>
                               <th>Dirección</th>
                               <th>Actividad</th>
                               <th>Num_Cajero</th>
@@ -759,7 +777,15 @@
                             <tr>
                                 <td>{{ tarea.id }}</td>
                                 <td>{{ tarea.descripcion }}</td>
-                                <td>{{ tarea.fecha_asignacion }}</td>
+                                <td>
+                                  {% if tarea.actividad == "Anclaje" %}
+                                      {{ tarea.fecha_anclaje }}
+                                  {% elif tarea.actividad == "Configuración" %}
+                                      {{ tarea.fecha_vencimiento }}
+                                  {% else %}
+                                      No disponible
+                                  {% endif %}
+                              </td>
                                 <td>{{ tarea.direccion }}</td>
                                 <td>{{ tarea.actividad }}</td>
                                 <td>{{ tarea.num_cajero }}</td>

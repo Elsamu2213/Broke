@@ -65,6 +65,15 @@ class Tarea(models.Model):
         ('Fibra', 'Fibra')
     ], default='Anclaje')
     usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True)  # Usar el nuevo modelo
+    confirmacion = models.CharField(
+        max_length=50,
+        choices=[
+            ('sin_confirmar', 'Sin Confirmar'),
+            ('confirmado', 'Confirmado'),
+            ('rechazado', 'Rechazado')
+        ],
+        default='sin_confirmar'
+    )
     num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")  # Con un valor por defecto único
     observaciones = models.TextField(null=True, blank=True)  # Campo observaciones que permite nulos y vacíos
     completada = models.BooleanField(default=False)  # Campo para marcar si está completada
@@ -155,18 +164,6 @@ class Notificacion(models.Model):
 
 
 
-class Salario(models.Model):
-    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.CASCADE)
-    tarea = models.ForeignKey(Tarea, on_delete=models.CASCADE)
-    lugar_trabajo = models.CharField(max_length=100)
-    viaticos = models.DecimalField(max_digits=10, decimal_places=2)
-    pago_actividad = models.DecimalField(max_digits=10, decimal_places=2)
-    total_pago = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
-    fecha_pago = models.DateField()
-
-    def save(self, *args, **kwargs):
-        self.total_pago = self.viaticos + self.pago_actividad
-        super(Salario, self).save(*args, **kwargs)
 
 
 

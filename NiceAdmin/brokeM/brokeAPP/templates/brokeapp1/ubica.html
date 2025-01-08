@@ -214,7 +214,6 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-
             <li>
               <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                 <i class="bi bi-person"></i>
@@ -224,7 +223,6 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-
             <li>
               <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                 <i class="bi bi-gear"></i>
@@ -234,7 +232,6 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-
             <li>
               <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
                 <i class="bi bi-question-circle"></i>
@@ -264,29 +261,25 @@
   <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'AccesoUs' %}">
           <i class="bi bi-envelope"></i>
           <span>Principal</span>
         </a>
       </li><!-- End Contact Page Nav -->
-    
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'PagoUsuario' %}">
           <i class="bi bi-card-list"></i>
           <span>Pago</span>
         </a>
       </li><!-- End Register Page Nav -->
-
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Ubica1_view' %}">
+        <a class="nav-link collapsed" href="{% url 'tareas_empleado' %}">
           <i class="bi bi-envelope"></i>
           <span>Ubicacion</span>
         </a>
       </li><!-- End Contact Page Nav -->
     </ul>
-
   </aside>
   <!-- End Sidebar-->
   <link href="{% static 'brokeapp2/css/style.css' %}" rel="stylesheet">
@@ -301,33 +294,62 @@
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
                         <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
                         <p class="custom-title display-5 font-weight-bold text-primary">Ubicación Sitio</p>
-
                         <div class="table-responsive mt-4">
                             <h2>Ubicación de Tareas</h2>
                             <table class="table table-bordered mt-4">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha de Asignación</th>
-                                        <th>Dirección</th>
-                                        <th>Actividad</th>
-                                        <th>Num_Cajero</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for tarea in tareas %}
-                                    <tr>
-                                        <td>{{ tarea.fecha_asignacion }}</td>
-                                        <td>{{ tarea.direccion }}</td>
-                                        <td>{{ tarea.actividad }}</td>
-                                        <td>{{ tarea.num_cajero }}</td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="4">No hay tareas disponibles.</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                              <thead>
+                                  <tr>
+                                      <th>id</th>
+                                      <th>Fecha de Actividad</th>
+                                      <th>Dirección</th>
+                                      <th>Actividad</th>
+                                      <th>Num. Cajero</th>
+                                      <th>coordenadas</th>
+                                      <th>confirmar Actividad</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for tarea in tareas %}
+                                  <tr>
+                                    <td>{{ tarea.id }}</td>
+                                    <td>
+                                      {% if tarea.actividad == "Anclaje" %}
+                                          {{ tarea.fecha_anclaje }}
+                                      {% elif tarea.actividad == "Configuración" %}
+                                          {{ tarea.fecha_vencimiento }}
+                                      {% else %}
+                                          No disponible
+                                      {% endif %}
+                                  </td>                                  
+                                      <td>{{ tarea.direccion }}</td>
+                                      <td>{{ tarea.actividad }}</td>
+                                      <td>{{ tarea.num_cajero }}</td>
+                                      <td>{{ tarea.cordenadas }}</td>
+                                      <td>
+                                        {% if tarea.confirmacion == 'sin_confirmar' %}
+                                            <form action="{% url 'confirmar_actividad' tarea.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" name="accion" value="aceptar" class="btn btn-success">Aceptar</button>
+                                            </form>
+                                            <form action="{% url 'confirmar_actividad' tarea.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" name="accion" value="rechazar" class="btn btn-danger">Rechazar</button>
+                                            </form>
+                                        {% elif tarea.confirmacion == 'confirmado' %}
+                                            <span class="text-success">Confirmado</span>
+                                        {% elif tarea.confirmacion == 'rechazado' %}
+                                            <span class="text-danger">Rechazado</span>
+                                        {% endif %}
+                                    </td>
+                                    
+                                  </tr>
+                                  {% empty %}
+                                  <tr>
+                                      <td colspan="4">No hay tareas disponibles.</td>
+                                  </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
                         </div>
                         <div class="row justify-content-center mt-4">
                           <div class="col-xl-11 col-lg-8">

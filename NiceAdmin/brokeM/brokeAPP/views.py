@@ -290,15 +290,21 @@ def modificar_asignacion(request, tarea_id):
             data = json.loads(request.body)  # Cargar el cuerpo de la solicitud JSON
             usuario_id = data.get('usuario_id')
             tarea = get_object_or_404(Tarea, id=tarea_id)
+
+            # Obtener el usuario asociado
             usuario = get_object_or_404(Usuario, id=usuario_id)
 
             # Asignar el nuevo usuario a la tarea
             tarea.usuario = usuario
+
+            # Cambiar el atributo 'confirmacion' a dato de 'sin_confirmar'
+            tarea.confirmacion = "sin_confirmar"
             tarea.save()
 
             return JsonResponse({'message': 'Asignación modificada exitosamente.'}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
 
 #para verificar usuarios Administrador_______________________________________
 
@@ -614,7 +620,7 @@ def actualizar_actividad(request, tarea_id):
                 tarea.usuario = None  # Reinicia el usuario asignado
                 tarea.estado = "Pendiente"  # Opcional: Reinicia el estado
                 tarea.completada = 0
-
+                tarea.confirmacion = "sin_confirmar"
             tarea.save()
 
             return JsonResponse({'success': True, 'message': 'Actividad actualizada exitosamente'})
@@ -787,14 +793,13 @@ def borrar_datos_y_generar_excel(request):
         'mensaje': '¿Está seguro de que desea borrar todas las tareas? Esta acción no se puede deshacer.',
     })
 
-
 from django.shortcuts import get_object_or_404, redirect
 from .models import Tarea, HistorialTarea
-
+ 
 def cambiar_estado_tarea(request, tarea_id):
     tarea = get_object_or_404(Tarea, id=tarea_id)
     nuevo_estado = request.POST.get('estado')
-
+ 
     # Verifica que el estado sea válido
     estados_validos = ['Anclaje_completado', 'cancelado', 'completado']
     if nuevo_estado in estados_validos:
@@ -811,9 +816,9 @@ def cambiar_estado_tarea(request, tarea_id):
         # Actualiza el estado de la tarea
         tarea.estado = nuevo_estado
         tarea.save()
-
-    return redirect('vista_de_tareas')  # Redirige a donde tengas la vista de tareas
-
+ 
+    return redirect('vista_de_tareas')  #
+ 
 
 
 
@@ -933,3 +938,37 @@ from .models import Notificacion
 def lista_notificaciones(request):
     notificaciones = Notificacion.objects.filter(usuario=request.user).order_by('-fecha_creacion')
     return render(request, 'brokeapp1/lista_notificaciones.html', {'notificaciones': notificaciones})
+
+
+
+
+#vista para que cada usuario pueda ver sus propias tareas___________________
+def tareas_empleado(request):
+    usuario = request.user  # Usuario autenticado
+    tareas = Tarea.objects.filter(usuario=usuario).order_by('-fecha_anclaje')  # Filtrar tareas por usuario y ordenar
+    context = {
+        'tareas': tareas
+    }
+    return render(request, 'brokeapp1/ubica.html', context)
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Tarea
+
+def confirmar_actividad(request, tarea_id):
+    tarea = get_object_or_404(Tarea, pk=tarea_id)
+
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+
+        if accion == 'aceptar':
+            tarea.confirmacion = 'confirmado'
+            messages.success(request, f"La actividad {tarea.descripcion} ha sido aceptada.")
+        elif accion == 'rechazar':
+            tarea.confirmacion = 'rechazado'
+            messages.error(request, f"La actividad {tarea.descripcion} ha sido rechazada.")
+        
+        tarea.save()  # Guardar los cambios en el modelo
+        return redirect('tareas_empleado')  # Redirigir a la lista de tareas
+    return redirect('tareas_empleado')  # Si no es un POST, redirigir a la lista de tareas
+

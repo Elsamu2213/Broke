@@ -12,8 +12,8 @@ from .views import cambiar_estado_tarea
 
 
 urlpatterns = [
-     # Aquí defines una ruta para tu vista de perfil recuerda que al tener base de datos en tablas las vistas cambian
-     #   # Aquí defines una ruta para tu vista de perfil
+    # Aquí defines una ruta para tu vista de perfil recuerda que al tener base de datos en tablas las vistas cambian
+    #   # Aquí defines una ruta para tu vista de perfil
     path('dashboardA/', views.dashboardA_view, name='dashboardA'),  # Aquí defines una ruta para tu vista de perfil
     path('loginAdmin/', views.loginAdmin_view, name='loginAdmin'),  # Aquí defines una ruta para tu vista de perfil
     path('loginUser/', views.loginUser_view, name='loginUser'),  # Aquí defines una ruta para tu vista de perfil
@@ -78,7 +78,7 @@ path('chatAdmin/', views.chatAdmin, name='chatAdmin'),
 
 path('enviar_correo/', views.enviar_correo_view, name='enviar_correo'),
 
-path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
+
 
 
 #Observaciones tabla asignar 
@@ -116,5 +116,7 @@ path('Ubica1_view/', views.Ubica_view, name='Ubica1_view'),
 
     path('notificaciones/', views.lista_notificaciones, name='lista_notificaciones'),
     
+    path('tareas/empleado/', views.tareas_empleado, name='tareas_empleado'),
 
+    path('confirmar_actividad/<int:tarea_id>/', views.confirmar_actividad, name='confirmar_actividad'),
 ]

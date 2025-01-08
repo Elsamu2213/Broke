@@ -43,9 +43,21 @@
 }
 
 .COLOR {
-  background: linear-gradient(to right, #1643f9,#218cf6, #ffffff, #75bef3);
+  background: linear-gradient(to right, #ffffff,#218cf6,#9ccff6, #2c55f6,#218cf6,#ffffff,#489bee,#87baee, #ffffff, #75bef3);
+  background-size: 300% 300%;
+  animation: gradientAnimation 5s ease infinite;
 }
-
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 .LETRAS{
   width: 60%; 
   height: 8%; 

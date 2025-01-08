@@ -266,7 +266,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboardA' %}">
+        <a class="nav-link collapsed" href="{% url 'dashboardA' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -288,7 +288,7 @@
       <!-- End Forms Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Correo' %}">
+        <a class="nav-link " href="{% url 'Correo' %}">
           <i class="bi bi-envelope"></i>
           <span>Mensaje</span>
         </a>
@@ -319,7 +319,7 @@
   <main id="main" class="main">
     <section class="section contact">
         <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-            <div class="card shadow-lg p-4" style="max-width: 600px; width: 100%; border: 2px solid #1e90ff; border-radius: 12px;">
+            <div class="card shadow-lg p-4" style="max-width: 600px; width: 100%; border: 5px solid #1e90ff; border-radius: 15px;">
                 <h3 class="text-center mb-4" style="color: #1e90ff;">📧 Enviar un Correo</h3>
                 <form action="{% url 'enviar_correo' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}

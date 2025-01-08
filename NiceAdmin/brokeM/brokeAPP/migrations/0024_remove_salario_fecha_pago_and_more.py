@@ -12,10 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='salario',
-            name='fecha_pago',
-        ),
-        migrations.RemoveField(
-            model_name='salario',
             name='pago_actividad',
         ),
         migrations.RemoveField(

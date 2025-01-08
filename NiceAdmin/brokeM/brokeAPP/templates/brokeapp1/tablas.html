@@ -261,7 +261,7 @@
       <ul class="sidebar-nav" id="sidebar-nav">
   
         <li class="nav-item">
-          <a class="nav-link " href="{% url 'dashboardA' %}">
+          <a class="nav-link collapsed" href="{% url 'dashboardA' %}">
             <i class="bi bi-grid"></i>
             <span>Dashboard</span>
           </a>
@@ -275,7 +275,7 @@
       
   
         <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle=".html" href="{% url 'tablas' %}">
+          <a class="nav-link " data-bs-target="#forms-nav" data-bs-toggle=".html" href="{% url 'tablas' %}">
             <i class="bi bi-journal-text"></i><span>Empleados</span><i class=""></i>
           </a>
          
@@ -314,138 +314,162 @@
 
     <!-- tablas.html -->
     <main id="main" class="main">
-      <div class="container">
+      <div class="container py-5">
           <div class="row justify-content-center">
               <div class="col-xl-12 col-lg-12">
-                  <h2 class="text-center my-4">EMPLEADOS</h2>
-                  
-                  <!-- Tabla con diseño Bootstrap -->
-                  <div class="table-responsive">
-                      <table class="table table-striped table-bordered table-hover">
-                          <thead class="table-dark">
-                              <tr>
-                                  <th scope="col">ID</th>
-                                  <th scope="col">Estado</th>
-                                  <th scope="col">Fecha de Asignación</th>
-                                  <th scope="col">Dirección</th>
-                                  <th scope="col">Actividad</th>
-                                  <th scope="col">Num Cajero</th>
-                                  <th scope="col">Asignado a</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              {% for historialtarea in sabrina %}
+                  <div class="card shadow-lg p-4" style="border: 5px solid #1e90ff; border-radius: 15px;">
+                      <h2 class="text-center mb-4" style="color: #1e90ff;">Empleados</h2>
+                      <!-- Tabla con diseño Bootstrap -->
+                      <div class="table-responsive">
+                          <table class="table table-striped table-hover">
+                              <thead class="table-primary" style="color: #1e90ff;">
                                   <tr>
-                                      <td>{{ historialtarea.id }}</td>
-                                      <td>{{ historialtarea.estado }}</td>
-                                      <td>{{ historialtarea.fecha_asignacion }}</td>
-                                      <td>{{ historialtarea.direccion }}</td>
-                                      <td>{{ historialtarea.actividad }}</td>
-                                      <td>{{ historialtarea.num_cajero }}</td>
-                                      <td>{{ historialtarea.asignado_a }}</td>
+                                      <th scope="col">ID</th>
+                                      <th scope="col">Estado</th>
+                                      <th scope="col">Fecha de Asignación</th>
+                                      <th scope="col">Dirección</th>
+                                      <th scope="col">Actividad</th>
+                                      <th scope="col">Num Cajero</th>
+                                      <th scope="col">Asignado a</th>
                                   </tr>
-                              {% empty %}
-                                  <tr>
-                                      <td colspan="7" class="text-center">No hay tareas en el historial.</td>
-                                  </tr>
-                              {% endfor %}
-                          </tbody>
-                      </table>
+                              </thead>
+                              <tbody>
+                                  {% for historialtarea in sabrina %}
+                                      <tr>
+                                          <td>{{ historialtarea.id }}</td>
+                                          <td>{{ historialtarea.estado }}</td>
+                                          <td>{{ historialtarea.fecha_asignacion }}</td>
+                                          <td>{{ historialtarea.direccion }}</td>
+                                          <td>{{ historialtarea.actividad }}</td>
+                                          <td>{{ historialtarea.num_cajero }}</td>
+                                          <td>{{ historialtarea.asignado_a }}</td>
+                                      </tr>
+                                  {% empty %}
+                                      <tr>
+                                          <td colspan="7" class="text-center">No hay tareas en el historial.</td>
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
                   </div>
               </div>
           </div>
       </div>
-    </main>
+  </main>
+  
 <!-- =======--------------------------------------------------------HISTORIAL-----------------------------------------------------------------------------======= -->
 <main id="main" class="main">
-  <div class="container">
+  <div class="container py-5">
       <div class="row justify-content-center">
-          <!-- Contenedor para el formulario de actualización con un ancho reducido y centrado -->
+          <!-- Contenedor para el formulario de actualización -->
           <div class="col-md-8 col-lg-6 mb-4">
-              <h2 class="text-center my-4">ACTUALIZAR SALARIO</h2>
-              <!-- Formulario para filtrar por usuario -->
-              <form method="GET" action="{% url 'tablas' %}">
-                  <div class="row">
-                      <div class="col-md-8">
-                          <select name="usuario" class="form-control">
-                              <option value="">Seleccione un usuario</option>
-                              {% for usuario in usuarios %}
-                                  <option value="{{ usuario.id }}" {% if request.GET.usuario == usuario.id|stringformat:"s" %}selected{% endif %}>
-                                      {{ usuario.username }}
-                                  </option>
-                              {% endfor %}
-                          </select>
+              <div class="card shadow-lg p-4" style="border: 5px solid #1e90ff; border-radius: 15px;">
+                  <h2 class="text-center mb-4" style="color: #1e90ff;">Actualizar Salario</h2>
+                  <!-- Formulario para filtrar por usuario -->
+                  <form method="GET" action="{% url 'tablas' %}" id="filtrar-form">
+                      <div class="row mb-3">
+                          <div class="col-md-8">
+                              <select name="usuario" id="usuario" class="form-control" style="border: 1px solid #1e90ff; border-radius: 8px;">
+                                  <option value="">Seleccione un usuario</option>
+                                  {% for usuario in usuarios %}
+                                      <option value="{{ usuario.id }}" {% if request.GET.usuario == usuario.id|stringformat:"s" %}selected{% endif %}>
+                                          {{ usuario.username }}
+                                      </option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                          <div class="col-md-4">
+                              <button type="submit" class="btn btn-primary w-100" id="filtrar-btn" style="border-radius: 8px;">Filtrar</button>
+                          </div>
                       </div>
-                      <div class="col-md-4">
-                          <button type="submit" class="btn btn-primary">Filtrar</button>
+                  </form>
+                  <!-- Formulario para actualizar salario -->
+                  <form method="POST" action="{% url 'tablas' %}" id="actualizar-form">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="salario_id" class="form-label" style="color: #1e90ff;">ID Salario</label>
+                          <input type="text" class="form-control" id="salario_id" name="salario_id" value="{{ salario.id }}" readonly style="border: 1px solid #1e90ff; border-radius: 8px;">
                       </div>
-                  </div>
-              </form>
-              <!-- Formulario para actualizar salario de un registro -->
-              <form method="POST" action="{% url 'tablas' %}">
-                  {% csrf_token %}
-                  <div class="form-group">
-                      <label for="salario_id">ID Salario</label>
-                      <input type="text" class="form-control" id="salario_id" name="salario_id" value="{{ salario.id }}" readonly>
-                  </div>
-                  <div class="form-group">
-                      <label for="viaticos">Viáticos</label>
-                      <input type="number" class="form-control" id="viaticos" name="viaticos" value="{{ salario.viaticos }}" placeholder="Viáticos" oninput="calcularTotal()">
-                  </div>
-                  <div class="form-group">
-                      <label for="pago_sitio">Pago Sitio</label>
-                      <input type="number" class="form-control" id="pago_sitio" name="pago_sitio" value="{{ salario.pago_sitio }}" placeholder="Pago Sitio" oninput="calcularTotal()">
-                  </div>
-                  <div class="form-group">
-                      <label for="total">Total</label>
-                      <input type="number" class="form-control" id="total" name="total" value="{{ salario.total }}" placeholder="Total" readonly>
-                  </div>
-                  
-                  <!-- Botón de actualización, con margen superior y centrado -->
-                  <div class="text-center mt-4">
-                      <button type="submit" class="btn btn-success">Actualizar</button>
-                  </div>
-              </form>
+                      <div class="mb-3">
+                          <label for="viaticos" class="form-label" style="color: #1e90ff;">Viáticos</label>
+                          <input type="number" class="form-control" id="viaticos" name="viaticos" value="{{ salario.viaticos }}" placeholder="Viáticos" oninput="calcularTotal()" style="border: 1px solid #1e90ff; border-radius: 8px;">
+                      </div>
+                      <div class="mb-3">
+                          <label for="pago_sitio" class="form-label" style="color: #1e90ff;">Pago Sitio</label>
+                          <input type="number" class="form-control" id="pago_sitio" name="pago_sitio" value="{{ salario.pago_sitio }}" placeholder="Pago Sitio" oninput="calcularTotal()" style="border: 1px solid #1e90ff; border-radius: 8px;">
+                      </div>
+                      <div class="mb-3">
+                          <label for="total" class="form-label" style="color: #1e90ff;">Total</label>
+                          <input type="number" class="form-control" id="total" name="total" value="{{ salario.total }}" placeholder="Total" readonly style="border: 1px solid #1e90ff; border-radius: 8px;">
+                      </div>
+                      <div class="text-center mt-4">
+                          <button type="submit" class="btn btn-success w-100" id="actualizar-btn" style="border-radius: 8px;">Actualizar</button>
+                      </div>
+                  </form>
+              </div>
           </div>
-          
           <!-- Contenedor para la tabla de salarios -->
           <div class="col-xl-12 col-lg-12">
-              <h2 class="text-center my-4">SALARIO EMPLEADO</h2>
-
-              <!-- Tabla para mostrar los salarios -->
-              <table class="table table-striped">
-                  <thead>
-                      <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Usuario</th>
-                          <th scope="col">Tarea</th>
-                          <th scope="col">Viáticos</th>
-                          <th scope="col">Pago Sitio</th>
-                          <th scope="col">Total</th>
-                          <th scope="col">Acción</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% for salario in salarios %}
+              <div class="card shadow-lg p-4" style="border: 5px solid #1e90ff; border-radius: 15px;">
+                  <h2 class="text-center mb-4" style="color: #1e90ff;">Salario Empleado</h2>
+                  <table class="table table-striped table-hover">
+                      <thead class="table-primary" style="color: #1e90ff;">
                           <tr>
-                              <td>{{ salario.id }}</td>
-                              <td>{{ salario.usuario.username }}</td>
-                              <td>{{ salario.tarea_id }}</td>
-                              <td>{{ salario.viaticos }}</td>
-                              <td>{{ salario.pago_sitio }}</td>
-                              <td>{{ salario.total }}</td>
-                              <td>
-                                  <!-- Botón para llenar el formulario de edición -->
-                                  <a href="{% url 'tablas' %}?salario_id={{ salario.id }}" class="btn btn-primary">Editar</a>
-                              </td>
+                              <th scope="col">#</th>
+                              <th scope="col">Usuario</th>
+                              <th scope="col">Tarea</th>
+                              <th scope="col">Viáticos</th>
+                              <th scope="col">Pago Sitio</th>
+                              <th scope="col">Total</th>
+                              <th scope="col">Acción</th>
                           </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
+                      </thead>
+                      <tbody>
+                          {% for salario in salarios %}
+                              <tr>
+                                  <td>{{ salario.id }}</td>
+                                  <td>{{ salario.usuario.username }}</td>
+                                  <td>{{ salario.tarea_id }}</td>
+                                  <td>{{ salario.viaticos }}</td>
+                                  <td>{{ salario.pago_sitio }}</td>
+                                  <td>{{ salario.total }}</td>
+                                  <td>
+                                      <a href="{% url 'tablas' %}?salario_id={{ salario.id }}" class="btn btn-primary" style="border-radius: 8px;">Editar</a>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
           </div>
       </div>
   </div>
 </main>
+
+
+<script>
+  // Validar que se haya seleccionado un usuario antes de filtrar
+  document.getElementById('filtrar-btn').addEventListener('click', function(event) {
+      const usuarioSelect = document.getElementById('usuario');
+      if (!usuarioSelect.value) {
+          event.preventDefault(); // Evitar que se envíe el formulario
+          alert('Por favor, seleccione un usuario antes de filtrar.');
+      }
+  });
+
+  // Validar que los campos no estén vacíos antes de actualizar
+  document.getElementById('actualizar-btn').addEventListener('click', function(event) {
+      const viaticos = document.getElementById('viaticos').value;
+      const pagoSitio = document.getElementById('pago_sitio').value;
+
+      if (!viaticos || !pagoSitio) {
+          event.preventDefault(); // Evitar que se envíe el formulario
+          alert('Por favor, complete todos los campos antes de actualizar.');
+      }
+  });
+</script>
+
 
 <!-- Incluir el archivo JavaScript al final -->
 <script src="{% static 'brokeapp2/js/main.js'%}"></script>

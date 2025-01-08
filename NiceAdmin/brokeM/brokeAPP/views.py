@@ -884,6 +884,9 @@ def dashboardA_view(request):
     # Contar cuántos usuarios tienen el rol de "Empleado"
     total_empleados = UsuarioCustomizado.objects.filter(rol='Empleado').count()
 
+    # Obtener los administradores con sus nombres
+    administradores = UsuarioCustomizado.objects.filter(rol='Admin').values('first_name', 'last_name')
+
     # Obtener el usuario con más tareas asignadas
     usuario_con_mas_tareas = UsuarioCustomizado.objects.annotate(num_tareas=Count('tarea')).order_by('-num_tareas').first()
 
@@ -897,10 +900,6 @@ def dashboardA_view(request):
         'En_Proceso': Tarea.objects.filter(estado='en_proceso').count(),
     }
 
-    # Asegurarse de que todos los valores sean enteros (en caso de None)
-    for estado, count in tarea_estados.items():
-        tarea_estados[estado] = count if count is not None else 0
-
     # Convertir los datos a formato JSON para usarlos en el script
     tarea_estados_json = json.dumps(tarea_estados)
 
@@ -908,9 +907,9 @@ def dashboardA_view(request):
     return render(request, 'brokeapp1/dashboardA.html', {
         'total_empleados': total_empleados,
         'usuario_con_mas_tareas': usuario_con_mas_tareas,
-        'tarea_estados_json': tarea_estados_json
+        'tarea_estados_json': tarea_estados_json,
+        'administradores': administradores
     })
-
 
 from django.http import JsonResponse
 from .models import Tarea

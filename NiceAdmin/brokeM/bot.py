@@ -16,7 +16,7 @@ ESTADOS_VALIDOS = ['iniciado', 'en_proceso', 'Anclaje_completado', 'cancelado','
 FLUJO_ESTADOS = {
     'pendiente': 'iniciado',
     'iniciado': 'en_proceso',
-    'en_proceso': ['completado', 'Anclaje_completado', 'cancelado', 'pendiente_revision', 'reasignado']
+    'en_proceso': ['completado', 'Anclaje_completado', 'cancelado', 'pendiente_revision', 'reasignado', 'reprogramado']
 }
 
 @client.event

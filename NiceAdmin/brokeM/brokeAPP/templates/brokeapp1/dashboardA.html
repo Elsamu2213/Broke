@@ -290,9 +290,6 @@
         </a>
        
       </li>
-      <!-- End Forms Nav -->
-
-
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'Correo' %}">
           <i class="bi bi-envelope"></i>
@@ -320,10 +317,6 @@
         <!-- End Register Page Nav -->
       </li><!-- End Register Page Nav -->
 
-     
-    
-      
-
     </ul>
 
   </aside>
@@ -348,215 +341,151 @@
         <div class="col-lg-8">
           <div class="row">
 <!---------------------------------------------USUARIO----------------------------------------------------------------->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                  <h5 class="card-title">Usuario con más Tareas Asignadas</h5>
-              
-                  <div class="d-flex align-items-center">
-                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                          <i class="bi bi-person-check"></i>
-                      </div>
-                      <div class="ps-3">
-                          <h6>
-                              {% if usuario_con_mas_tareas %}
-                                  {{ usuario_con_mas_tareas.get_full_name }}  <!-- Nombre del usuario con más tareas -->
-                              {% else %}
-                                  No hay usuarios asignados
-                              {% endif %}
-                          </h6>
-                          <span class="text-muted small pt-2 ps-1">Tareas Asignadas</span>
-                      </div>
-                  </div>
+<div class="col-xxl-4 col-md-6">
+  <div class="card info-card shadow-lg" style="border: 2px solid #f85c35; border-radius: 12px;">
+      <div class="card-body">
+          <h5 class="card-title text-center" style="color: #f85c35;">Usuario con más Tareas Asignadas</h5>
+          <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" 
+                   style="background-color: #f85c35; color: white; width: 50px; height: 50px;">
+                  <i class="bi bi-person-check" style="font-size: 24px;"></i>
               </div>
+              <div class="ps-3">
+                  <h6 style="color: #f85c35;">
+                      {% if usuario_con_mas_tareas %}
+                          {{ usuario_con_mas_tareas.get_full_name }} <!-- Nombre del usuario con más tareas -->
+                      {% else %}
+                          No hay usuarios asignados
+                      {% endif %}
+                  </h6>
+                  <span class="text-muted small pt-2 ps-1">Tareas Asignadas</span>
               </div>
-            </div><!-- End Sales Card -->
+          </div>
+      </div>
+  </div>
+</div><!-- End Sales Card -->
+
 
 <!---------------------------------------------CONTENEDOR EMPLEADO----------------------------------------------------------------->
-            <div class="col-xxl-4 col-xl-12">
-
-              <div class="card info-card customers-card">
-                <div class="card-body">
-                  <h5 class="card-title">Empleados</h5>
-              
-                  <div class="d-flex align-items-center">
-                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                          <i class="bi bi-people"></i>
-                      </div>
-                      <div class="ps-3">
-                          <h6>{{ total_empleados }}</h6>  <!-- Aquí se muestra el número total de empleados -->
-                          <span class="text-danger small pt-1 fw-bold">rol</span> <span class="text-muted small pt-2 ps-1">total</span>
-                      </div>
-                  </div>
-              </div>         
+<div class="col-xxl-4 col-xl-10">
+  <div class="card info-card shadow-lg" style="border: 2px solid #1e90ff; border-radius: 12px;">
+      <div class="card-body">
+          <h5 class="card-title text-center" style="color: #1e90ff;">Empleados</h5>
+          <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" 
+                   style="background-color: #1e90ff; color: white; width: 50px; height: 50px;">
+                  <i class="bi bi-people" style="font-size: 24px;"></i>
               </div>
-            </div><!-- End Customers Card -->
+              <div class="ps-3">
+                  <h6 style="color: #1e90ff;">{{ total_empleados }}</h6> <!-- Número total de empleados -->
+                  <span class="text-danger small pt-1 fw-bold">rol</span>
+                  <span class="text-muted small pt-2 ps-1">total</span>
+              </div>
+          </div>
+      </div>
+  </div>
+</div><!-- End Customers Card -->
+
+<div class="col-xxl-4 col-xl-10">
+  <div class="card info-card shadow-lg" style="border: 2px solid #28a745; border-radius: 12px;">
+      <div class="card-body">
+          <h5 class="card-title text-center" style="color: #28a745;">Administradores</h5>
+          <div class="d-flex align-items-center">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" 
+                   style="background-color: #28a745; color: white; width: 50px; height: 50px;">
+                  <i class="bi bi-person-circle" style="font-size: 24px;"></i>
+              </div>
+              <div class="ps-3">
+                  <ul style="list-style-type: none; padding-left: 0;">
+                      {% for admin in administradores %}
+                          <li style="color: #28a745; font-size: 1.8rem; font-weight: bold;">
+                              {{ admin.first_name }} {{ admin.last_name }}
+                          </li>
+                      {% endfor %}
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
 <!---------------------------------------------CONTENEDOR GRAFICA----------------------------------------------------------------->
-            <div class="col-12">
-              <div class="card">
+<div class="col-12">
+  <div class="card shadow-lg" style="border: 2px solid #b723f7; border-radius: 12px;">
 
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
+      <div class="card-body">
+          <h5 class="card-title text-center" style="color: #b723f7;">Reporte <span>/día</span></h5>
 
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
+          <!-- Bar Chart -->
+          <div id="reportsChart" style="border: 1px solid #d9d9d9; border-radius: 8px; padding: 10px;"></div>
 
-                <div class="card-body">
-                  <h5 class="card-title">Reporte <span>/día</span></h5>
-              
-                  <!-- Bar Chart -->
-                  <div id="reportsChart"></div>
-              
-                  <script>
-                      document.addEventListener("DOMContentLoaded", function() {
-                          // Recuperar los datos de los estados de las tareas desde el contexto de Django
-                          var tareaEstadisticas = JSON.parse('{{ tarea_estados_json|escapejs }}');
-              
-                          // Crear el gráfico de barras
-                          new ApexCharts(document.querySelector("#reportsChart"), {
-                              series: [{
-                                  name: 'Tareas',
-                                  data: [
-                                      tareaEstadisticas.Anclaje_completado,
-                                      tareaEstadisticas.Reprogramado,
-                                      tareaEstadisticas.Completado,
-                                      tareaEstadisticas.Cancelado,
-                                      tareaEstadisticas.Iniciado,
-                                      tareaEstadisticas.En_Proceso
-                                  ]
-                              }],
-                              chart: {
-                                  height: 350,
-                                  type: 'bar',
-                                  toolbar: {
-                                      show: false
-                                  }
-                              },
-                              // Asignar colores personalizados a cada barra
-                              colors: [
-                                  '#9b4dca',  // Anclaje completado (morado)
-                                  '#2196f3',  // Reprogramado (azul)
-                                  '#4caf50',  // Completado (verde)
-                                  '#f44336',  // Cancelado (rojo)
-                                  '#00bcd4',  // Iniciado (azul claro)
-                                  '#ffeb3b'   // En proceso (amarillo)
-                              ],
-                              plotOptions: {
-                                  bar: {
-                                      horizontal: false,
-                                      columnWidth: '40%',
-                                      endingShape: 'rounded'
-                                  }
-                              },
-                              dataLabels: {
-                                  enabled: false
-                              },
-                              stroke: {
-                                  show: true,
-                                  width: 2,
-                                  colors: ['transparent']
-                              },
-                              xaxis: {
-                                  categories: ['Anclaje Completado', 'Reprogramado', 'Completado', 'Cancelado', 'Iniciado', 'En Proceso']
-                              },
-                              tooltip: {
-                                  y: {
-                                      formatter: function (val) {
-                                          return val + " Tareas";
-                                      }
-                                  }
+          <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                  // Recuperar los datos de los estados de las tareas desde el contexto de Django
+                  var tareaEstadisticas = JSON.parse('{{ tarea_estados_json|escapejs }}');
+
+                  // Crear el gráfico de barras
+                  new ApexCharts(document.querySelector("#reportsChart"), {
+                      series: [{
+                          name: 'Tareas',
+                          data: [
+                              tareaEstadisticas.Anclaje_completado,
+                              tareaEstadisticas.Reprogramado,
+                              tareaEstadisticas.Completado,
+                              tareaEstadisticas.Cancelado,
+                              tareaEstadisticas.Iniciado,
+                              tareaEstadisticas.En_Proceso
+                          ]
+                      }],
+                      chart: {
+                          height: 350,
+                          type: 'bar',
+                          toolbar: {
+                              show: false
+                          }
+                      },
+                      // Asignar colores personalizados a cada barra
+                      colors: [
+                          '#9b4dca',  // Anclaje completado (morado)
+                          '#2196f3',  // Reprogramado (azul)
+                          '#4caf50',  // Completado (verde)
+                          '#f44336',  // Cancelado (rojo)
+                          '#00bcd4',  // Iniciado (azul claro)
+                          '#ffeb3b'   // En proceso (amarillo)
+                      ],
+                      plotOptions: {
+                          bar: {
+                              horizontal: false,
+                              columnWidth: '40%',
+                              endingShape: 'rounded'
+                          }
+                      },
+                      dataLabels: {
+                          enabled: false
+                      },
+                      stroke: {
+                          show: true,
+                          width: 2,
+                          colors: ['transparent']
+                      },
+                      xaxis: {
+                          categories: ['Anclaje Completado', 'Reprogramado', 'Completado', 'Cancelado', 'Iniciado', 'En Proceso']
+                      },
+                      tooltip: {
+                          y: {
+                              formatter: function (val) {
+                                  return val + " Tareas";
                               }
-                          }).render();
-                      });
-                  </script>
-                  <!-- End Bar Chart -->
-              </div>
-              </div>
-            </div>
+                          }
+                      }
+                  }).render();
+              });
+          </script>
+          <!-- End Bar Chart -->
+      </div>
+  </div>
+</div>
 <!---------------------------------------------CONTENEDOR GRAFICA----------------------------------------------------------------->
-
-            
-            <!-- Recent Sales -->
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-
-                <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                  </ul>
-                </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
-
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td>Brandon Jacob</td>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td>$64</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2147</a></th>
-                        <td>Bridie Kessler</td>
-                        <td><a href="#" class="text-primary">Blanditiis dolor omnis similique</a></td>
-                        <td>$47</td>
-                        <td><span class="badge bg-warning">Pending</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2049</a></th>
-                        <td>Ashleigh Langosh</td>
-                        <td><a href="#" class="text-primary">At recusandae consectetur</a></td>
-                        <td>$147</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Angus Grady</td>
-                        <td><a href="#" class="text-primar">Ut voluptatem id earum et</a></td>
-                        <td>$67</td>
-                        <td><span class="badge bg-danger">Rejected</span></td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><a href="#">#2644</a></th>
-                        <td>Raheem Lehner</td>
-                        <td><a href="#" class="text-primary">Sunt similique distinctio</a></td>
-                        <td>$165</td>
-                        <td><span class="badge bg-success">Approved</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div><!-- End Recent Sales -->
           </div>
         </div><!-- End Left side columns -->
 

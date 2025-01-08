@@ -31,13 +31,7 @@ function finalizarTarea(tareaId) {
   });
 }
 
-
-
-
 //filtrar en busqueda  para actualizar en tiempo real "observaciones "______________________________________________
-
-
-
 
 //filtrar en busqueda  para actualizar en tiempo real "descripcion "______________________________________________
 document.addEventListener("DOMContentLoaded", function () {

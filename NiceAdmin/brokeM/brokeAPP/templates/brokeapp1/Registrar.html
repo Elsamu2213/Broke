@@ -276,7 +276,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboardA' %}">
+        <a class="nav-link collapsed" href="{% url 'dashboardA' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -306,7 +306,7 @@
       </li><!-- End Contact Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'Registrar' %}">
+        <a class="nav-link " href="{% url 'Registrar' %}">
           <i class="bi bi-card-list"></i>
           <span>Registro</span>
         </a>
@@ -323,85 +323,77 @@
           </a>
         </li>
       </li><!-- End Register Page Nav -->
-
-     
-    
-      
-
     </ul>
 
   </aside>
   <!-- End Sidebar-->
 
   <main id="main" class="main">
+    <div class="pagetitle text-center mb-4">
+        <h1 style="color: #1e90ff;">Formulario</h1>
+    </div>
 
-    <div class="pagetitle">
-      <h1>Formulario</h1>
-      <nav>
-      </nav>
-    </div><!-- End Page Title -->
     <section class="section">
-      <div class="row justify-content-center">
-          <div class="col-lg-6 d-flex justify-content-center">
-              <div class="card w-100">
-                  <div class="card-body">
-                      <h5 class="card-title text-center">Registro de Usuario</h5>
-  
-                      <!-- Formulario de Registro de Usuario -->
-                      <form method="POST" action="{% url 'crear_usuario' %}">
-                          {% csrf_token %}
-  
-                          <div class="form-group">
-                              <label for="nombre">Nombre</label>
-                              <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese su nombre" required>
-                          </div>
-  
-                          <div class="form-group">
-                              <label for="apellido">Apellido</label>
-                              <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese su apellido" required>
-                          </div>
-  
-                          <div class="form-group">
-                              <label for="email">Email</label>
-                              <input type="email" class="form-control" name="email" id="email" placeholder="Ingrese su email" required>
-                          </div>
-  
-                          <div class="form-group">
-                              <label for="telefono">Teléfono</label>
-                              <input type="text" class="form-control" name="telefono" id="telefono" placeholder="Ingrese su número de teléfono">
-                          </div>
-  
-                          <div class="form-group">
-                              <label for="rol">Rol</label>
-                              <select class="form-control" name="rol" id="rol">
-                                  <option value="Empleado">Empleado</option>
-                                  <option value="Admin">Admin</option>
-                              </select>
-                          </div>
-  
-                          <!-- Campo para la contraseña -->
-                          <div class="form-group">
-                              <label for="contrasena">Contraseña</label>
-                              <input type="password" class="form-control" name="contrasena" id="contrasena" placeholder="Ingrese su contraseña" required>
-                          </div>
-  
-                          <!-- Campo para repetir la contraseña -->
-                          <div class="form-group">
-                              <label for="confirmar_contrasena">Repetir Contraseña</label>
-                              <input type="password" class="form-control" name="confirmar_contrasena" id="confirmar_contrasena" placeholder="Repita su contraseña" required>
-                          </div>
-  
-                          <button type="submit" class="btn btn-primary w-100">Registrar</button>
-                      </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
-  
-    
+        <div class="row justify-content-center">
+            <div class="col-lg-6 d-flex justify-content-center">
+                <div class="card shadow-lg p-4" style="border: 2px solid #1e90ff; border-radius: 12px; width: 100%;">
+                    <div class="card-header text-center" style="background-color: #1e90ff; color: white; border-radius: 8px;">
+                        <h5 class="card-title mb-0">Registro de Usuario</h5>
+                    </div>
+                    <div class="card-body bg-light">
+                        <!-- Formulario de Registro de Usuario -->
+                        <form method="POST" action="{% url 'crear_usuario' %}">
+                            {% csrf_token %}
 
-  </main><!-- End #main -->
+                            <div class="form-group mb-3">
+                                <label for="nombre" class="form-label" style="color: #1e90ff;">Nombre</label>
+                                <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese su nombre" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="apellido" class="form-label" style="color: #1e90ff;">Apellido</label>
+                                <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese su apellido" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="email" class="form-label" style="color: #1e90ff;">Email</label>
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Ingrese su email" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="telefono" class="form-label" style="color: #1e90ff;">Teléfono</label>
+                                <input type="text" class="form-control" name="telefono" id="telefono" placeholder="Ingrese su número de teléfono" style="border: 1px solid #1e90ff; border-radius: 8px;">
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="rol" class="form-label" style="color: #1e90ff;">Rol</label>
+                                <select class="form-control" name="rol" id="rol" style="border: 1px solid #1e90ff; border-radius: 8px;">
+                                    <option value="Empleado">Empleado</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+
+                            <!-- Campo para la contraseña -->
+                            <div class="form-group mb-3">
+                                <label for="contrasena" class="form-label" style="color: #1e90ff;">Contraseña</label>
+                                <input type="password" class="form-control" name="contrasena" id="contrasena" placeholder="Ingrese su contraseña" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                            </div>
+
+                            <!-- Campo para repetir la contraseña -->
+                            <div class="form-group mb-3">
+                                <label for="confirmar_contrasena" class="form-label" style="color: #1e90ff;">Repetir Contraseña</label>
+                                <input type="password" class="form-control" name="confirmar_contrasena" id="confirmar_contrasena" placeholder="Repita su contraseña" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                            </div>
+
+                            <button type="submit" class="btn" style="background-color: #1e90ff; color: white; border-radius: 8px; width: 100%;">Registrar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
 
 <!-- Modal -->
 <div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">

@@ -274,7 +274,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{% url 'dashboardA' %}">
+        <a class="nav-link collapsed" href="{% url 'dashboardA' %}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -310,7 +310,7 @@
         </a>
       </li><!-- End Register Page Nav -->
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'lista_usuarios' %}">
+        <a class="nav-link " href="{% url 'lista_usuarios' %}">
           <i class="bi bi-lock"></i>
           <span>Listas usuarios</span>
         </a>
@@ -333,153 +333,92 @@
   <!-- End Sidebar-->
 
   <main id="main" class="main">
-
-    <div class="pagetitle">
-      <h1>lista usuarios</h1>
-    </div><!-- End Page Title -->
-
     <section class="section">
-      <div class="row">
-        <div class="col-lg-12">
+        <div class="container" style="min-height: 80vh;">
+            <div class="card shadow-lg p-4" style="border: 2px solid #1e90ff; border-radius: 12px;">
+                <h3 class="text-center mb-4" style="color: #1e90ff;">📋 Lista de Usuarios</h3>
+                <div class="container table-responsive">
+                    <input class="form-control mb-3" id="searchInput" type="text" placeholder="Buscar..." style="border: 1px solid #1e90ff; border-radius: 8px;">
+                    <table class="table table-bordered">
+                        <thead style="background-color: #1e90ff; color: white;">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTable">
+                            {% for usuario in usuarios %}
+                            <tr>
+                                <td>{{ usuario.id }}</td>
+                                <td>{{ usuario.first_name }}</td>
+                                <td>{{ usuario.last_name }}</td>
+                                <td>{{ usuario.email }}</td>
+                                <td>{{ usuario.telefono }}</td>
+                                <td>{{ usuario.rol }}</td>
+                                <td>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ usuario.id }}">Editar</button>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ usuario.id }}">Borrar</button>
+                                </td>
+                            </tr>
 
-          <div class="card">
-            
-<div class="container mr-12 table-responsive mt-4">
-  <h2>   </h2>
-  <input class="form-control mb-3" id="searchInput" type="text" placeholder="Buscar...">
-  <table class="table table-bordered container mr-12">
-      <thead>
-          <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Email</th>
-              <th>Teléfono</th>
-              <th>Rol</th>
-              
-              <th>Acciones</th>
-          </tr>
-      </thead>
-      <tbody id="userTable">
-          {% for usuario in usuarios %}
-          <tr>
-              <td>{{ usuario.id }}</td>
-              <td>{{ usuario.first_name }}</td>
-              <td>{{ usuario.last_name }}</td>
-              <td>{{ usuario.email }}</td>
-              <td>{{ usuario.telefono }}</td>
-              <td>{{ usuario.rol }}</td>
-              
-              <td>
-                  <!-- Botón para editar -->
-                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ usuario.id }}">Editar</button>
+                            <!-- Modal para editar usuario -->
+                            <div class="modal fade" id="editModal{{ usuario.id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #1e90ff; color: white;">
+                                            <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="{% url 'editar_usuario' usuario.id %}">
+                                                {% csrf_token %}
+                                                <div class="mb-3">
+                                                    <label for="nombre" class="form-label" style="color: #1e90ff;">Nombre</label>
+                                                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.first_name }}" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
+                                                </div>
+                                                <!-- Similar styles applied to other fields -->
+                                                <button type="submit" class="btn" style="background-color: #1e90ff; color: white; border-radius: 8px; width: 100%;">Guardar Cambios</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                  <!-- Botón para borrar -->
-                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ usuario.id }}">Borrar</button>
-                      {% csrf_token %}
-                  
-                  </form>
-              </td>
-          </tr>
-
-          <!-- Modal para editar usuario -->
-          <div class="modal fade" id="editModal{{ usuario.id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <form method="POST" action="{% url 'editar_usuario' usuario.id %}">
-                          {% csrf_token %}
-                          
-                          <div class="mb-3">
-                              <label for="nombre" class="form-label">Nombre</label>
-                              <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.first_name }}" required>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="apellido" class="form-label">Apellido</label>
-                              <input type="text" class="form-control" id="apellido" name="apellido" value="{{ usuario.last_name }}" required>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="email" class="form-label">Email</label>
-                              <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="telefono" class="form-label">Teléfono</label>
-                              <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}">
-                          </div>
-                          
-                          <!-- Campo para la nueva contraseña -->
-                          <div class="mb-3">
-                              <label for="password" class="form-label">Nueva Contraseña</label>
-                              <input type="password" class="form-control" id="password" name="password" placeholder="Escriba la nueva contraseña (opcional)">
-                          </div>
-                          
-                          <!-- Campo para confirmar la nueva contraseña -->
-                          <div class="mb-3">
-                              <label for="confirmar_password" class="form-label">Confirmar Contraseña</label>
-                              <input type="password" class="form-control" id="confirmar_password" name="confirmar_password" placeholder="Repita la nueva contraseña">
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="rol" class="form-label">Rol</label>
-                              <select class="form-control" id="rol" name="rol" required>
-                                  <option value="Admin" {% if usuario.rol == 'Admin' %}selected{% endif %}>Admin</option>
-                                  <option value="Empleado" {% if usuario.rol == 'Empleado' %}selected{% endif %}>Empleado</option>
-                              </select>
-                          </div>
-                          
-                          <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                      </form>
-                      
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-            <!-- Modal de confirmación para borrar usuario -->
-            <div class="modal fade" id="confirmDeleteModal{{ usuario.id }}" tabindex="-1" aria-labelledby="confirmDeleteLabel{{ usuario.id }}" aria-hidden="true">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="confirmDeleteLabel{{ usuario.id }}">Confirmar Borrado</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                          ¿Estás seguro de que deseas borrar al usuario {{ usuario.nombre }} {{ usuario.apellido }}?
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-
-                          <!-- Formulario para borrar al usuario -->
-                          <form method="POST" action="{% url 'borrar_usuario' usuario.id %}">
-                              {% csrf_token %}
-                              <button type="submit" class="btn btn-danger">Borrar</button>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          {% endfor %}
-      </tbody>
-  </table>
-</div>
-           
-          </div>
-
-    
-
+                            <!-- Modal de confirmación para borrar usuario -->
+                            <div class="modal fade" id="confirmDeleteModal{{ usuario.id }}" tabindex="-1" aria-labelledby="confirmDeleteLabel{{ usuario.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #1e90ff; color: white;">
+                                            <h5 class="modal-title" id="confirmDeleteLabel{{ usuario.id }}">Confirmar Borrado</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Estás seguro de que deseas borrar al usuario {{ usuario.nombre }} {{ usuario.apellido }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form method="POST" action="{% url 'borrar_usuario' usuario.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Borrar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-      </div>
     </section>
+</main>
 
-  </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">

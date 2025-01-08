@@ -42,9 +42,10 @@
   background-color: #9b59b6; /* Morado */
 }
 
-.COLOR{
-  background-color: #BBDDEB;
+.COLOR {
+  background: linear-gradient(to right, #1643f9,#218cf6, #ffffff, #75bef3);
 }
+
 .LETRAS{
   width: 60%; 
   height: 8%; 
@@ -81,7 +82,7 @@
 
 body {
   font-family: "Open Sans", sans-serif;
-  background: #f6f9ff;
+  background: #ffffff;
   color: #444444;
 }
 

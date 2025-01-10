@@ -198,6 +198,7 @@
                                   <tr>
                                       <th>id</th>
                                       <th>Fecha de Actividad</th>
+                                      <th>hora de Actividad</th>
                                       <th>Dirección</th>
                                       <th>Actividad</th>
                                       <th>Num. Cajero</th>
@@ -217,7 +218,16 @@
                                           {% else %}
                                               No disponible
                                           {% endif %}
-                                      </td>                                  
+                                      </td> 
+                                      <td>
+                                        {% if tarea.actividad == "Anclaje" %}
+                                            {{ tarea.hora_anclaje }}
+                                        {% elif tarea.actividad == "Configuración" %}
+                                            {{ tarea.hora_venconfig }}
+                                        {% else %}
+                                            No disponible
+                                        {% endif %}
+                                    </td>                                 
                                       <td>{{ tarea.direccion }}</td>
                                       <td>{{ tarea.actividad }}</td>
                                       <td>{{ tarea.num_cajero }}</td>

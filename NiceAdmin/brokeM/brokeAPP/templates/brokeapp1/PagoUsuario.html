@@ -204,25 +204,26 @@
                               
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>ID de tarea</th>
                                         <th>Viáticos</th>
                                         <th>Pago Sitio</th>
                                         <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for salario in salarios %}
-                                        <tr>
-                                            <td>{{ salario.id }}</td>
-                                            <td>{{ salario.viaticos }}</td>
-                                            <td>{{ salario.pago_sitio }}</td>
-                                            <td>{{ salario.total }}</td>
-                                        </tr>
-                                    {% empty %}
-                                        <tr>
-                                            <td colspan="4">No tienes salarios registrados.</td>
-                                        </tr>
-                                    {% endfor %}
+                                  
+                                  {% for salario in salarios %}
+        <tr>
+            <td>{{ salario.tarea.id }}</td> <!-- Muestra el ID de la tarea asociada -->
+            <td>{{ salario.viaticos }}</td>
+            <td>{{ salario.pago_sitio }}</td>
+            <td>{{ salario.total }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4">No hay salarios disponibles.</td>
+        </tr>
+    {% endfor %}
                                 </tbody>
                             </table>
                         </div>

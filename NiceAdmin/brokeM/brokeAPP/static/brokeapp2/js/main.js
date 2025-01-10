@@ -1,7 +1,4 @@
 
-//ára enviar la notificacion de salario function notificarCambioSalario(salarioId) {
- 
-
 
 //finalizar tarea boton
 function quitarDeProcesos(tareaId) {

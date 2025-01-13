@@ -88,6 +88,12 @@ def asignar_view(request):
 # Cambiadef dashboardA_view(request):
 # Cambia return render(request, 'brokeapp1/dashboardA.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
 
+#error con csrf error 
+
+def csrf_failure(request, reason=""):
+    return render(request, 'brokeapp1/csrf_failure.html', status=403)
+
+
 def loginAdmin_view(request):
     return render(request, 'brokeapp1/loginAdmin.html')  # Cambia 'brokeapp1/profile.html' según tu estructura de carpetas
     
@@ -305,9 +311,14 @@ def modificar_asignacion(request, tarea_id):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
+#para error con csrf_______________________________________
+from django.shortcuts import render
+
+def csrf_failure(request, reason=""):
+    return render(request, 'brokeapp1/csrf_failure.html', status=403)
 
 #para verificar usuarios Administrador_______________________________________
-
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -321,15 +332,17 @@ def login_view(request):
             if usuario.rol == 'Admin':
                 return redirect('dashboardA')  # Redirige al panel de administrador
             else:
-                return redirect('empleadosPrueba')  # Redirige al panel de empleados
+                messages.error(request, 'Credenciales inválidas.')  # Redirige al panel de empleados
+                
         else:
-            messages.error(request, 'Credenciales inválidas.')
+            messages.error(request, 'Credenciales inválidas comprueba tu usuario.')
     
-    return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
+    return render(request, 'brokeapp1/index.html')  # Renderiza la página de login
 
 
+#para verificar usuarios Empleado_______________________________________
 
-
+@csrf_exempt
 def login_employee_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -346,9 +359,9 @@ def login_employee_view(request):
                 messages.error(request, 'No tienes acceso a la parte de empleados.')
                 return redirect('home')  # Redirige al login de administradores
         else:
-            messages.error(request, 'Credenciales inválidas.')
+            messages.error(request, 'Credenciales inválidas comprueba tu usuario.')
 
-    return render(request, 'brokeapp1/loginUser.html')  # Renderiza la página de login
+    return render(request, 'brokeapp1/index.html')  # Renderiza la página de login
 
 
 

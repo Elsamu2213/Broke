@@ -65,6 +65,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'brokeM.wsgi.application'
 
+CSRF_FAILURE_VIEW = 'brokeAPP.views.csrf_failure'
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

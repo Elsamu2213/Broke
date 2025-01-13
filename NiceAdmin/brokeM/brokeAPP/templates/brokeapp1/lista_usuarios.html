@@ -256,27 +256,66 @@
                             </tr>
 
                             <!-- Modal para editar usuario -->
-                            <div class="modal fade" id="editModal{{ usuario.id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background-color: #1e90ff; color: white;">
-                                            <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form method="POST" action="{% url 'editar_usuario' usuario.id %}">
-                                                {% csrf_token %}
-                                                <div class="mb-3">
-                                                    <label for="nombre" class="form-label" style="color: #1e90ff;">Nombre</label>
-                                                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.first_name }}" style="border: 1px solid #1e90ff; border-radius: 8px;" required>
-                                                </div>
-                                                <!-- Similar styles applied to other fields -->
-                                                <button type="submit" class="btn" style="background-color: #1e90ff; color: white; border-radius: 8px; width: 100%;">Guardar Cambios</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                             <!-- Modal para editar usuario -->
+          <div class="modal fade" id="editModal{{ usuario.id }}" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Editar Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="POST" action="{% url 'editar_usuario' usuario.id %}">
+                        {% csrf_token %}
+                       
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.first_name }}" required>
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" value="{{ usuario.last_name }}" required>
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" value="{{ usuario.telefono }}">
+                        </div>
+                       
+                        <!-- Campo para la nueva contraseña -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Escriba la nueva contraseña (opcional)">
+                        </div>
+                       
+                        <!-- Campo para confirmar la nueva contraseña -->
+                        <div class="mb-3">
+                            <label for="confirmar_password" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="confirmar_password" name="confirmar_password" placeholder="Repita la nueva contraseña">
+                        </div>
+                       
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol</label>
+                            <select class="form-control" id="rol" name="rol" required>
+                                <option value="Admin" {% if usuario.rol == 'Admin' %}selected{% endif %}>Admin</option>
+                                <option value="Empleado" {% if usuario.rol == 'Empleado' %}selected{% endif %}>Empleado</option>
+                            </select>
+                        </div>
+                       
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </form>
+                   
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
                             <!-- Modal de confirmación para borrar usuario -->
                             <div class="modal fade" id="confirmDeleteModal{{ usuario.id }}" tabindex="-1" aria-labelledby="confirmDeleteLabel{{ usuario.id }}" aria-hidden="true">

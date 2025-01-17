@@ -997,7 +997,15 @@ def ver_salarios(request):
     
     return render(request, 'brokeapp1/PagoUsuario.html', context)
 
+#para reagendar la tarea 
 
+from django.shortcuts import get_object_or_404, redirect
+from .models import Tarea
+
+def reagendar_tarea(request, tarea_id):
+    tarea = get_object_or_404(Tarea, id=tarea_id)
+    tarea.reset_tarea()  # Llama al método que resetea los campos
+    return redirect('asignar')  # Redirige a la vista que desees
 
 
 

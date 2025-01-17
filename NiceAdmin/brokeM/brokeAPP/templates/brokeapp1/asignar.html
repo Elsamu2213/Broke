@@ -45,12 +45,6 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div><!-- End Search Bar -->
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
@@ -205,12 +199,7 @@
           <i class="bi bi-lock"></i>
           <span>Listas usuarios</span>
         </a>
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="{% url 'chatAdmin' %}">
-            <i class="bi bi-chat"></i>
-            <span>Discord</span>
-          </a>
-        </li>
+       
         <!-- End Register Page Nav -->
       </li><!-- End Register Page Nav -->
     </ul>
@@ -717,7 +706,11 @@
                                         
                                     ">
                                         {{ tarea.estado|title }}
+
                                     </span>
+                                {% if tarea.estado == 'cancelado' or tarea.estado == 'reprogramado' %}
+                                <a href="{% url 'reagendar_tarea' tarea.id %}" class="btn btn-warning">Reagendar</a>
+                            {% endif %}
                                 </td>
                             </tr>
                         {% empty %}

@@ -122,5 +122,8 @@ path('enviar_correo/', views.enviar_correo_view, name='enviar_correo'),
 
     path('confirmar_actividad/<int:tarea_id>/', views.confirmar_actividad, name='confirmar_actividad'),
 
+
+    path('reagendar_tarea/<int:tarea_id>/', views.reagendar_tarea, name='reagendar_tarea'),
+
     
 ]

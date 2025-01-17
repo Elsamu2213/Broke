@@ -52,44 +52,26 @@ class Factura(models.Model):
 
 
 
+from django.db import models
+
 class Tarea(models.Model):
+    # Campos previamente definidos
     descripcion = models.CharField(max_length=255)
     fecha_anclaje = models.CharField(max_length=20, null=True, blank=True)
     hora_anclaje = models.CharField(max_length=10, null=True, blank=True)
     fecha_vencimiento = models.CharField(max_length=20, null=True, blank=True)
     hora_venconfig = models.CharField(max_length=10, null=True, blank=True)
     direccion = models.CharField(max_length=255, default="Dirección pendiente")
-    actividad = models.CharField(max_length=50, choices=[
-        ('Anclaje', 'Anclaje'),
-        ('Configuración', 'Configuración'),
-        ('Fibra', 'Fibra')
-    ], default='Anclaje')
-    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True)  # Usar el nuevo modelo
-    confirmacion = models.CharField(
-        max_length=50,
-        choices=[
-            ('sin_confirmar', 'Sin Confirmar'),
-            ('confirmado', 'Confirmado'),
-            ('rechazado', 'Rechazado')
-        ],
-        default='sin_confirmar'
-    )
-    num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")  # Con un valor por defecto único
-    observaciones = models.TextField(null=True, blank=True)  # Campo observaciones que permite nulos y vacíos
-    completada = models.BooleanField(default=False)  # Campo para marcar si está completada
-    Cod_postal = models.CharField(max_length=255, default="Dirección pendiente")  # Campo para marcar si está completada
-    cordenadas = models.CharField(max_length=255, default="cordenadas pendiente")  # Campo para marcar si está completada
+    actividad = models.CharField(max_length=50, choices=[('Anclaje', 'Anclaje'), ('Configuración', 'Configuración'), ('Fibra', 'Fibra')], default='Anclaje')
+    usuario = models.ForeignKey('UsuarioCustomizado', on_delete=models.SET_NULL, null=True, blank=True) 
+    confirmacion = models.CharField(max_length=50, choices=[('sin_confirmar', 'Sin Confirmar'), ('confirmado', 'Confirmado'), ('rechazado', 'Rechazado')], default='sin_confirmar')
+    num_cajero = models.CharField(max_length=50, unique=True, default="Sin número")  
+    observaciones = models.TextField(null=True, blank=True)  
+    completada = models.BooleanField(default=False)  
+    Cod_postal = models.CharField(max_length=255, default="Dirección pendiente")  
+    cordenadas = models.CharField(max_length=255, default="cordenadas pendiente")  
 
-    estado = models.CharField(max_length=20, choices=[
-         ('iniciado', 'Iniciado'),
-         ('en_proceso', 'En Proceso'),
-         ('Anclaje_completado', 'Anclaje completado'),
-         ('cancelado', 'Cancelado'),
-         ('completado', 'Completado'),
-         ('pendiente_revision', 'Pendiente de Revisión'),
-         ('reprogramado', 'Reprogramado'),
-    ], default='pendiente')  # Agregar campo estado
-
+    estado = models.CharField(max_length=20, choices=[('iniciado', 'Iniciado'), ('en_proceso', 'En Proceso'), ('Anclaje_completado', 'Anclaje completado'), ('cancelado', 'Cancelado'), ('completado', 'Completado'), ('pendiente_revision', 'Pendiente de Revisión'), ('reprogramado', 'Reprogramado')], default='pendiente')
 
     def __str__(self):
         return f"Tarea {self.id}: {self.descripcion}"
@@ -98,18 +80,24 @@ class Tarea(models.Model):
     def asignada(self):
         return self.usuario is not None
 
-    def save(self, *args, **kwargs):
+    def reset_tarea(self):
+        """
+        Resetea los campos 'completada' a False y 'confirmacion' a 'sin_confirmar'
+        cuando el estado es 'cancelado' o 'reprogramado'.
+        """
+        if self.estado in ['cancelado', 'reprogramado']:
+            self.completada = False
+            self.confirmacion = 'sin_confirmar'
+            self.save()
 
+    def save(self, *args, **kwargs):
         # Guardar el estado original solo si la tarea ya existe (tiene una pk asignada)
         if self.pk:
             original = Tarea.objects.get(pk=self.pk)
             self._original_estado = original.estado
         else:
-            self._original_estado = self.estado  # Usar el estado actual cuando es una nueva tarea
+            self._original_estado = self.estado
 
-        
-
-        # Si el estado está cambiando a uno de los estados relevantes
         if self.pk is not None:  # Solo si ya existe la tarea
             original = Tarea.objects.get(pk=self.pk)
             if original.estado != self.estado and self.estado in ['Anclaje_completado', 'cancelado', 'completado', 'reprogramado']:
@@ -121,7 +109,7 @@ class Tarea(models.Model):
                     direccion=self.direccion,
                     actividad=self.actividad,
                     num_cajero=self.num_cajero,
-                    asignado_a=self.usuario.username if self.usuario else 'Desconocido',  # Asigna el usuario
+                    asignado_a=self.usuario.username if self.usuario else 'Desconocido',
                 )
                 # Crear o actualizar registro en Salario
                 if self.usuario is not None:
@@ -132,7 +120,6 @@ class Tarea(models.Model):
                     )
 
         super().save(*args, **kwargs)  # Llama al método save original
-
 
 
 class MensajeWhatsApp(models.Model):

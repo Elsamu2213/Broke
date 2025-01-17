@@ -42,12 +42,7 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div><!-- End Search Bar -->
+    
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
@@ -183,103 +178,105 @@
 
   <main id="main" class="main">
     <div class="container">
-      <!-- Fila centralizada con la tarjeta -->
-      <div class="row justify-content-center">
-          <div class="col-xl-12 col-lg-10">
-              <!-- Tarjeta con sombra, bordes redondeados y color de borde personalizado -->
-              <div class="card shadow-lg" style="border: 5px solid #28a745; border-radius: 15px;">
-                  <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                      <!-- Logo -->
-                      <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
-                      <p class="custom-title display-2 font-weight-bold text-center" style="color: #28a745;">TAREAS POR CONFIRMAR</p>
-                      <div class="table-responsive mt-4">
-                          <table class="table table-bordered mt-4">
-                              <thead>
-                                  <tr>
-                                      <th>id</th>
-                                      <th>Fecha de Actividad</th>
-                                      <th>hora de Actividad</th>
-                                      <th>Dirección</th>
-                                      <th>Actividad</th>
-                                      <th>Num. Cajero</th>
-                                      <th>Coordenadas</th>
-                                      <th>Confirmar Actividad</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  {% for tarea in tareas %}
-                                  <tr>
-                                      <td>{{ tarea.id }}</td>
-                                      <td>
-                                          {% if tarea.actividad == "Anclaje" %}
-                                              {{ tarea.fecha_anclaje }}
-                                          {% elif tarea.actividad == "Configuración" %}
-                                              {{ tarea.fecha_vencimiento }}
-                                          {% else %}
-                                              No disponible
-                                          {% endif %}
-                                      </td> 
-                                      <td>
-                                        {% if tarea.actividad == "Anclaje" %}
-                                            {{ tarea.hora_anclaje }}
-                                        {% elif tarea.actividad == "Configuración" %}
-                                            {{ tarea.hora_venconfig }}
-                                        {% else %}
-                                            No disponible
-                                        {% endif %}
-                                    </td>                                 
-                                      <td>{{ tarea.direccion }}</td>
-                                      <td>{{ tarea.actividad }}</td>
-                                      <td>{{ tarea.num_cajero }}</td>
-                                      <td>{{ tarea.cordenadas }}</td>
-                                      <td>
-                                          {% if tarea.confirmacion == 'sin_confirmar' %}
-                                              <form action="{% url 'confirmar_actividad' tarea.id %}" method="post">
-                                                  {% csrf_token %}
-                                                  <button type="submit" name="accion" value="aceptar" class="btn btn-success">Aceptar</button>
-                                              </form>
-                                              <form action="{% url 'confirmar_actividad' tarea.id %}" method="post">
-                                                  {% csrf_token %}
-                                                  <button type="submit" name="accion" value="rechazar" class="btn btn-danger">Rechazar</button>
-                                              </form>
-                                          {% elif tarea.confirmacion == 'confirmado' %}
-                                              <span class="text-success">Confirmado</span>
-                                          {% elif tarea.confirmacion == 'rechazado' %}
-                                              <span class="text-danger">Rechazado</span>
-                                          {% endif %}
-                                      </td>
-                                  </tr>
-                                  {% empty %}
-                                  <tr>
-                                      <td colspan="7">No hay tareas disponibles.</td>
-                                  </tr>
-                                  {% endfor %}
-                              </tbody>
-                          </table>
-                      </div>
-                      <div class="row justify-content-center mt-4">
-                          <div class="col-xl-11 col-lg-8">
-                              <div class="mb-3">
-                                <h1 class="text-center" style="color: #28a745;">VERIFICA UBICACIÓN</h1>
-                                  <input type="text" id="direccionInput" class="form-control input-largo" placeholder="Ingrese una dirección" />
-                              </div>
-                              <div class="text-center">
-                                  <button id="buscarBtn" class="btn btn-primary">Buscar</button>
-                              </div>
-                          </div>
-                      </div>
-                      <!-- Contenedor del mapa -->
-                      <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  
-
-    <!-- Estilos y scripts de Leaflet -->
-   
+        <!-- Fila centralizada con la tarjeta -->
+        <div class="row justify-content-center">
+            <div class="col-xl-12 col-lg-10">
+                <!-- Tarjeta con sombra, bordes redondeados y color de borde personalizado -->
+                <div class="card shadow-lg" style="border: 5px solid #28a745; border-radius: 15px;">
+                    <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                        <!-- Logo -->
+                        <img src="{% static 'brokeapp2/img/logo1.png' %}" alt="Logo" class="logoB img-fluid mb-3">
+                        
+                        <p class="custom-title display-2 font-weight-bold text-center" style="color: #28a745;">TAREAS POR CONFIRMAR</p>
+                        
+                        <!-- Tabla Responsiva -->
+                        <div class="table-responsive mt-4 w-100">
+                            <table class="table table-bordered table-sm table-striped table-hover mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>descripcion</th>
+                                        <th>Fecha de Actividad</th>
+                                        <th>hora de Actividad</th>
+                                        <th>Dirección</th>
+                                        <th>Actividad</th>
+                                        <th>Num. Cajero</th>
+                                        <th>Coordenadas</th>
+                                        <th>Confirmar Actividad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tarea in tareas %}
+                                    <tr>
+                                        <td>{{ tarea.id }}</td>
+                                        <td>{{ tarea.descripcion }}</td>
+                                        <td>
+                                            {% if tarea.actividad == "Anclaje" %}
+                                                {{ tarea.fecha_anclaje }}
+                                            {% elif tarea.actividad == "Configuración" %}
+                                                {{ tarea.fecha_vencimiento }}
+                                            {% else %}
+                                                No disponible
+                                            {% endif %}
+                                        </td> 
+                                        <td>
+                                            {% if tarea.actividad == "Anclaje" %}
+                                                {{ tarea.hora_anclaje }}
+                                            {% elif tarea.actividad == "Configuración" %}
+                                                {{ tarea.hora_venconfig }}
+                                            {% else %}
+                                                No disponible
+                                            {% endif %}
+                                        </td>                                 
+                                        <td>{{ tarea.direccion }}</td>
+                                        <td>{{ tarea.actividad }}</td>
+                                        <td>{{ tarea.num_cajero }}</td>
+                                        <td>{{ tarea.cordenadas }}</td>
+                                        <td>
+                                            {% if tarea.confirmacion == 'sin_confirmar' %}
+                                                <form action="{% url 'confirmar_actividad' tarea.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" name="accion" value="aceptar" class="btn btn-success">Aceptar</button>
+                                                </form>
+                                                <form action="{% url 'confirmar_actividad' tarea.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <button type="submit" name="accion" value="rechazar" class="btn btn-danger">Rechazar</button>
+                                                </form>
+                                            {% elif tarea.confirmacion == 'confirmado' %}
+                                                <span class="text-success">Confirmado</span>
+                                            {% elif tarea.confirmacion == 'rechazado' %}
+                                                <span class="text-danger">Rechazado</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="9">No hay tareas disponibles.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-xl-11 col-lg-8">
+                                <div class="mb-3">
+                                    <h1 class="text-center" style="color: #28a745;">VERIFICA UBICACIÓN</h1>
+                                    <input type="text" id="direccionInput" class="form-control input-largo" placeholder="Ingrese una dirección" />
+                                </div>
+                                <div class="text-center">
+                                    <button id="buscarBtn" class="btn btn-primary">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Contenedor del mapa -->
+                        <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
+
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">

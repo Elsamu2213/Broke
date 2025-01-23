@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=psqkk+8^9z+jynr$ic=t6p)m(q&qo1fts9h5*khlqu6ehwrq1'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -72,32 +72,6 @@ CSRF_FAILURE_VIEW = 'brokeAPP.views.csrf_failure'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 # Database Gael
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'BROK',
-        'USER': 'root',  
-        'PASSWORD': '142536',  
-        'HOST': 'localhost',  
-        'PORT': '3306',  
-    }
-}
-"""
-
-
-
-# Database Samuel
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'brok',
-        'USER': 'root',  
-        'PASSWORD': '12345',  
-        'HOST': 'localhost',  
-        'PORT': '3306',  
-    }
-}
 
 
 # Password validation
@@ -154,7 +128,34 @@ AUTH_USER_MODEL = 'brokeAPP.UsuarioCustomizado'
 
 
 # JETTT______________________________________________________recuerda que se cambio a utils.y
-MAILJET_API_KEY = '84fcb24e7287379c43123e6b882746a7'
-MAILJET_SECRET_KEY = '3fd7b61ca969df6e54209c67da69313e'
 
+
+
+# Importa el gestor de configuración desde el archivo .env
+import os
+from dotenv import load_dotenv
+
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+
+# Base de datos
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    }
+}
+
+# Clave secreta de Django
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+
+# Claves de APIs
+DISCORD_API_KEY = os.getenv('DISCORD_API_KEY')
+MAILJET_API_KEY = os.getenv('MAILJET_API_KEY')
+MAILJET_SECRET_KEY = os.getenv('MAILJET_SECRET_KEY')
+TOKEN = os.getenv('TOKEN')
 

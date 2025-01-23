@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import requests
 
-TOKEN = 'MTI5ODU0MjUyNTkwODM4NTgxMw.GN504t.7M-B0owLgS2e7mlWbmC6Jzr4T53Vy7CVm1VxHU'
+
 CHANNEL_ID = 1298417233290072087
 API_URL = 'http://127.0.0.1:8000/api/actualizar_estado/'  # Actualización del estado
 INFO_API_URL = 'http://127.0.0.1:8000/api/tarea/{}/'      # Obtener información de la tarea

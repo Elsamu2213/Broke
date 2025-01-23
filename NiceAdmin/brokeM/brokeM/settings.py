@@ -20,12 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'brokem.onrender.com', 
-    'brokeapp.onrender.com', 
-    'broke-67fe.onrender.com', 
-    'localhost', 
+    'broke-blt3.onrender.com',
+    'brokeapp.onrender.com',
+    'brokem.onrender.com',
+    'broke-67fe.onrender.com',
+    'localhost',
     '127.0.0.1'
 ]
+
 
 
 # Application definition

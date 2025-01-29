@@ -17,9 +17,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 
 
@@ -110,6 +110,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+#estas 2 lineas de codigo son  Archivos estáticos (para servir imágenes, CSS, JS en Render):
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -118,7 +122,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Añadir esta línea para que Django busque archivos estáticos en la carpeta 'static'
-STATICFILES_DIRS = [BASE_DIR / 'brokeAPP/static']
+STATICFILES_DIRS = [BASE_DIR , "brokeAPP/static"]
 
 # uso de modelo de base de datos  personalizado
 AUTH_USER_MODEL = 'brokeAPP.UsuarioCustomizado'

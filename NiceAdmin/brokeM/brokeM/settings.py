@@ -122,11 +122,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Añadir esta línea para que Django busque archivos estáticos en la carpeta 'static'
-STATICFILES_DIRS = [BASE_DIR , "brokeAPP/static"]
 
+STATICFILES_DIRS = [BASE_DIR / 'brokeAPP/static/']
 # uso de modelo de base de datos  personalizado
 AUTH_USER_MODEL = 'brokeAPP.UsuarioCustomizado'
-
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+IGNORE_PATTERN = ['brokeapp2/vendor/tinymce/skins/ui/tinymce-5/*', 'brokeapp2/vendor/tinymce/skins/ui/tinymce-5-dark/*']
 
 # para uso de correo 
 

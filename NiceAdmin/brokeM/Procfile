@@ -1,1 +1,2 @@
-web: gunicorn brokeM.wsgi
+web: python manage.py collectstatic --noinput && gunicorn brokeM.wsgi:application --chdir NiceAdmin/brokeM --bind 0.0.0.0:$PORT
+
